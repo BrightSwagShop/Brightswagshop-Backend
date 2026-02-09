@@ -1,0 +1,6 @@
+@FakeWebShop.Api_HostAddress = http://localhost:5076
+
+GET {{FakeWebShop.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
