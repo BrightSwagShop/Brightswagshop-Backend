@@ -32,6 +32,32 @@ public class ProductDbContext: DbContext
         );
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    // TPT mapping
+    modelBuilder.Entity<Product>().ToTable("Products");
+    modelBuilder.Entity<ClothingProduct>().ToTable("ClothingProducts");
+    modelBuilder.Entity<Tshirt>().ToTable("Tshirts");
+    modelBuilder.Entity<Hoodie>().ToTable("Hoodies");
+    modelBuilder.Entity<DrinkProduct>().ToTable("DrinkProducts");
+    modelBuilder.Entity<Mok>().ToTable("Mokken");
+    modelBuilder.Entity<Drinkfles>().ToTable("DrinkFlessen");
+    modelBuilder.Entity<Powerbank>().ToTable("Powerbanks");
+    modelBuilder.Entity<Pen>().ToTable("Pennen");
+    modelBuilder.Entity<Sticker>().ToTable("Stickers");
+    modelBuilder.Entity<NoteBook>().ToTable("NoteBooks");
+    modelBuilder.Entity<ToteBag>().ToTable("ToteBags");
+
+    // Category (1) -> Products (many)
+    modelBuilder.Entity<Product>()
+        .HasOne<Category>()               // of .HasOne(p => p.Category) als je nav property hebt
+        .WithMany(c => c.Producten)
+        .HasForeignKey(p => p.CategoryId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    base.OnModelCreating(modelBuilder);
+}
+
 
     
 
