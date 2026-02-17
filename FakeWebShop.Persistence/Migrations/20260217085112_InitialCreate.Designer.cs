@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FakeWebShop.Persistence.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20260216155118_InitialCreate")]
+    [Migration("20260217085112_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,11 +53,6 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("varchar(21)");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -73,11 +68,9 @@ namespace FakeWebShop.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
-                    b.HasDiscriminator().HasValue("Product");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.ClothingProduct", b =>
@@ -94,13 +87,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<int>("Stof")
                         .HasColumnType("int");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("ClothingProduct_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("ClothingProduct");
+                    b.ToTable("ClothingProducts", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.DrinkProduct", b =>
@@ -114,13 +101,7 @@ namespace FakeWebShop.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("DrinkProduct_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("DrinkProduct");
+                    b.ToTable("DrinkProducts", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.NoteBook", b =>
@@ -135,13 +116,7 @@ namespace FakeWebShop.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("NoteBook_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("NoteBook");
+                    b.ToTable("NoteBooks", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Pen", b =>
@@ -152,7 +127,7 @@ namespace FakeWebShop.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasDiscriminator().HasValue("Pen");
+                    b.ToTable("Pennen", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Powerbank", b =>
@@ -174,7 +149,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<int>("PortTotaal")
                         .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("Powerbank");
+                    b.ToTable("Powerbanks", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Sticker", b =>
@@ -187,7 +162,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<double>("Hoogte")
                         .HasColumnType("double");
 
-                    b.HasDiscriminator().HasValue("Sticker");
+                    b.ToTable("Stickers", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.ToteBag", b =>
@@ -204,19 +179,7 @@ namespace FakeWebShop.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Breedte")
-                                .HasColumnName("ToteBag_Breedte");
-
-                            t.Property("Hoogte")
-                                .HasColumnName("ToteBag_Hoogte");
-
-                            t.Property("Kleur")
-                                .HasColumnName("ToteBag_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("ToteBag");
+                    b.ToTable("ToteBags", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Hoodie", b =>
@@ -229,13 +192,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<int>("PocketType")
                         .HasColumnType("int");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("ClothingProduct_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("Hoodie");
+                    b.ToTable("Hoodies", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Tshirt", b =>
@@ -245,13 +202,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<int>("PrintType")
                         .HasColumnType("int");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("ClothingProduct_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("Tshirt");
+                    b.ToTable("Tshirts", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Drinkfles", b =>
@@ -264,13 +215,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<int>("Materiaal")
                         .HasColumnType("int");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("DrinkProduct_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("Drinkfles");
+                    b.ToTable("DrinkFlessen", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Mok", b =>
@@ -280,13 +225,7 @@ namespace FakeWebShop.Persistence.Migrations
                     b.Property<bool>("VaatwasserBestendig")
                         .HasColumnType("tinyint(1)");
 
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Kleur")
-                                .HasColumnName("DrinkProduct_Kleur");
-                        });
-
-                    b.HasDiscriminator().HasValue("Mok");
+                    b.ToTable("Mokken", (string)null);
                 });
 
             modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Product", b =>
@@ -294,6 +233,105 @@ namespace FakeWebShop.Persistence.Migrations
                     b.HasOne("FakeWebShop.Persistence.Entities.Model.Category", null)
                         .WithMany("Producten")
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.ClothingProduct", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.ClothingProduct", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.DrinkProduct", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.DrinkProduct", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.NoteBook", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.NoteBook", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Pen", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Pen", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Powerbank", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Powerbank", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Sticker", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Sticker", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.ToteBag", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.Product", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.ToteBag", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Hoodie", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.ClothingProduct", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Hoodie", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Tshirt", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.ClothingProduct", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Tshirt", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Drinkfles", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.DrinkProduct", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Drinkfles", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FakeWebShop.Persistence.Entities.Model.Mok", b =>
+                {
+                    b.HasOne("FakeWebShop.Persistence.Entities.Model.DrinkProduct", null)
+                        .WithOne()
+                        .HasForeignKey("FakeWebShop.Persistence.Entities.Model.Mok", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
