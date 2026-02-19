@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FakeWebShop.Contracts\FakeWebShop.Contracts.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Persistence\FakeWebShop.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MongoServicesMapping\" />
+    <Folder Include="MongoServicesMapping\ProductTypesMapping\" />
+  </ItemGroup>
+
 </Project>
