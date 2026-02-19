@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FakeWebShop.Persistence.Enums\FakeWebShop.Domain.Enums.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Request\VariantRequest\" />
+    <Folder Include="Response\VariantResponse\" />
+  </ItemGroup>
+
 </Project>
