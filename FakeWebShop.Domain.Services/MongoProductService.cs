@@ -3,31 +3,39 @@ using FakeWebShop.Contracts.Request.Products;
 using FakeWebShop.Contracts.Request.Products.BaseProductRequest;
 using FakeWebShop.Contracts.Response.Products.BaseProductResponse;
 using FakeWebShop.Domain.Services.MongoInterfaces;
+using FakeWebShop.Domain.Services.MongoServicesMapping;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 namespace FakeWebShop.Domain.Services;
 
 public class MongoProductService(IMongoProductRepository repo) : IMongoProductService
 {
-    public Task<MongoProductResponse> CreateProduct(MongoProductRequest product)
+    public async Task<MongoProductResponse> CreateProduct(MongoProductRequest product)
     {
-        throw new NotImplementedException();
+        var productModel = product.AsModel();
+        var productEntity = productModel.AsEntity();
+
+        var createdProduct = await repo.CreateAsync(productEntity);
+        return createdProduct.AsModel().AsResponse();
     }
 
-    public Task DeleteProduct(string id)
+    public async Task<bool> DeleteProduct(string id)
     {
-        throw new NotImplementedException();
+        return await repo.DeleteAsync(id);
     }
 
-    public Task<MongoProductResponse> GetProductById(string id)
+    public async Task<MongoProductResponse?> GetProductById(string id)
     {
-        throw new NotImplementedException();
+        var product = await repo.GetByIdAsync(id);
+        return product?.AsModel().AsResponse();
     }
 
-    public Task<List<MongoProductResponse>> GetProducts()
+    public async Task<List<MongoProductResponse>> GetProducts()
     {
-        throw new NotImplementedException();
+        var product = await repo.GetAllAsync();
+        return product.Select(p => p.AsModel().AsResponse()).ToList();
     }
 
-    // Later 
+    // Update Later aanmaken 
+    
 }

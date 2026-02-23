@@ -15,4 +15,8 @@
     <ProjectReference Include="..\FakeWebShop.Domain.Services\FakeWebShop.Domain.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
