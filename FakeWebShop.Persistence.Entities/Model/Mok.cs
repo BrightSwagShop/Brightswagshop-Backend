@@ -4,7 +4,7 @@ namespace FakeWebShop.Persistence.Entities.Model;
 
 public class Mok : DrinkProduct
 {
-      public bool VaatwasserBestendig { get; private set; }
+      public bool VaatwasserBestendig { get;  set; }
    public Mok(
         Guid id,
         string naam,

@@ -5,8 +5,8 @@ namespace FakeWebShop.Persistence.Entities.Model;
 
 public class Drinkfles: DrinkProduct
 {
-    public bool IsThermisch { get; private set; }
-    public DrinkFlesMateriaal Materiaal { get; private set; }
+    public bool IsThermisch { get;   set; }
+    public DrinkFlesMateriaal Materiaal { get;   set; }
 
     public Drinkfles(
         Guid id,

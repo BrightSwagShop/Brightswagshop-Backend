@@ -12,7 +12,6 @@ public class Category
        
     }
      
-
     public Guid Id{ get; set; }
     public string Naam{ get; set; }
     public List<Product> Producten { get; set;}
