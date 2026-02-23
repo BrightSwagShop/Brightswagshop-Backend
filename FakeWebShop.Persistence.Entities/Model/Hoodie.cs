@@ -5,8 +5,8 @@ namespace FakeWebShop.Persistence.Entities.Model;
 
 public class Hoodie : ClothingProduct
 {
-    public bool HasZipper { get; private set; }
-    public PocketType PocketType { get; private set; }
+    public bool HasZipper { get;   set; }
+    public PocketType PocketType { get;   set; }
 
     public Hoodie(Guid id, string naam, string beschrijving, decimal prijs,
         string imageUrl, Guid categoryId,

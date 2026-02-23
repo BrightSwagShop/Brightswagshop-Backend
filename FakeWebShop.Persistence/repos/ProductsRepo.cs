@@ -8,10 +8,10 @@ public class ProductsRepo(ProductDbContext dbContext) : IProductsRepo
 {
     public async Task DeleteProductAsync(Guid id)
     {
-        var existing = dbContext.Categories.Find(id);
+        var existing = dbContext.Products.Find(id);
          if (existing is null)
-         throw new Exception("Category not found");
-          dbContext.Categories.Remove(existing);
+         throw new Exception("Product not found");
+          dbContext.Products.Remove(existing);
           await dbContext.SaveChangesAsync();
     }
 
@@ -24,24 +24,7 @@ public class ProductsRepo(ProductDbContext dbContext) : IProductsRepo
     {
         return await dbContext.Products.FindAsync(id);
     }
+ 
 
-    public async Task<Product> SaveProductAsync(Product product)
-    {
-         dbContext.Products.Add(product);
-        await dbContext.SaveChangesAsync();
-        return product;
-    }
-
-    public async Task<Product> UpdateProductAsync(Product product)
-    {
-        var existing = dbContext.Products.Find(product.Id);
-        if(existing is null)
-        throw new Exception("product not found");
-        existing.Naam = product.Naam;
-        existing.Beschrijving = product.Beschrijving;
-        existing.ImageUrl = product.ImageUrl;
-        existing.CategoryId = product.CategoryId;
-        await dbContext.SaveChangesAsync();
-        return existing;
-    }
+     
 }
