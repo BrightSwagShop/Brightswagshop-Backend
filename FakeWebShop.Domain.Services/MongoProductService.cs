@@ -12,11 +12,11 @@ public class MongoProductService(IMongoProductRepository repo) : IMongoProductSe
 {
     public async Task<MongoProductResponse> CreateProduct(MongoProductRequest product)
     {
-        var productModel = product.AsModel();
-        var productEntity = productModel.AsEntity();
+        var productModel = product.ToModel();
+        var productEntity = productModel.ToEntity();
 
         var createdProduct = await repo.CreateAsync(productEntity);
-        return createdProduct.AsModel().AsResponse();
+        return createdProduct.ToModel().ToResponse();
     }
 
     public async Task<bool> DeleteProduct(string id)
@@ -27,15 +27,15 @@ public class MongoProductService(IMongoProductRepository repo) : IMongoProductSe
     public async Task<MongoProductResponse?> GetProductById(string id)
     {
         var product = await repo.GetByIdAsync(id);
-        return product?.AsModel().AsResponse();
+        return product?.ToModel().ToResponse();
     }
 
     public async Task<List<MongoProductResponse>> GetProducts()
     {
         var product = await repo.GetAllAsync();
-        return product.Select(p => p.AsModel().AsResponse()).ToList();
+        return product.Select(p => p.ToModel().ToResponse()).ToList();
     }
 
     // Update Later aanmaken 
-    
+
 }

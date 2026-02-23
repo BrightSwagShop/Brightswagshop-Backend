@@ -12,7 +12,7 @@ public class MongoProductRepository : IMongoProductRepository
     public MongoProductRepository(IMongoClient client, IOptions<MongoOptions> options)
     {
         var database = client.GetDatabase(options.Value.Database); // Get Databse
-        _products = database.GetCollection<Product>("Products");    // Get Juiste Collection
+        _products = database.GetCollection<Product>("products");    // Get Juiste Collection
     }
 
     // Nieuw product aanmaken

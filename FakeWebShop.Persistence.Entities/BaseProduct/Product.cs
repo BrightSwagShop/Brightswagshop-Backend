@@ -24,9 +24,11 @@ public abstract class Product
     public decimal Price { get; set; }
 
     [BsonElement("category")]
+    [BsonRepresentation(BsonType.String)]
     public CategoryEnum Category { get; set; }
 
     [BsonElement("productType")]
+    [BsonRepresentation(BsonType.String)]
     public ProductTypeEnum ProductType { get; set; }
 
     [BsonElement("isActive")]
