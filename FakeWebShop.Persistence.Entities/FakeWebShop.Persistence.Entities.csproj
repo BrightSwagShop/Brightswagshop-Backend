@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FakeWebShop.Persistence.Enums\FakeWebShop.Domain.Enums.csproj" />
+  </ItemGroup>
+
 </Project>
