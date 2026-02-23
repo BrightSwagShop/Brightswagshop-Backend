@@ -1,7 +1,6 @@
 using System;
 using FakeWebShop.Contracts.Request;
 using FakeWebShop.Contracts.Request.Products.BaseProductRequest;
-using FakeWebShop.Contracts.Response;
 using FakeWebShop.Contracts.Response.Products.BaseProductResponse;
 using FakeWebShop.Domain.Model;
 using FakeWebShop.Domain.Models;
@@ -14,14 +13,15 @@ internal static class MongoProductMapping
 {
     // Create & Put         Get 
     // Request -> Model -> Entity -> Model -> Response
-
-    // 1 Entry mapper kijkt op runtime welk subtype het is (switch pattern)
+    // 1 Entry mapper kijkt op runtime welk subtype het is (switch pattern), 
 
     // Request naar model
     public static ProductModel AsModel(this MongoProductRequest request) =>
     request switch
     {
         ClothingProductRequest clothing => clothing.AsModel(),
+        MugProductRequest mug => mug.AsModel(),
+        
         _ => throw new NotSupportedException($"Unknown product request type: {request.GetType().Name}")
     };
 
@@ -31,6 +31,7 @@ internal static class MongoProductMapping
     {
 
         ClothingProductModel clothing => clothing.AsEntity(),
+        MugProductModel mug => mug.AsEntity(),
         _ => throw new NotSupportedException($"Unknown product model type: {model.GetType().Name}")
     };
 
@@ -38,8 +39,8 @@ internal static class MongoProductMapping
     public static ProductModel AsModel(this Product entity) =>
     entity switch
     {
-
         ClothingProduct clothing => clothing.AsModel(),
+        MugProduct mug => mug.AsModel(),
         _ => throw new NotSupportedException($"Unknown product entity type: {entity.GetType().Name}")
     };
 
@@ -49,6 +50,7 @@ internal static class MongoProductMapping
     {
 
         ClothingProductModel clothing => clothing.AsResponse(),
+        MugProductModel mug => mug.AsResponse(),
         _ => throw new NotSupportedException($"Unknown product model type: {model.GetType().Name}")
     };
 }

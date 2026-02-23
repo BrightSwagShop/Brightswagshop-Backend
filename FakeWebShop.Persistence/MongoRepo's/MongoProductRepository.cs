@@ -13,13 +13,13 @@ public class MongoProductRepository : IMongoProductRepository
     {
         var database = client.GetDatabase(options.Value.Database); // Get Databse
         _products = database.GetCollection<Product>("Products");    // Get Juiste Collection
-
     }
 
     // Nieuw product aanmaken
-    public async Task CreateAsync(Product product)
+    public async Task<Product> CreateAsync(Product product)
     {
         await _products.InsertOneAsync(product);
+        return product;
     }
 
     // Product delete
@@ -42,8 +42,6 @@ public class MongoProductRepository : IMongoProductRepository
             .Find(Product => Product.Id == id)
             .FirstOrDefaultAsync();
     }
-
-
 
 
     // Product updaten

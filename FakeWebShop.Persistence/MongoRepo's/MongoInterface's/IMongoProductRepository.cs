@@ -6,7 +6,7 @@ namespace FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 public interface IMongoProductRepository
 {
-    Task CreateAsync(Product product);
+    Task<Product> CreateAsync(Product product);
     Task<List<Product>> GetAllAsync();
     Task<Product?> GetByIdAsync(string id);
     Task<bool> DeleteAsync(string id);
@@ -14,7 +14,6 @@ public interface IMongoProductRepository
     // Volledige vervanging
     // Task<bool> UpdateAsync(Product product);
 
-    // Task<bool> PatchAsync(ProductUpdateDto patch);
 
 
 }
