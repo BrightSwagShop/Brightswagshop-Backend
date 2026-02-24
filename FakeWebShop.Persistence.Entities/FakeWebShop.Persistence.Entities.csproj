@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
+    <Folder Include="BaseProduct\" />
+    <Folder Include="ProductTypes\" />
   </ItemGroup>
 
 </Project>
