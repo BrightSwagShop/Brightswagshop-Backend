@@ -12,4 +12,11 @@
     <Folder Include="services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FakeWebShop.Contracts\FakeWebShop.Contracts.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Persistence.Entities\FakeWebShop.Persistence.Entities.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Persistence\FakeWebShop.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>
