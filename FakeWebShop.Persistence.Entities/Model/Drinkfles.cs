@@ -1,5 +1,6 @@
 using System;
-using FakeWebShop.Persistence.Entities.Model.Enums;
+using FakeWebShop.Domain.Model;
+ 
 
 namespace FakeWebShop.Persistence.Entities.Model;
 
