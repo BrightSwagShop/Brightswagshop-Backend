@@ -8,7 +8,7 @@ namespace FakeWebShop.Domain.Services.services;
 
 public class CategoryService(ICategoryRepo repository) : ICategoryService
 {
-        public async Task<CategoryResponseContract> CreateCategoryAsync(CategoryRequestContract category)
+    public async Task<CategoryResponseContract> CreateCategoryAsync(CategoryRequestContract category)
     {
         var model = category.AsModel();
         var entity = model.AsEntity();
@@ -18,7 +18,7 @@ public class CategoryService(ICategoryRepo repository) : ICategoryService
         return createdEntity.AsModel().AsContract();
     }
 
-    public async Task DeleteCategoryAsync(Guid id)
+    public async Task DeleteCategoryAsync(Guid id)s
     {
         await repository.DeleteCategoryAsync(id);
     }
