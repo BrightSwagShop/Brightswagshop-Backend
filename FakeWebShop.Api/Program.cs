@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoOptions>(
     builder.Configuration.GetSection("Mongo"));
 
-// builder.Services.AddSingleton<IMongoClient>(_ =>
-//     new MongoClient(builder.Configuration["Mongo:ConnectionString"]));
+builder.Services.AddSingleton<IMongoClient>(_ =>
+    new MongoClient(builder.Configuration["Mongo:ConnectionString"]));
 
 
 // Dependency Injection
