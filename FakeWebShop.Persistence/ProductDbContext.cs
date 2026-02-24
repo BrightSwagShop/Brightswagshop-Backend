@@ -6,7 +6,11 @@ namespace FakeWebShop.Persistence;
 
 public class ProductDbContext: DbContext
 {
-     //  private string connectionString = "server=localhost;port=3308;database=FakeWebShop;user=root;password=WachtW00rd;"; 
+    public ProductDbContext(DbContextOptions<ProductDbContext> options)
+    : base(options)
+        {
+        }
+       private string connectionString = "server=localhost;port=3308;database=FakeWebShop;user=root;password=WachtW00rd;"; 
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Product> Products { get; set; }

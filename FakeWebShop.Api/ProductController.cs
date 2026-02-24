@@ -38,6 +38,7 @@ namespace FakeWebShop.Api
     public async Task<ActionResult<DrinkflesResponseContract>> CreateDrinkfles([FromBody] DrinkflesRequestContract contract)
     {
         var created = await service.CreateDrinkflesAsync(contract);
+        Console.WriteLine($"CategoryId IN: {contract.CategoryId}");
         return CreatedAtAction(nameof(GetDrinkflesById), new { id = created.Id }, created);
     }
 
