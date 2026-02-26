@@ -2,7 +2,8 @@ using System;
 using FakeWebShop.Contracts;
 using FakeWebShop.Domain.Services.Interfaces;
 using FakeWebShop.Domain.Services.Mapping;
-using FakeWebShop.Persistence.repos;
+using FakeWebShop.Persistence.Interfaces;
+
 
 namespace FakeWebShop.Domain.Services.services;
 
@@ -18,7 +19,7 @@ public class CategoryService(ICategoryRepo repository) : ICategoryService
         return createdEntity.AsModel().AsContract();
     }
 
-    public async Task DeleteCategoryAsync(Guid id)s
+    public async Task DeleteCategoryAsync(Guid id)
     {
         await repository.DeleteCategoryAsync(id);
     }

@@ -3,7 +3,7 @@ using FakeWebShop.Domain.Model;
 
 namespace FakeWebShop.Contracts;
 
-public class HoodieResponseContract :ProductResponseContract
+public class HoodieResponseContract : ProductResponseContract
 {
     public Maat Maat { get; set; }
 
@@ -13,6 +13,6 @@ public class HoodieResponseContract :ProductResponseContract
 
     public bool HasZipper { get; set; }
 
-    public PocketType PocketType { get; set; } 
+    public PocketType PocketType { get; set; }
 
 }

@@ -1,7 +1,7 @@
 using System;
 using FakeWebShop.Persistence.Entities.Model;
 
-namespace FakeWebShop.Persistence.repos;
+namespace FakeWebShop.Persistence.Interfaces;
 
 public interface ICategoryRepo
 {

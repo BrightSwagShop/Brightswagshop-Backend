@@ -4,7 +4,7 @@ using FakeWebShop.Contracts.Enums;
 using FakeWebShop.Domain.Services.Interfaces;
 using FakeWebShop.Domain.Services.Mapping;
 using FakeWebShop.Persistence.Entities.Model;
-using FakeWebShop.Persistence.repos;
+using FakeWebShop.Persistence.Interfaces;
 
 namespace FakeWebShop.Domain.Services.services;
 

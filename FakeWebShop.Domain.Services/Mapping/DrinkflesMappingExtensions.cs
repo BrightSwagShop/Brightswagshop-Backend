@@ -7,7 +7,7 @@ namespace FakeWebShop.Domain.Services.Mapping;
 
 public static class DrinkflesMappingExtensions
 {
-     // REQUEST → DOMAIN
+    // REQUEST → DOMAIN
     public static DrinkflesModel AsModel(this DrinkflesRequestContract contract)
     {
         return new DrinkflesModel
@@ -29,7 +29,7 @@ public static class DrinkflesMappingExtensions
     {
         return new DrinkflesResponseContract
         {
-            Id = model.Id ?? throw new  Exception(),
+            Id = model.Id ?? throw new Exception(),
             Naam = model.Naam,
             Beschrijving = model.Beschrijving,
             Prijs = model.Prijs,
@@ -65,13 +65,13 @@ public static class DrinkflesMappingExtensions
     {
         return new Drinkfles(
             model.Id ?? Guid.NewGuid(),
-            model.Naam ?? throw new  Exception(),
-            model.Beschrijving ?? throw new  Exception(),
+            model.Naam ?? throw new Exception(),
+            model.Beschrijving ?? throw new Exception(),
             model.Prijs,
-            model.ImageUrl ?? throw new  Exception(),
+            model.ImageUrl ?? throw new Exception(),
             model.CategoryId,
             model.Inhoud,
-            model.Kleur ?? throw new  Exception(),
+            model.Kleur ?? throw new Exception(),
             model.IsThermisch,
             model.Materiaal
         );
