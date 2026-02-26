@@ -2,13 +2,13 @@ using System;
 using FakeWebShop.Contracts;
 using FakeWebShop.Domain.Services.Interfaces;
 using FakeWebShop.Domain.Services.Mapping;
-using FakeWebShop.Persistence.repos;
+using FakeWebShop.Persistence.Interfaces;
 
 namespace FakeWebShop.Domain.Services.services;
 
 public class ProductService(IProductsRepo repository) : IProductService
 {
-     public async Task<ProductResponseContract?> GetProductAsync(Guid id)
+    public async Task<ProductResponseContract?> GetProductAsync(Guid id)
     {
         var entity = await repository.GetProductAsync(id);
         if (entity == null) return null;

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FakeWebShop.Api
@@ -7,6 +6,6 @@ namespace FakeWebShop.Api
     [Route("api/products")]
     public class ProductenController : ControllerBase
     {
-        
+
     }
 }

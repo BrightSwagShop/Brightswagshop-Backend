@@ -1,5 +1,6 @@
 using System;
 using FakeWebShop.Persistence.Entities.Model;
+using FakeWebShop.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FakeWebShop.Persistence.repos;

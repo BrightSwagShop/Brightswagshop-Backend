@@ -1,5 +1,6 @@
 using System;
 using FakeWebShop.Persistence.Entities.Model;
+using FakeWebShop.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -9,11 +10,11 @@ public class CategoryRepo(ProductDbContext dbContext) : ICategoryRepo
 {
     public async Task DeleteCategoryAsync(Guid id)
     {
-         var existing = dbContext.Categories.Find(id);
-         if (existing is null)
-         throw new Exception("Category not found");
-          dbContext.Categories.Remove(existing);
-          await dbContext.SaveChangesAsync();
+        var existing = dbContext.Categories.Find(id);
+        if (existing is null)
+            throw new Exception("Category not found");
+        dbContext.Categories.Remove(existing);
+        await dbContext.SaveChangesAsync();
 
     }
 
@@ -37,8 +38,8 @@ public class CategoryRepo(ProductDbContext dbContext) : ICategoryRepo
     public async Task<Category> UpdateCategoryAsync(Category category)
     {
         var existing = dbContext.Categories.Find(category.Id);
-        if(existing is null)
-        throw new Exception("Category not found");
+        if (existing is null)
+            throw new Exception("Category not found");
         existing.Naam = category.Naam;
         existing.Producten = category.Producten;
         await dbContext.SaveChangesAsync();
