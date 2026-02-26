@@ -13,9 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoOptions>(
     builder.Configuration.GetSection("Mongo"));
 
-// MongoClient registeren (Singleton)
 builder.Services.AddSingleton<IMongoClient>(_ =>
     new MongoClient(builder.Configuration["Mongo:ConnectionString"]));
+
 
 // Repository DI & Service DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
