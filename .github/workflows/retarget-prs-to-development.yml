@@ -1,0 +1,35 @@
+name: Retarget Open PRs to Development
+
+on:
+  push:
+    branches:
+      - 'copilot/move-branches-to-development'
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  retarget-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retarget open feature/* and fix/* PRs from main to Development
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Looking for open PRs targeting 'main' with feature/* or fix/* heads..."
+
+          gh pr list \
+            --repo "$REPO" \
+            --state open \
+            --base main \
+            --json number,headRefName \
+            --jq '.[] | select(.headRefName | test("^(feature|fix)/")) | [.number, .headRefName] | @tsv' \
+          | while IFS=$'\t' read -r pr_number head_ref; do
+              echo "Retargeting PR #${pr_number} (${head_ref}) → Development"
+              gh pr edit "${pr_number}" --repo "$REPO" --base Development
+              echo "  Done."
+            done
+
+          echo "All eligible PRs have been retargeted to Development."
