@@ -1,9 +1,3 @@
-# JMeter Results and Reports
-results/
-*.jtl
-*.log
-jmeter.log
-
 # Temporary files
 *.tmp
 *.temp
