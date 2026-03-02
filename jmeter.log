@@ -1,0 +1,20 @@
+2026-02-24 11:14:13,858 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2026-02-24 11:14:13,911 INFO o.a.j.JMeter: Loading user properties from: C:\Users\boone\Tools\apache-jmeter-5.6.3\bin\user.properties
+2026-02-24 11:14:13,912 INFO o.a.j.JMeter: Loading system properties from: C:\Users\boone\Tools\apache-jmeter-5.6.3\bin\system.properties
+2026-02-24 11:14:13,954 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-02-24 11:14:13,954 INFO o.a.j.JMeter: Version 5.6.3
+2026-02-24 11:14:13,954 INFO o.a.j.JMeter: java.version=21.0.5
+2026-02-24 11:14:13,954 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2026-02-24 11:14:13,954 INFO o.a.j.JMeter: os.name=Windows 11
+2026-02-24 11:14:13,955 INFO o.a.j.JMeter: os.arch=amd64
+2026-02-24 11:14:13,956 INFO o.a.j.JMeter: os.version=10.0
+2026-02-24 11:14:13,956 INFO o.a.j.JMeter: file.encoding=UTF-8
+2026-02-24 11:14:13,956 INFO o.a.j.JMeter: java.awt.headless=null
+2026-02-24 11:14:13,956 INFO o.a.j.JMeter: Max memory     =1073741824
+2026-02-24 11:14:13,956 INFO o.a.j.JMeter: Available Processors =8
+2026-02-24 11:14:13,980 INFO o.a.j.JMeter: Default Locale=English (EN)
+2026-02-24 11:14:13,980 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2026-02-24 11:14:13,981 INFO o.a.j.JMeter: JMeterHome=C:\Users\boone\Tools\apache-jmeter-5.6.3
+2026-02-24 11:14:13,981 INFO o.a.j.JMeter: user.dir  =C:\Users\boone\Documents\BRIGHTEST\SwagShop\Brightswagshop-Backend
+2026-02-24 11:14:13,981 INFO o.a.j.JMeter: PWD       =C:\Users\boone\Documents\BRIGHTEST\SwagShop\Brightswagshop-Backend
+2026-02-24 11:14:14,061 INFO o.a.j.JMeter: IP: 10.200.8.16 Name: Laptop_WB FullName: Laptop_WB

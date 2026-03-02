@@ -7,6 +7,6 @@ public interface IMongoProductService
     Task<MongoProductResponse> CreateProduct(MongoProductRequest product);
     Task<List<MongoProductResponse>> GetProducts();
     Task<MongoProductResponse> GetProductById(string id);
-    Task DeleteProduct(string id);
+    Task<bool> DeleteProduct(string id);
     // Update Product voor later "Lange code";
 }
