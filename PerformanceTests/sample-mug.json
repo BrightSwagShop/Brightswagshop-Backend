@@ -1,0 +1,35 @@
+{
+  "$type": "Mok",
+  "name": "Ceramic Coffee Mug - 350ml",
+  "description": "Durable ceramic mug perfect for coffee and tea",
+  "price": 12.99,
+  "category": 1,
+  "productType": 1,
+  "isActive": true,
+  "kleuren": [
+    {
+      "kleur": "Classic White",
+      "imageUrl": "https://example.com/white-mug.jpg",
+      "stock": 150,
+      "sku": "MUG-WHT-350-001"
+    },
+    {
+      "kleur": "Matte Black",
+      "imageUrl": "https://example.com/black-mug.jpg",
+      "stock": 120,
+      "sku": "MUG-BLK-350-001"
+    },
+    {
+      "kleur": "Ocean Blue",
+      "imageUrl": "https://example.com/blue-mug.jpg",
+      "stock": 80,
+      "sku": "MUG-BLU-350-001"
+    },
+    {
+      "kleur": "Sunset Orange",
+      "imageUrl": "https://example.com/orange-mug.jpg",
+      "stock": 60,
+      "sku": "MUG-ORG-350-001"
+    }
+  ]
+}
