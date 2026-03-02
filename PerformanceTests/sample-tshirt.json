@@ -1,0 +1,94 @@
+{
+  "$type": "TShirt",
+  "name": "Premium Cotton T-Shirt",
+  "description": "High-quality cotton t-shirt with modern fit",
+  "price": 29.99,
+  "category": 0,
+  "productType": 0,
+  "isActive": true,
+  "kleuren": [
+    {
+      "kleur": "Navy Blue",
+      "imageUrl": "https://example.com/navy-tshirt.jpg",
+      "maten": [
+        {
+          "maat": "XS",
+          "stock": 25,
+          "sku": "TSH-NAVY-XS-001"
+        },
+        {
+          "maat": "S",
+          "stock": 50,
+          "sku": "TSH-NAVY-S-001"
+        },
+        {
+          "maat": "M",
+          "stock": 75,
+          "sku": "TSH-NAVY-M-001"
+        },
+        {
+          "maat": "L",
+          "stock": 60,
+          "sku": "TSH-NAVY-L-001"
+        },
+        {
+          "maat": "XL",
+          "stock": 40,
+          "sku": "TSH-NAVY-XL-001"
+        },
+        {
+          "maat": "XXL",
+          "stock": 20,
+          "sku": "TSH-NAVY-XXL-001"
+        }
+      ]
+    },
+    {
+      "kleur": "Forest Green",
+      "imageUrl": "https://example.com/green-tshirt.jpg",
+      "maten": [
+        {
+          "maat": "S",
+          "stock": 30,
+          "sku": "TSH-GRN-S-001"
+        },
+        {
+          "maat": "M",
+          "stock": 45,
+          "sku": "TSH-GRN-M-001"
+        },
+        {
+          "maat": "L",
+          "stock": 35,
+          "sku": "TSH-GRN-L-001"
+        },
+        {
+          "maat": "XL",
+          "stock": 25,
+          "sku": "TSH-GRN-XL-001"
+        }
+      ]
+    },
+    {
+      "kleur": "Charcoal Gray",
+      "imageUrl": "https://example.com/gray-tshirt.jpg",
+      "maten": [
+        {
+          "maat": "S",
+          "stock": 40,
+          "sku": "TSH-GRY-S-001"
+        },
+        {
+          "maat": "M",
+          "stock": 55,
+          "sku": "TSH-GRY-M-001"
+        },
+        {
+          "maat": "L",
+          "stock": 50,
+          "sku": "TSH-GRY-L-001"
+        }
+      ]
+    }
+  ]
+}

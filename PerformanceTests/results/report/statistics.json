@@ -1,0 +1,50 @@
+{
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 9528,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 582.8153862300579,
+    "medianResTime" : 85.0,
+    "minResTime" : 1.0,
+    "maxResTime" : 3169.0,
+    "pct1ResTime" : 1583.1000000000004,
+    "pct2ResTime" : 1764.5499999999993,
+    "pct3ResTime" : 1997.7099999999991,
+    "throughput" : 75.77420432313785,
+    "receivedKBytesPerSec" : 82255.3982373133,
+    "sentKBytesPerSec" : 24.889940811343862
+  },
+  "GET All Products" : {
+    "transaction" : "GET All Products",
+    "sampleCount" : 4764,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 1142.9093198992464,
+    "medianResTime" : 1288.5,
+    "minResTime" : 36.0,
+    "maxResTime" : 3169.0,
+    "pct1ResTime" : 1764.5,
+    "pct2ResTime" : 1893.75,
+    "pct3ResTime" : 2055.4000000000015,
+    "throughput" : 37.88860876273491,
+    "receivedKBytesPerSec" : 82238.62531514192,
+    "sentKBytesPerSec" : 4.736076095341865
+  },
+  "POST Create Mug" : {
+    "transaction" : "POST Create Mug",
+    "sampleCount" : 4764,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 22.72145256087317,
+    "medianResTime" : 7.0,
+    "minResTime" : 1.0,
+    "maxResTime" : 1238.0,
+    "pct1ResTime" : 46.0,
+    "pct2ResTime" : 68.0,
+    "pct3ResTime" : 217.7500000000091,
+    "throughput" : 37.93356053126095,
+    "receivedKBytesPerSec" : 20.067633103879352,
+    "sentKBytesPerSec" : 20.178766581998282
+  }
+}
