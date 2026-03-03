@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Simple SQL API Performance Test">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Simple MongoDB API Test">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
-      <boolProp name="TestPlan.functional_mode">false</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Load Test">
@@ -26,7 +28,7 @@
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">5076</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.path">/api/producten</stringProp>
+          <stringProp name="HTTPSampler.path">/api/products</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -40,7 +42,7 @@
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">5076</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.path">/api/producten/drinkflessen</stringProp>
+          <stringProp name="HTTPSampler.path">/api/products</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -50,16 +52,21 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;naam&quot;: &quot;Steel Bottle 750ml&quot;,&#xd;
-  &quot;beschrijving&quot;: &quot;Dubbelwandige thermische drinkfles&quot;,&#xd;
-  &quot;prijs&quot;: 29.99,&#xd;
-  &quot;imageUrl&quot;: &quot;https://example.com/drinkfles.jpg&quot;,&#xd;
-  &quot;categoryId&quot;: &quot;00afdbcb-5b7c-4827-a4c7-0a34e3253757&quot;,&#xd;
-&#xd;
-  &quot;inhoud&quot;: 750,&#xd;
-  &quot;kleur&quot;: &quot;Zwart&quot;,&#xd;
-  &quot;isThermisch&quot;: true,&#xd;
-  &quot;materiaal&quot;: 0&#xd;
+  &quot;$type&quot;: &quot;Mok&quot;,&#xd;
+  &quot;name&quot;: &quot;Test Mug ${__time(YMDHMS)}-${__threadNum}&quot;,&#xd;
+  &quot;description&quot;: &quot;Performance test mug&quot;,&#xd;
+  &quot;price&quot;: 12.99,&#xd;
+  &quot;category&quot;: 1,&#xd;
+  &quot;productType&quot;: 1,&#xd;
+  &quot;isActive&quot;: true,&#xd;
+  &quot;kleuren&quot;: [&#xd;
+    {&#xd;
+      &quot;kleur&quot;: &quot;White&quot;,&#xd;
+      &quot;imageUrl&quot;: &quot;https://example.com/white-mug.jpg&quot;,&#xd;
+      &quot;stock&quot;: 100,&#xd;
+      &quot;sku&quot;: &quot;MUG-WHT-${__time(YMDHMS)}&quot;&#xd;
+    }&#xd;
+  ]&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -114,7 +121,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>

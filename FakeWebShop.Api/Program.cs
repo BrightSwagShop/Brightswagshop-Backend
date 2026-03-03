@@ -34,10 +34,11 @@ builder.Services.AddControllers()
     });
 
 
-var app = builder.Build();
+// MongoOptions binden (voor IOptions<MongoOptions>)
+builder.Services.Configure<MongoOptions>(
+    builder.Configuration.GetSection("Mongo"));
 
 
-app.UseHttpsRedirection();
 
 app.MapControllers();
 

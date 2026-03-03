@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeWebShop.Persistence", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeWebShop.Persistence.Entities", "FakeWebShop.Persistence.Entities\FakeWebShop.Persistence.Entities.csproj", "{173EAB8E-6134-4E62-A7AE-76C1137EF7C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeWebShop.Domain.Enums", "FakeWebShop.Persistence.Enums\FakeWebShop.Domain.Enums.csproj", "{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{173EAB8E-6134-4E62-A7AE-76C1137EF7C9}.Release|x64.Build.0 = Release|Any CPU
 		{173EAB8E-6134-4E62-A7AE-76C1137EF7C9}.Release|x86.ActiveCfg = Release|Any CPU
 		{173EAB8E-6134-4E62-A7AE-76C1137EF7C9}.Release|x86.Build.0 = Release|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Debug|x64.Build.0 = Debug|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Debug|x86.Build.0 = Debug|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x64.ActiveCfg = Release|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x64.Build.0 = Release|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
