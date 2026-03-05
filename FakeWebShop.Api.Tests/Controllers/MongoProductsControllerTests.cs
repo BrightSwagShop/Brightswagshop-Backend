@@ -6,6 +6,9 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using FakeWebShop.Contracts.Response;
+using FakeWebShop.Contracts.Request; 
+using FakeWebShop.Domain.Enums; 
 
 namespace FakeWebShop.Api.Tests.Controllers;
 
@@ -36,7 +39,11 @@ public class MongoProductsControllerTests
         // We maken een fake lijst die de service zou teruggeven
         var list = new List<MongoProductResponse>
         {
-            new() { Id = "507f1f77bcf86cd799439011" }
+            new MugProductResponse
+            {
+                Id = "507f1f77bcf86cd799439011",
+                Kleuren = new()
+            }
         };
 
         // We zeggen tegen Moq:
@@ -90,7 +97,11 @@ public class MongoProductsControllerTests
     public async Task GetById_ReturnsOk_WhenFound()
     {
         var id = "507f1f77bcf86cd799439011";
-        var product = new MongoProductResponse { Id = id };
+       var product = new MugProductResponse
+        {
+            Id = id,
+            Kleuren = new()
+        };
 
         // Service geeft product terug
         _service.Setup(s => s.GetProductById(id))
