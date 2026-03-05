@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FakeWebShop.Api\FakeWebShop.Api.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Contracts\FakeWebShop.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
