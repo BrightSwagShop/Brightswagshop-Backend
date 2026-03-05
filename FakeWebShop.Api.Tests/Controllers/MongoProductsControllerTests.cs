@@ -9,6 +9,8 @@ using Xunit;
 using FakeWebShop.Contracts.Response;
 using FakeWebShop.Contracts.Request; 
 using FakeWebShop.Domain.Enums; 
+using FakeWebShop.Contracts.Response.VariantResponse;
+using FakeWebShop.Contracts.Request.VariantRequest;
 
 namespace FakeWebShop.Api.Tests.Controllers;
 
@@ -41,8 +43,14 @@ public class MongoProductsControllerTests
         {
             new MugProductResponse
             {
-                Id = "507f1f77bcf86cd799439011",
-                Kleuren = new()
+               Id = "507f1f77bcf86cd799439011",
+                Name = "Test Mug",
+                Description = "Test description",
+                Price = 10m,
+                Category = CategoryEnum.Drinkartikelen,
+                ProductType = ProductTypeEnum.Mok,
+                IsActive = true,
+                Kleuren = new List<ColorVariantResponse>()
             }
         };
 
@@ -97,11 +105,17 @@ public class MongoProductsControllerTests
     public async Task GetById_ReturnsOk_WhenFound()
     {
         var id = "507f1f77bcf86cd799439011";
-       var product = new MugProductResponse
-        {
-            Id = id,
-            Kleuren = new()
-        };
+        var product = new MugProductResponse
+    {
+        Id = "507f1f77bcf86cd799439011",
+        Name = "Test Mug",
+        Description = "Test description",
+        Price = 10m,
+        Category = CategoryEnum.Drinkartikelen,
+        ProductType = ProductTypeEnum.Mok,
+        IsActive = true,
+        Kleuren = new List<ColorVariantResponse>()
+    };
 
         // Service geeft product terug
         _service.Setup(s => s.GetProductById(id))
@@ -125,51 +139,55 @@ public class MongoProductsControllerTests
     // ============================
     //We controleren of de controller een 201 Created teruggeeft met de juiste route en het aangemaakte product 
     // wanneer een nieuw product succesvol wordt aangemaakt.
-    [Fact]
+   [Fact]
     public async Task Create_ReturnsCreatedAtAction()
     {
-        // Fake request object
-         var request = new MugProductRequest
+        // Arrange: concrete request (geen abstract)
+        var request = new MugProductRequest
         {
             Name = "Test mug",
+            Description = "Test",
             Price = 10m,
-            Category = CategoryEnum.Mugs,
-            ProductType = ProductTypeEnum.Mug,
+            Category = CategoryEnum.Drinkartikelen,
+            ProductType = ProductTypeEnum.Mok, 
             IsActive = true,
-            Kleuren = new()
+            Kleuren = new List<ColorVariantRequest>
+            {
+                new ColorVariantRequest
+                {
+                    Kleur = "Black",
+                    ImageUrl = "img.jpg",
+                    Stock = 5,
+                    Sku = "MOK-BLK-001"
+                }
+            }
         };
 
-        // Fake response dat service zou teruggeven
-        var created = new MongoProductResponse
+        // Arrange: concrete response (geen abstract)
+        var created = new MugProductResponse
         {
-            Id = "507f1f77bcf86cd799439011"
+            Id = "507f1f77bcf86cd799439011",
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            Category = request.Category,
+            ProductType = request.ProductType,
+            IsActive = request.IsActive,
+            Kleuren = new List<ColorVariantResponse>()
         };
 
-        // Service moet created object teruggeven
         _service.Setup(s => s.CreateProduct(request))
                 .ReturnsAsync(created);
 
+        // Act
         var result = await _controller.Create(request);
 
-        // Controller moet 201 CreatedAtAction teruggeven
-        var createdAt = result.Result
-            .Should()
-            .BeOfType<CreatedAtActionResult>()
-            .Subject;
-
-        // Statuscode moet 201 zijn
+        // Assert
+        var createdAt = result.Result.Should().BeOfType<CreatedAtActionResult>().Subject;
         createdAt.StatusCode.Should().Be(201);
-
-        // ActionName moet verwijzen naar GetById
         createdAt.ActionName.Should().Be(nameof(MongoProductsController.GetById));
-
-        // RouteValues moet id bevatten
         createdAt.RouteValues!["id"].Should().Be(created.Id);
-
-        // Body moet het created object bevatten
         createdAt.Value.Should().BeEquivalentTo(created);
-
-
 
         _service.VerifyAll();
     }
