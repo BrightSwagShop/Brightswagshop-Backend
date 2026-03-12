@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FakeWebShop.Contracts\FakeWebShop.Contracts.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Abstractions\FakeWebShop.Domain.Abstractions.csproj" />
     <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
     <ProjectReference Include="..\FakeWebShop.Persistence\FakeWebShop.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Imageinterface\" />
     <Folder Include="MongoServicesMapping\" />
     <Folder Include="MongoServicesMapping\ProductTypesMapping\" />
   </ItemGroup>
