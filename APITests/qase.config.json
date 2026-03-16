@@ -1,0 +1,17 @@
+{
+  "mode": "testops",
+  "fallback": "report",
+  "testops": {
+    "project": "BRIGHTSWAG",
+    "api": {
+      "token": ""
+    },
+    "run": {
+      "complete": true,
+      "title": "Cucumber API Automated Run"
+    },
+    "batch": {
+      "size": 100
+    }
+  }
+}

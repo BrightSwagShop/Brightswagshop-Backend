@@ -4,13 +4,17 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "test:cucumber": "cucumber-js --profile default",
+    "test:cucumber:qase": "cucumber-js --profile qase"
   },
   "overrides": {
     "qaseio": "2.0.2"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^12.7.0",
     "@playwright/test": "^1.54.2",
+    "cucumberjs-qase-reporter": "^2.2.2",
     "playwright-qase-reporter": "^1.0.2"
   }
 }
