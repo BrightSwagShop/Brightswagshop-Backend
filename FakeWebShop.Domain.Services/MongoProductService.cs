@@ -2,6 +2,7 @@ using System;
 using FakeWebShop.Contracts.Request.Products;
 using FakeWebShop.Contracts.Request.Products.BaseProductRequest;
 using FakeWebShop.Contracts.Response.Products.BaseProductResponse;
+using FakeWebShop.Domain.Enums;
 using FakeWebShop.Domain.Services.MongoInterfaces;
 using FakeWebShop.Domain.Services.MongoServicesMapping;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
@@ -34,6 +35,15 @@ public class MongoProductService(IMongoProductRepository repo) : IMongoProductSe
     {
         var product = await repo.GetAllAsync();
         return product.Select(p => p.ToModel().ToResponse()).ToList();
+    }
+
+    public async Task<List<MongoProductResponse>> GetProductsByTypeAsync(ProductTypeEnum productType)
+    {
+        var products = await repo.GetByTypeAsync(productType);
+
+        return products
+            .Select(p => p.ToModel().ToResponse())
+            .ToList();
     }
 
     // Update Later aanmaken 

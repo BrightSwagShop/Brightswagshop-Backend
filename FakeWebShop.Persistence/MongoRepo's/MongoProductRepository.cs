@@ -3,6 +3,7 @@ using FakeWebShop.Persistence.MongoRepo_s.Options;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using FakeWebShop.Persistence.Entities.BaseProduct;
+using FakeWebShop.Domain.Enums;
 
 namespace FakeWebShop.Persistence.MongoRepo_s;
 
@@ -42,7 +43,14 @@ public class MongoProductRepository : IMongoProductRepository
             .Find(Product => Product.Id == id)
             .FirstOrDefaultAsync();
     }
-    
+    // Product Type teruggeven
+    public async Task<List<Product>> GetByTypeAsync(ProductTypeEnum productType)
+    {
+        return await _products
+            .Find(p => p.ProductType == productType)
+            .ToListAsync();
+    }
+
 
 
     // Product updaten
