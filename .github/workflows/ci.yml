@@ -61,6 +61,7 @@ jobs:
         ASPNETCORE_URLS: http://127.0.0.1:5076
         API_BASE_URL: http://127.0.0.1:5076
         QASE_REPORT: "1"
+        QASE_MODE: testops
         QASE_TESTOPS_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
         QASE_TESTOPS_PROJECT: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
         QASE_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
@@ -80,6 +81,15 @@ jobs:
           sleep 2
         done
         npm test
+      working-directory: APITests
+
+    - name: Run Cucumber API tests
+      env:
+        API_BASE_URL: http://127.0.0.1:5076
+        QASE_MODE: testops
+        QASE_TESTOPS_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
+        QASE_TESTOPS_PROJECT: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
+      run: npm run test:cucumber:qase
       working-directory: APITests
       
     - name: Check for vulnerabilities
