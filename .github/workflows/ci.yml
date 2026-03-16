@@ -6,12 +6,18 @@ on:
 
 env:
   DOTNET_VERSION: '10.0.x'
+  NODE_VERSION: '20.x'
   SOLUTION_FILE: 'Backend_BrightSwagShop.sln'
 
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
     
     steps:
     - name: Checkout code
@@ -21,6 +27,11 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
         
     - name: Cache NuGet packages
       uses: actions/cache@v4
@@ -39,6 +50,37 @@ jobs:
     - name: Run tests
       run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --no-build --verbosity normal
       continue-on-error: true
+
+    - name: Install API test dependencies
+      run: npm ci
+      working-directory: APITests
+
+    - name: Run Playwright API tests
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
+        ASPNETCORE_URLS: http://127.0.0.1:5076
+        API_BASE_URL: http://127.0.0.1:5076
+        QASE_REPORT: "1"
+        QASE_TESTOPS_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
+        QASE_TESTOPS_PROJECT: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
+        QASE_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
+        QASE_PROJECT_CODE: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
+      run: |
+        dotnet run --project ../FakeWebShop.Api --no-build > api.log 2>&1 &
+        for i in {1..30}; do
+          if curl -sSf "$API_BASE_URL/api/products" > /dev/null; then
+            echo "API is up"
+            break
+          fi
+          if [ "$i" -eq 30 ]; then
+            echo "API failed to start"
+            cat api.log
+            exit 1
+          fi
+          sleep 2
+        done
+        npm test
+      working-directory: APITests
       
     - name: Check for vulnerabilities
       run: dotnet list package --vulnerable --include-transitive
