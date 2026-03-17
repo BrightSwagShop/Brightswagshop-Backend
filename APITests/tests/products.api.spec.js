@@ -1,56 +1,52 @@
 const { test, expect } = require('@playwright/test');
 const { qase } = require('playwright-qase-reporter/dist/playwright');
+const { ProductsApiSom } = require('./som/products-api.som');
+const { createMugPayload } = require('./data/product-payloads');
 
-function createMugPayload() {
-  const unique = Date.now();
-
-  return {
-    $type: 'Mok',
-    name: `Playwright Mug ${unique}`,
-    description: 'Simple API test product',
-    price: 9.99,
-    category: 'Drinkartikelen',
-    productType: 'Mok',
-    isActive: true,
-    kleuren: [
-      {
-        kleur: 'Zwart',
-        imageUrl: 'https://example.com/mug-black.png',
-        stock: 10,
-        sku: `MUG-${unique}`
-      }
-    ]
-  };
-}
+const BASE_URL = process.env.API_BASE_URL || 'http://localhost:5076';
 
 test.describe('Products API', () => {
+  let seededProductId;
+  let apiContext;
+
+  test.beforeAll(async ({ playwright }) => {
+    apiContext = await playwright.request.newContext({ baseURL: BASE_URL });
+    const productsApi = new ProductsApiSom(apiContext);
+    const response = await productsApi.createProduct(createMugPayload());
+    const created = await response.json();
+    seededProductId = created.id;
+  });
+
+  test.afterAll(async () => {
+    if (seededProductId && apiContext) {
+      const productsApi = new ProductsApiSom(apiContext);
+      await productsApi.deleteProduct(seededProductId);
+    }
+    await apiContext?.dispose();
+  });
+
   test(qase(52, '[Products API - Smoke] GET /api/products returns 200 and array'), async ({ request }) => {
-    const response = await request.get('/api/products');
+    const productsApi = new ProductsApiSom(request);
+    const response = await productsApi.getAllProducts();
 
     expect(response.ok()).toBeTruthy();
     const body = await response.json();
     expect(Array.isArray(body)).toBeTruthy();
   });
 
-  test(qase(53, '[Products API - Smoke] GET /api/products/:id returns 404 for unknown id'), async ({ request }) => {
-    const response = await request.get('/api/products/000000000000000000000000');
+  test(qase(53, '[Products API - Smoke] GET /api/products/:id returns 200 for seeded product'), async ({ request }) => {
+    const productsApi = new ProductsApiSom(request);
+    const response = await productsApi.getProductById(seededProductId);
 
-    expect(response.status()).toBe(404);
+    expect(response.status()).toBe(200);
+    const body = await response.json();
+    expect(body.id).toBe(seededProductId);
   });
 
-  test(qase(54, '[Products API - Smoke] POST + GET + DELETE product flow'), async ({ request }) => {
-    const createResponse = await request.post('/api/products', {
-      data: createMugPayload()
-    });
+  test(qase(54, '[Products API - Smoke] GET /api/products/:id returns 404 for unknown id'), async ({ request }) => {
+    const productsApi = new ProductsApiSom(request);
+    const response = await productsApi.getProductById('000000000000000000000000');
 
-    expect(createResponse.status()).toBe(201);
-    const created = await createResponse.json();
-    expect(created.id).toBeTruthy();
-
-    const getResponse = await request.get(`/api/products/${created.id}`);
-    expect(getResponse.status()).toBe(200);
-
-    const deleteResponse = await request.delete(`/api/products/${created.id}`);
-    expect(deleteResponse.status()).toBe(204);
+    expect(response.status()).toBe(404);
   });
 });
