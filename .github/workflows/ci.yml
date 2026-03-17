@@ -66,7 +66,7 @@ jobs:
         QASE_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
         QASE_PROJECT_CODE: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
       run: |
-        dotnet run --project ../FakeWebShop.Api --no-build > api.log 2>&1 &
+        dotnet run --project ../FakeWebShop.Api --configuration Release --no-build > api.log 2>&1 &
         for i in {1..30}; do
           if curl -sSf "$API_BASE_URL/api/products" > /dev/null; then
             echo "API is up"
