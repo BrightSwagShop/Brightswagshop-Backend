@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
@@ -7,8 +8,12 @@ using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 using FakeWebShop.Persistence.MongoRepo_s.Options;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
+using FakeWebShop.Api.Security;
 using MongoDB.Driver;
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -54,11 +59,22 @@ builder.Services.AddControllers()
             new JsonStringEnumConverter());
     });
 
+builder.Services
+    .AddAuthentication(HeaderAuthDefaults.Scheme)
+    .AddScheme<AuthenticationSchemeOptions, HeaderAuthenticationHandler>(
+        HeaderAuthDefaults.Scheme,
+        _ => { });
+
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthorizationMiddlewareResultHandler>();
+
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
 

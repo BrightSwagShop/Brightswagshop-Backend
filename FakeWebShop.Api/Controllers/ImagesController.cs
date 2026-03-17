@@ -1,4 +1,5 @@
 using FakeWebShop.Domain.Abstractions.Storage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FakeWebShop.Api.Controllers;
@@ -15,6 +16,7 @@ public class ImagesController : ControllerBase
     }
 
     [HttpPost("upload")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Upload(IFormFile file)
     {
         if (file == null || file.Length == 0)
