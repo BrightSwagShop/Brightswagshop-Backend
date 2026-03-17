@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FakeWebShop.Api.Controllers;
 
 [ApiController]
+
 [Route("api/products")]
 public class MongoProductsController(IMongoProductService service) : ControllerBase
 {
