@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Cart\" />
+    <Folder Include="Order\" />
     <Folder Include="VariantModel\" />
   </ItemGroup>
 
