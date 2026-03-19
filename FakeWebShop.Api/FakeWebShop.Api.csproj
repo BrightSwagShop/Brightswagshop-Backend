@@ -9,9 +9,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+    <PackageReference Include="Supabase" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FakeWebShop.Domain.Abstractions\FakeWebShop.Domain.Abstractions.csproj" />
     <ProjectReference Include="..\FakeWebShop.Domain.Services\FakeWebShop.Domain.Services.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
 using System;
 using FakeWebShop.Contracts.Request.Products.BaseProductRequest;
 using FakeWebShop.Contracts.Response.Products.BaseProductResponse;
+using FakeWebShop.Domain.Enums;
 using FakeWebShop.Domain.Services.MongoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,5 +44,24 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
         if (!deleted)
             return NotFound();
         return NoContent();
+    }
+
+    [HttpGet("type/{slug}")]
+    public async Task<ActionResult<List<MongoProductResponse>>> GetProductsByType(string slug)
+    {
+        ProductTypeEnum? productType = slug.ToLower() switch
+        {
+            "tshirt" => ProductTypeEnum.TShirt,
+            "hoodie" => ProductTypeEnum.Hoodie,
+            "mok" => ProductTypeEnum.Mok,
+            "sticker" => ProductTypeEnum.Sticker,
+            _ => null
+        };
+
+        if (productType is null)
+            return NotFound($"Producttype '{slug}' bestaat niet.");
+
+        var products = await service.GetProductsByTypeAsync(productType.Value);
+        return Ok(products);
     }
 }
