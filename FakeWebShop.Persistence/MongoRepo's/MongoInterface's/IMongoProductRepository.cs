@@ -1,4 +1,5 @@
 using System;
+using FakeWebShop.Domain.Enums;
 using FakeWebShop.Persistence.Entities.BaseProduct;
 
 
@@ -10,6 +11,7 @@ public interface IMongoProductRepository
     Task<List<Product>> GetAllAsync();
     Task<Product?> GetByIdAsync(string id);
     Task<bool> DeleteAsync(string id);
+    Task<List<Product>> GetByTypeAsync(ProductTypeEnum productType);
 
     // Volledige vervanging
     // Task<bool> UpdateAsync(Product product);

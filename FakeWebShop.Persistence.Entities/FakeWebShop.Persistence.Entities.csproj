@@ -14,4 +14,8 @@
     <ProjectReference Include="..\FakeWebShop.Persistence.Enums\FakeWebShop.Domain.Enums.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Variant\BaseColorVaria\" />
+  </ItemGroup>
+
 </Project>
