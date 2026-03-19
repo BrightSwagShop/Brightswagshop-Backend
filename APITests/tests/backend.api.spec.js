@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { BackendApiSom } = require('./som/backend-api.som');
 
-test.describe('Backend API - Minimal Coverage', () => {
+test.describe('Backend API - Smoke', () => {
   test('GET /api/categories returns 200 and list with id/name', async ({ request }) => {
     const backendApi = new BackendApiSom(request);
     const response = await backendApi.getCategories();
