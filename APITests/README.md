@@ -57,6 +57,22 @@ npm test
 npm run test:cucumber:qase
 ```
 
+Run both Playwright + Cucumber and report everything in one command:
+
+```powershell
+npm run test:qase
+```
+
+The `test:qase` command validates required env vars first and fails fast if missing:
+
+- `QASE_TESTOPS_API_TOKEN` (or `QASE_API_TOKEN`)
+- `QASE_TESTOPS_PROJECT` (or `QASE_PROJECT_CODE`)
+
+Auto-creation behavior:
+
+- Playwright tests without `qase(<id>, ...)` are auto-created in Qase from test/suite names.
+- Cucumber scenarios without `@QaseID=...` are auto-created in Qase from feature/scenario names.
+
 For GitHub Actions, set repository secrets:
 
 - `QASE_TESTOPS_API_TOKEN`
