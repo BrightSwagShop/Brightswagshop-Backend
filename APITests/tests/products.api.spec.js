@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const { qase } = require('playwright-qase-reporter/dist/playwright');
 const { ProductsApiSom } = require('./som/products-api.som');
 const { createMugPayload } = require('./data/product-payloads');
 
@@ -30,7 +29,7 @@ test.describe('Products API', () => {
     await apiContext?.dispose();
   });
 
-  test(qase(52, '[Products API - Smoke] GET /api/products returns 200 and array'), async ({ request }) => {
+  test('[Products API - Smoke] GET /api/products returns 200 and array', async ({ request }) => {
     const productsApi = new ProductsApiSom(request);
     const response = await productsApi.getAllProducts();
     const result = await productsApi.readResponse(response);
@@ -39,7 +38,7 @@ test.describe('Products API', () => {
     expect(Array.isArray(result.body)).toBeTruthy();
   });
 
-  test(qase(53, '[Products API - Smoke] GET /api/products/:id returns 200 for seeded product'), async ({ request }) => {
+  test('[Products API - Smoke] GET /api/products/:id returns 200 for seeded product', async ({ request }) => {
     const productsApi = new ProductsApiSom(request);
     const response = await productsApi.getProductById(seededProductId);
     const result = await productsApi.readResponse(response);
@@ -48,7 +47,7 @@ test.describe('Products API', () => {
     expect(result.body.id).toBe(seededProductId);
   });
 
-  test(qase(54, '[Products API - Smoke] GET /api/products/:id returns 404 for unknown id'), async ({ request }) => {
+  test('[Products API - Smoke] GET /api/products/:id returns 404 for unknown id', async ({ request }) => {
     const productsApi = new ProductsApiSom(request);
     const response = await productsApi.getProductById('000000000000000000000000');
     const result = await productsApi.readResponse(response);
