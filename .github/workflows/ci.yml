@@ -54,6 +54,25 @@ jobs:
       run: npm ci
       working-directory: APITests
 
+    - name: Start API for integration tests
+      run: |
+        dotnet run --project FakeWebShop.Api/FakeWebShop.Api.csproj --launch-profile http > api.log 2>&1 &
+        echo $! > api.pid
+
+    - name: Wait for API readiness
+      run: |
+        for i in {1..30}; do
+          if curl -fsS http://127.0.0.1:5076/api/categories > /dev/null; then
+            echo "API is up"
+            exit 0
+          fi
+          echo "Waiting for API... ($i/30)"
+          sleep 2
+        done
+        echo "API failed to start"
+        cat api.log || true
+        exit 1
+
     - name: Run Playwright Cucumber API tests
       env:
         API_BASE_URL: http://127.0.0.1:5076
