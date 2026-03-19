@@ -54,35 +54,7 @@ jobs:
       run: npm ci
       working-directory: APITests
 
-    - name: Run Playwright API tests
-      env:
-        ASPNETCORE_ENVIRONMENT: Development
-        ASPNETCORE_URLS: http://127.0.0.1:5076
-        API_BASE_URL: http://127.0.0.1:5076
-        QASE_REPORT: "1"
-        QASE_MODE: testops
-        QASE_TESTOPS_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
-        QASE_TESTOPS_PROJECT: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
-        QASE_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
-        QASE_PROJECT_CODE: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
-      run: |
-        dotnet run --project ../FakeWebShop.Api --configuration Release --no-build > api.log 2>&1 &
-        for i in {1..30}; do
-          if curl -sSf "$API_BASE_URL/api/products" > /dev/null; then
-            echo "API is up"
-            break
-          fi
-          if [ "$i" -eq 30 ]; then
-            echo "API failed to start"
-            cat api.log
-            exit 1
-          fi
-          sleep 2
-        done
-        npm test
-      working-directory: APITests
-
-    - name: Run Cucumber API tests
+    - name: Run Playwright Cucumber API tests
       env:
         API_BASE_URL: http://127.0.0.1:5076
         QASE_MODE: testops
