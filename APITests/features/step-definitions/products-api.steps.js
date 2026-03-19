@@ -1,47 +1,28 @@
-const { Given, When, Then } = require('@cucumber/cucumber');
+const { Before, After, Given, When, Then } = require('@cucumber/cucumber');
 const assert = require('node:assert/strict');
+const { request } = require('@playwright/test');
+const { ProductsApiSom } = require('../../tests/som/products-api.som');
+const { createMugPayload } = require('../../tests/data/product-payloads');
 
 const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:5076';
 
-function createMugPayload() {
-  const unique = Date.now();
+Before(async function () {
+  this.apiContext = await request.newContext({ baseURL: BASE_URL });
+  this.productsApi = new ProductsApiSom(this.apiContext);
+});
 
-  return {
-    $type: 'Mok',
-    name: `Cucumber Mug ${unique}`,
-    description: 'Cucumber API test product',
-    price: 9.99,
-    category: 'Drinkartikelen',
-    productType: 'Mok',
-    isActive: true,
-    kleuren: [
-      {
-        kleur: 'Zwart',
-        imageUrl: 'https://example.com/mug-black.png',
-        stock: 10,
-        sku: `MUG-${unique}`
-      }
-    ]
-  };
-}
-
-async function request(method, path, body) {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-
-  let jsonBody = null;
-  const contentType = response.headers.get('content-type') || '';
-  if (contentType.includes('application/json')) {
-    jsonBody = await response.json();
+After(async function () {
+  if (this.createdProductId) {
+    await this.productsApi.deleteProduct(this.createdProductId);
   }
 
-  return { response, jsonBody };
+  await this.apiContext?.dispose();
+});
+
+async function storeResponse(world, response) {
+  const result = await world.productsApi.readResponse(response);
+  world.lastResponse = result.response;
+  world.lastBody = result.body;
 }
 
 Given('I have a valid mug payload', function () {
@@ -49,31 +30,46 @@ Given('I have a valid mug payload', function () {
 });
 
 When('I GET {string}', async function (path) {
-  const result = await request('GET', path);
-  this.lastResponse = result.response;
-  this.lastBody = result.jsonBody;
+  if (path === '/api/products') {
+    const response = await this.productsApi.getAllProducts();
+    await storeResponse(this, response);
+    return;
+  }
+
+  if (path.startsWith('/api/products/')) {
+    const productId = path.replace('/api/products/', '');
+    const response = await this.productsApi.getProductById(productId);
+    await storeResponse(this, response);
+    return;
+  }
+
+  throw new Error(`Unsupported path for GET step: ${path}`);
 });
 
 When('I POST {string} with the payload', async function (path) {
-  const result = await request('POST', path, this.payload);
-  this.lastResponse = result.response;
-  this.lastBody = result.jsonBody;
+  if (path !== '/api/products') {
+    throw new Error(`Unsupported path for POST step: ${path}`);
+  }
+
+  const response = await this.productsApi.createProduct(this.payload);
+  await storeResponse(this, response);
 });
 
 When('I GET the created product by id', async function () {
-  const result = await request('GET', `/api/products/${this.createdProductId}`);
-  this.lastResponse = result.response;
-  this.lastBody = result.jsonBody;
+  const response = await this.productsApi.getProductById(this.createdProductId);
+  await storeResponse(this, response);
 });
 
 When('I DELETE the created product by id', async function () {
-  const result = await request('DELETE', `/api/products/${this.createdProductId}`);
-  this.lastResponse = result.response;
-  this.lastBody = result.jsonBody;
+  const response = await this.productsApi.deleteProduct(this.createdProductId);
+  await storeResponse(this, response);
+  if (this.lastResponse.status() === 204) {
+    this.createdProductId = null;
+  }
 });
 
 Then('the response status should be {int}', function (statusCode) {
-  assert.equal(this.lastResponse.status, statusCode);
+  assert.equal(this.lastResponse.status(), statusCode);
 });
 
 Then('the response should be an array', function () {
