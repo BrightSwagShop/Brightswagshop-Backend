@@ -10,30 +10,39 @@ namespace FakeWebShop.Persistence.MongoRepo_s;
 
 public class DiscountRepository : IDiscountRepository
 {
-    public Task<Discount> CreateAsync(Discount discount)
+    private readonly IMongoCollection<Discount> _discounts;
+
+    public DiscountRepository(IMongoClient client, IOptions<MongoOptions> options)
     {
-        throw new NotImplementedException();
+        var database = client.GetDatabase(options.Value.Database);
+        _discounts = database.GetCollection<Discount>(MongoCollectionsNames.Discounts);
     }
 
-    public Task DeleteAsync(string id)
+    public async Task<Discount> CreateAsync(Discount discount)
     {
-        throw new NotImplementedException();
+        await _discounts.InsertOneAsync(discount);
+        return discount;
     }
 
-    public Task<List<Discount>> GetAllAsync()
+    public async Task<Discount?> GetByIdAsync(string id)
     {
-        throw new NotImplementedException();
+        return await _discounts
+            .Find(discount => discount.Id == id)
+            .FirstOrDefaultAsync();
     }
 
-    public Task<Discount?> GetByIdAsync(string id)
+    public async Task DeleteAsync(string id)
     {
-        throw new NotImplementedException();
+        await _discounts.DeleteOneAsync(discount => discount.Id == id);
     }
 
-    public Task UpdateAsync(Discount discount)
+    public async Task<List<Discount>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _discounts.Find(_ => true).ToListAsync();
     }
 
-
+    public async Task UpdateAsync(Discount discount)
+    {
+        await _discounts.ReplaceOneAsync(d => d.Id == discount.Id, discount);
+    }
 }
