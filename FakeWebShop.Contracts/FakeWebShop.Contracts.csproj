@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="Request\VariantRequest\" />
     <Folder Include="Response\VariantResponse\" />
+    <Folder Include="UserContracts\" />
   </ItemGroup>
 
 </Project>
