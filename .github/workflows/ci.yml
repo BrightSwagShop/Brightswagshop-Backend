@@ -3,6 +3,24 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      upload_report:
+        description: Upload Allure report artifact
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      send_email:
+        description: Send Allure report email (requires SENDGRID_API_KEY)
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   DOTNET_VERSION: '10.0.x'
@@ -83,19 +101,19 @@ jobs:
       working-directory: APITests
 
     - name: Generate Allure report
-      if: always()
+      if: always() && github.event_name == 'workflow_dispatch' && (inputs.upload_report == 'true' || inputs.send_email == 'true')
       run: npm run report:allure:generate
       working-directory: APITests
 
     - name: Archive Allure report
-      if: always()
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true'
       run: |
         cd APITests
         zip -r allure-report.zip allure-report
 
     - name: Upload Allure Report
       uses: actions/upload-artifact@v4
-      if: always()
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true'
       continue-on-error: true
       with:
         name: backend-allure-report
@@ -103,7 +121,7 @@ jobs:
         retention-days: 30
 
     - name: Send Allure Report via Email (SendGrid API)
-      if: always()
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.send_email == 'true'
       run: |
         if [ -z "${{ secrets.SENDGRID_API_KEY }}" ]; then
           echo "SENDGRID_API_KEY not configured, skipping email"
