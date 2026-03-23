@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
+    "test": "cucumber-js --profile default",
     "test:cucumber": "cucumber-js --profile default",
     "qase:check-env": "node ./scripts/require-qase-env.js",
     "test:cucumber:qase": "npm run qase:check-env && cucumber-js --profile qase",
-    "test:qase": "npm run qase:check-env && playwright test && cucumber-js --profile qase"
+    "test:qase": "npm run test:cucumber:qase"
   },
   "overrides": {
     "qaseio": "2.0.2"
@@ -16,7 +15,6 @@
   "devDependencies": {
     "@cucumber/cucumber": "^12.7.0",
     "@playwright/test": "^1.54.2",
-    "cucumberjs-qase-reporter": "^2.2.2",
-    "playwright-qase-reporter": "^1.0.2"
+    "cucumberjs-qase-reporter": "^2.2.2"
   }
 }
