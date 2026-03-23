@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="PublicUser\" />
     <Folder Include="Variant\BaseColorVaria\" />
   </ItemGroup>
 

@@ -2,9 +2,12 @@ using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
 using FakeWebShop.Domain.Services.MongoInterfaces;
+using FakeWebShop.Domain.Services.MongoUserServices;
 using FakeWebShop.Persistence.MongoRepo_s;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 using FakeWebShop.Persistence.MongoRepo_s.Options;
+using FakeWebShop.Persistence.PublicUserRepo_s;
+using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using MongoDB.Driver;
@@ -27,7 +30,8 @@ builder.Services.Configure<SupabaseStorageSettings>(
 // Repository DI & Service DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
-
+builder.Services.AddScoped<MongoUserService, MongoUserService>();
+builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 // Supabase storage & Interface
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 
