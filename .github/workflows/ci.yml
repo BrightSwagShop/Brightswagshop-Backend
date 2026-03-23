@@ -87,12 +87,19 @@ jobs:
       run: npm run report:allure:generate
       working-directory: APITests
 
+    - name: Archive Allure report
+      if: always()
+      run: |
+        cd APITests
+        zip -r allure-report.zip allure-report
+
     - name: Upload Allure Report
       uses: actions/upload-artifact@v4
       if: always()
+      continue-on-error: true
       with:
         name: backend-allure-report
-        path: APITests/allure-report/
+        path: APITests/allure-report.zip
         retention-days: 30
 
     - name: Send Allure Report via Email (SendGrid API)
