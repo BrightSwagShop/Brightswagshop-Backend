@@ -35,7 +35,7 @@ public class DiscountModel
             var lineTotal = cartItem.UnitPrice * cartItem.Quantity;
 
             var matchingDiscounts = Items
-                .Where(item => item.IsCurrentlyValid(evaluationTime) && item.AppliesTo(cartItem))
+                .Where(item => item.IsCurrentlyValid(evaluationTime))
                 .Select(item => item.Percentage)
                 .ToList();
 
