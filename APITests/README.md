@@ -31,6 +31,22 @@ $env:API_BASE_URL = "http://localhost:5076"; npm test
 
 `npm test` runs Cucumber (`cucumber-js --profile default`).
 
+## Allure reporting
+
+All Cucumber runs also write Allure results to `allure-results/`.
+
+Generate an HTML report:
+
+```powershell
+npm run report:allure:generate
+```
+
+Open the generated report locally:
+
+```powershell
+npm run report:allure:open
+```
+
 Feature files:
 - `features/products-api.feature`
 - `features/backend-api.feature`
@@ -69,6 +85,8 @@ Alias command:
 npm run test:qase
 ```
 
+Qase run also produces Allure results because the `qase` profile includes the Allure formatter.
+
 The `test:qase` command validates required env vars first and fails fast if missing:
 
 - `QASE_TESTOPS_API_TOKEN` (or `QASE_API_TOKEN`)
@@ -83,3 +101,9 @@ For GitHub Actions, set repository secrets:
 
 - `QASE_TESTOPS_API_TOKEN`
 - `QASE_TESTOPS_PROJECT`
+
+Optional email notifications (workflow):
+
+- `SENDGRID_API_KEY`
+
+If `SENDGRID_API_KEY` is configured, CI sends an email with a link to the uploaded `backend-allure-report` artifact.

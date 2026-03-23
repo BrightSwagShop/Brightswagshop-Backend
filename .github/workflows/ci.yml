@@ -73,7 +73,7 @@ jobs:
         cat api.log || true
         exit 1
 
-    - name: Run Playwright Cucumber API tests
+    - name: Run Cucumber API tests
       env:
         API_BASE_URL: http://127.0.0.1:5076
         QASE_MODE: testops
@@ -82,19 +82,29 @@ jobs:
       run: npm run test:qase
       working-directory: APITests
 
-    - name: Upload Playwright Report
+    - name: Generate Allure report
+      if: always()
+      run: npm run report:allure:generate
+      working-directory: APITests
+
+    - name: Upload Allure Report
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: backend-playwright-report
-        path: APITests/playwright-report/
+        name: backend-allure-report
+        path: APITests/allure-report/
         retention-days: 30
 
-    - name: Send Playwright Report via Email (SendGrid API)
+    - name: Send Allure Report via Email (SendGrid API)
       if: always()
       run: |
-        if [ ! -f APITests/playwright-report/index.html ]; then
-          echo "Playwright report not found, skipping email"
+        if [ -z "${{ secrets.SENDGRID_API_KEY }}" ]; then
+          echo "SENDGRID_API_KEY not configured, skipping email"
+          exit 0
+        fi
+
+        if [ ! -f APITests/allure-report/index.html ]; then
+          echo "Allure report not found, skipping email"
           exit 0
         fi
 
@@ -104,7 +114,7 @@ jobs:
             "to": [{"email": "boonenwout@gmail.com"}]
           }],
           "from": {"email": "wout.boonen@brightest.be", "name": "GitHub Actions"},
-          "subject": "Backend Playwright Report - REPO [BRANCH]",
+          "subject": "Backend Allure Report - REPO [BRANCH]",
           "content": [{
             "type": "text/html",
             "value": "HTML_CONTENT"
@@ -114,7 +124,7 @@ jobs:
 
         sed -i "s|REPO|${{ github.repository }}|g" email_payload.json
         sed -i "s|BRANCH|${{ github.ref_name }}|g" email_payload.json
-        sed -i "s|HTML_CONTENT|<h2>Backend Playwright Test Report</h2><p><strong>Repository:</strong> ${{ github.repository }}</p><p><strong>Branch:</strong> ${{ github.ref_name }}</p><p><strong>Commit:</strong> ${{ github.sha }}</p><p><strong>Triggered by:</strong> ${{ github.actor }}</p><p><strong>Workflow:</strong> ${{ github.workflow }}</p><p><strong>Run ID:</strong> ${{ github.run_id }}</p><hr><p><strong>View the full HTML report in GitHub Actions artifacts:</strong></p><p><a href='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' style='display:inline-block;padding:10px 20px;background-color:#F4C709;color:#3C3C3B;text-decoration:none;border-radius:5px;font-weight:bold;'>Download Playwright Report</a></p><p>Click the link above, scroll to the Artifacts section, and download the <code>backend-playwright-report</code> artifact.</p>|g" email_payload.json
+        sed -i "s|HTML_CONTENT|<h2>Backend Allure Test Report</h2><p><strong>Repository:</strong> ${{ github.repository }}</p><p><strong>Branch:</strong> ${{ github.ref_name }}</p><p><strong>Commit:</strong> ${{ github.sha }}</p><p><strong>Triggered by:</strong> ${{ github.actor }}</p><p><strong>Workflow:</strong> ${{ github.workflow }}</p><p><strong>Run ID:</strong> ${{ github.run_id }}</p><hr><p><strong>View the full HTML report in GitHub Actions artifacts:</strong></p><p><a href='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' style='display:inline-block;padding:10px 20px;background-color:#F4C709;color:#3C3C3B;text-decoration:none;border-radius:5px;font-weight:bold;'>Download Allure Report</a></p><p>Click the link above, scroll to the Artifacts section, and download the <code>backend-allure-report</code> artifact.</p>|g" email_payload.json
 
         HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST https://api.sendgrid.com/v3/mail/send \
           -H "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
@@ -134,7 +144,7 @@ jobs:
           echo "Response body: $RESPONSE_BODY"
           exit 1
         fi
-      continue-on-error: false
+      continue-on-error: true
       
     - name: Check for vulnerabilities
       run: dotnet list package --vulnerable --include-transitive
