@@ -8,6 +8,7 @@ using FakeWebShop.Persistence.MongoRepo_s.Options;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,15 @@ builder.Services.AddSingleton<IMongoClient>(_ =>
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
+// Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/v2.0";
+        options.Audience = builder.Configuration["AzureAd:ClientId"];
+    });
 
+builder.Services.AddAuthorization();
 // Repository DI & Service DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
@@ -38,14 +47,15 @@ var allowedOrigins = builder.Configuration
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy
-            .WithOrigins(allowedOrigins!)
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
+            .AllowAnyMethod()
+            .AllowCredentials());
 });
+
+ 
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -55,8 +65,8 @@ builder.Services.AddControllers()
     });
 
 var app = builder.Build();
-
 app.UseCors("AllowFrontend");
+
 
 app.UseHttpsRedirection();
 app.MapControllers();
