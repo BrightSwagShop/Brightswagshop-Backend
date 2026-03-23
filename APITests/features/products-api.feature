@@ -1,18 +1,18 @@
 Feature: Products API
   Basic API checks for products endpoints.
 
-  @smoke @QaseID=52
+  @smoke @qase @QaseID=52
   Scenario: GET all products returns 200 and array
     When I GET "/api/products"
     Then the response status should be 200
     And the response should be an array
 
-  @smoke @QaseID=53
+  @smoke @qase @QaseID=53
   Scenario: GET unknown product returns 404
     When I GET "/api/products/000000000000000000000000"
     Then the response status should be 404
 
-  @smoke @QaseID=54
+  @smoke @qase @QaseID=54
   Scenario: Create, fetch and delete a product
     Given I have a valid mug payload
     When I POST "/api/products" with the payload

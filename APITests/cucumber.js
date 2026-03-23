@@ -11,6 +11,7 @@ module.exports = {
   },
   qase: {
     ...shared,
+    tags: '@qase',
     format: ['progress', 'cucumberjs-qase-reporter']
   }
 };

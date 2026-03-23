@@ -1,4 +1,4 @@
-# API Tests (Playwright + Cucumber)
+# API Tests (Cucumber + Playwright API client)
 
 Simple automated API tests for `FakeWebShop.Api`.
 
@@ -7,6 +7,10 @@ Simple automated API tests for `FakeWebShop.Api`.
 - `GET /api/products` returns `200`
 - `GET /api/products/{id}` returns `404` for unknown id
 - Basic create/get/delete flow via `POST` + `GET` + `DELETE`
+- `GET /api/categories` returns non-empty `id/name` data
+- `GET /api/producttypes` returns non-empty `name/slug` data
+- `POST /api/images/upload` without file returns `400`
+- Shopping cart create/get/delete smoke flow
 
 ## Run
 
@@ -25,21 +29,24 @@ Optional custom base URL (PowerShell):
 $env:API_BASE_URL = "http://localhost:5076"; npm test
 ```
 
-## Cucumber
+`npm test` runs Cucumber (`cucumber-js --profile default`).
 
-Run Cucumber API tests:
+Feature files:
+- `features/products-api.feature`
+- `features/backend-api.feature`
+- `features/shopping-cart-api.feature`
 
-```powershell
-npm run test:cucumber
-```
-
-Feature file: `features/products-api.feature`
-Step definitions: `features/step-definitions/products-api.steps.js`
+Step definitions:
+- `features/step-definitions/products-api.steps.js`
+- `features/step-definitions/backend-api.steps.js`
+- `features/step-definitions/shopping-cart-api.steps.js`
 
 ## Qase TestOps
 
-Playwright reporter is enabled via `playwright-qase-reporter`.
 Cucumber reporter is enabled via `cucumberjs-qase-reporter`.
+
+All scenarios intended for TestOps sync are tagged with `@qase`.
+The `qase` Cucumber profile runs only `@qase` scenarios.
 
 Set these env vars before running tests with Qase upload:
 
@@ -53,11 +60,10 @@ $env:QASE_REPORT = "1"
 Run with uploads:
 
 ```powershell
-npm test
 npm run test:cucumber:qase
 ```
 
-Run both Playwright + Cucumber and report everything in one command:
+Alias command:
 
 ```powershell
 npm run test:qase
@@ -70,8 +76,8 @@ The `test:qase` command validates required env vars first and fails fast if miss
 
 Auto-creation behavior:
 
-- Playwright tests without `qase(<id>, ...)` are auto-created in Qase from test/suite names.
-- Cucumber scenarios without `@QaseID=...` are auto-created in Qase from feature/scenario names.
+- Scenarios with `@QaseID=<id>` are linked to existing Qase test cases.
+- Scenarios with `@qase` but without `@QaseID=...` are auto-created in Qase from feature/scenario names.
 
 For GitHub Actions, set repository secrets:
 
