@@ -9,4 +9,6 @@ public interface IDiscountService
     Task<DiscountResponse> CreateAsync(DiscountRequest request);
     Task<DiscountResponse?> GetByIdAsync(string id);
     Task<List<DiscountResponse>> GetAllAsync();
+    Task<DiscountResponse?> UpdateAsync(string id, DiscountRequest request);
+    Task<bool> DeleteAsync(string id);
 }
