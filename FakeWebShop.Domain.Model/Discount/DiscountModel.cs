@@ -5,16 +5,16 @@ namespace FakeWebShop.Domain.Model.Discount;
 
 public class DiscountModel
 {
-    public Guid Id { get; private set; }
+    public string Id { get; set; } = string.Empty;
 
-    public string Name { get; private set; }
-    public string? Description { get; private set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
 
     public decimal Percentage { get; set; }
 
-    public DateTimeOffset StartsAt { get; private set; }
-    public DateTimeOffset? EndsAt { get; private set; }
-    public bool IsActive { get; private set; }
+    public DateTimeOffset StartsAt { get; set; }
+    public DateTimeOffset? EndsAt { get; set; }
+    public bool IsActive { get; set; }
 
     public List<DiscountItemModel> Items { get; set; } = new List<DiscountItemModel>();
 

@@ -5,11 +5,13 @@ namespace FakeWebShop.Domain.Model.Discount;
 
 public class DiscountItemModel
 {
-    public Guid Id { get; private set; }
+    public string Id { get; set; } = string.Empty;
 
-    public Guid DiscountId { get; private set; }
+    public string DiscountId { get; set; } = string.Empty;
 
     public string Code { get; set; } = string.Empty;
+
+    public string? ProductId { get; set; }
 
     public decimal Percentage { get; set; }
 
