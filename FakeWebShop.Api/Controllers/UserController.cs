@@ -19,7 +19,7 @@ namespace FakeWebShop.Api.Controllers
     [HttpPost("login")]
     public async Task<ActionResult<UserResponseContract>> Login([FromBody] UserRequestContract request)
     {
-        var user = await service.Login(request);
+         var user = await service.Login(request);
         if (user == null)
             return Unauthorized();
 
