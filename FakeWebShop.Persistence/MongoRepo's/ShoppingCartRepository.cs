@@ -41,5 +41,15 @@ public class ShoppingCartRepository : IShoppingCartRepository
         return deleteResult.DeletedCount > 0;
     }
 
+    public async Task UpdateAsync(ShoppingCart cart)
+    {
+        await _shoppingCarts.ReplaceOneAsync(c => c.Id == cart.Id, cart);
+    }
 
+    public async Task<ShoppingCart?> GetByIdAsync(string id)
+    {
+        return await _shoppingCarts
+            .Find(cart => cart.Id == id)
+            .FirstOrDefaultAsync();
+    }
 }

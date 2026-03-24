@@ -24,4 +24,8 @@ public class ShoppingCart
     [BsonElement("totalPrice")]
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal TotalPrice { get; set; }
+
+    [BsonElement("subTotal")]
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal SubTotal { get; set; }
 }

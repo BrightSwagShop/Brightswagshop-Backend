@@ -30,6 +30,16 @@ public class DiscountService(IDiscountRepository discountRepo) : IDiscountServic
         return entity.AsModel().AsResponse();
     }
 
+    public async Task<DiscountResponse?> GetByCodeAsync(string code)
+    {
+        var entity = await discountRepo.GetByCodeAsync(code);
+
+        if (entity is null)
+            return null;
+
+        return entity.AsModel().AsResponse();
+    }
+
     public async Task<List<DiscountResponse>> GetAllAsync()
     {
         var entities = await discountRepo.GetAllAsync();

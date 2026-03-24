@@ -11,6 +11,8 @@ public interface IDiscountRepository
 
     Task<Discount?> GetByIdAsync(string id);
 
+    Task<Discount?> GetByCodeAsync(string code);
+
     Task<List<Discount>> GetAllAsync();
 
     Task UpdateAsync(Discount discount);
