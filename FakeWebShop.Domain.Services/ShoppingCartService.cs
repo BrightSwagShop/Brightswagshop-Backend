@@ -79,10 +79,14 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
         if (cart is null || discount is null)
             return null;
 
+        if (cart.DiscountApplied)
+            throw new InvalidOperationException("A discount has already been applied to this cart.");
+        
         var cartModel = cart.AsModel();
         var discountModel = DiscountMapping.AsModel(discount);
 
         cart.SubTotal = cart.TotalPrice - discountModel.CalculateDiscountFor(cartModel, DateTimeOffset.UtcNow);
+        cart.DiscountApplied = true;
 
         await cartRepo.UpdateAsync(cart);
         return cart.AsModel().AsResponse();
