@@ -22,12 +22,17 @@ public class ShoppingCartController(IShoppingCartService service) : ControllerBa
     [HttpPost("{cartId}/apply-discount")]
     public async Task<ActionResult<ShoppingCartResponse>> ApplyDiscount(string cartId, [FromBody] ApplyDiscountRequest request)
     {
-        var updatedCart = await service.ApplyDiscountCodeAsync(cartId, request.Code);
-
-        if (updatedCart is null)
-            return NotFound();
-
-        return Ok(updatedCart);
+        try
+        {
+            var updatedCart = await service.ApplyDiscountCodeAsync(cartId, request.Code);
+            if (updatedCart is null)
+                return NotFound();
+            return Ok(updatedCart);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
     }
 
     [HttpGet("user/{userId}")]

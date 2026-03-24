@@ -28,4 +28,8 @@ public class ShoppingCart
     [BsonElement("subTotal")]
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal SubTotal { get; set; }
+
+    [BsonElement("discountApplied")]
+    [BsonRepresentation(BsonType.Boolean)]
+    public bool DiscountApplied { get; set; } = false;
 }

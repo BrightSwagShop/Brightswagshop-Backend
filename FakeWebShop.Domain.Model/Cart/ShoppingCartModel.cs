@@ -18,4 +18,6 @@ public class ShoppingCartModel
     public decimal TotalPrice { get; set; }
 
     public decimal SubTotal { get; set; }
+
+    public bool DiscountApplied { get; set; } = false;
 }
