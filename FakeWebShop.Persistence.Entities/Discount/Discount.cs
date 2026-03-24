@@ -21,6 +21,9 @@ public class Discount
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Percentage { get; set; }
 
+    [BsonElement("code")]
+    public string Code { get; set; } = null!;
+
     [BsonElement("startsAt")]
     public DateTimeOffset StartsAt { get; set; }
 
@@ -29,7 +32,4 @@ public class Discount
 
     [BsonElement("isActive")]
     public bool IsActive { get; set; }
-
-    [BsonElement("items")]
-    public List<DiscountItem> Items { get; set; } = new List<DiscountItem>();
 }

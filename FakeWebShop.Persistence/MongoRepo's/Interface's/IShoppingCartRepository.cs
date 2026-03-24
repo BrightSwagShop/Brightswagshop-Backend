@@ -9,5 +9,6 @@ public interface IShoppingCartRepository
     Task<ShoppingCart?> GetBySessionIdAsync(string sessionId);
     Task CreateAsync(ShoppingCart cart);
     Task<bool> DeleteAsync(string id);
-    // Task UpdateAsync(ShoppingCart cart);
+    Task UpdateAsync(ShoppingCart cart);
+    Task<ShoppingCart?> GetByIdAsync(string id);
 }

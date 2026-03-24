@@ -15,23 +15,10 @@ public static class DiscountMapping
             Name = request.Name,
             Description = request.Description,
             Percentage = request.Percentage,
+            Code = request.Code,
             StartsAt = request.StartsAt,
             EndsAt = request.EndsAt,
             IsActive = request.IsActive,
-            Items = request.Items.Select(i => i.AsModel()).ToList()
-        };
-    }
-
-    public static DiscountItemModel AsModel(this DiscountItemRequest request)
-    {
-        return new DiscountItemModel
-        {
-            Code = request.Code,
-            ProductId = request.ProductId,
-            Percentage = request.Percentage,
-            StartsAt = request.StartsAt,
-            EndsAt = request.EndsAt,
-            IsActive = request.IsActive
         };
     }
 
@@ -43,17 +30,10 @@ public static class DiscountMapping
             Name = model.Name,
             Description = model.Description,
             Percentage = model.Percentage,
+            Code = model.Code,
             StartsAt = model.StartsAt,
             EndsAt = model.EndsAt,
             IsActive = model.IsActive,
-            Items = model.Items.Select(i => new DiscountItem
-            {
-                Code = i.Code,
-                Percentage = i.Percentage,
-                StartsAt = i.StartsAt,
-                EndsAt = i.EndsAt,
-                IsActive = i.IsActive
-            }).ToList()
         };
     }
 
@@ -65,17 +45,9 @@ public static class DiscountMapping
             Name = entity.Name,
             Description = entity.Description,
             Percentage = entity.Percentage,
-            StartsAt = entity.StartsAt,
+            Code = entity.Code,
             EndsAt = entity.EndsAt,
             IsActive = entity.IsActive,
-            Items = entity.Items.Select(i => new DiscountItemModel
-            {
-                Code = i.Code,
-                Percentage = i.Percentage,
-                StartsAt = i.StartsAt,
-                EndsAt = i.EndsAt,
-                IsActive = i.IsActive
-            }).ToList()
         };
     }
 
@@ -87,25 +59,10 @@ public static class DiscountMapping
             Name = model.Name,
             Description = model.Description,
             Percentage = model.Percentage,
+            Code = model.Code,
             StartsAt = model.StartsAt.UtcDateTime,
             EndsAt = model.EndsAt?.UtcDateTime,
             IsActive = model.IsActive,
-            Items = model.Items.Select(item => item.AsResponse()).ToList()
-        };
-    }
-
-    public static DiscountItemResponse AsResponse(this DiscountItemModel model)
-    {
-        return new DiscountItemResponse
-        {
-            Id = model.Id,
-            DiscountId = model.DiscountId,
-            Code = model.Code,
-            ProductId = model.ProductId,
-            Percentage = model.Percentage,
-            StartsAt = model.StartsAt.UtcDateTime,
-            EndsAt = model.EndsAt?.UtcDateTime,
-            IsActive = model.IsActive
         };
     }
 }

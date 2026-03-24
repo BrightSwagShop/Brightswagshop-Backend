@@ -31,6 +31,17 @@ public class DiscountRepository : IDiscountRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<Discount?> GetByCodeAsync(string code)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return null;
+        }
+
+        return await _discounts.Find(d => d.Code == code).FirstOrDefaultAsync();
+
+    }
+
     public async Task DeleteAsync(string id)
     {
         await _discounts.DeleteOneAsync(discount => discount.Id == id);
