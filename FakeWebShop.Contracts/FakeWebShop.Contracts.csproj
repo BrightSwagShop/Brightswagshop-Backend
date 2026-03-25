@@ -17,6 +17,7 @@
     <Folder Include="Response\CartResponse\" />
     <Folder Include="Response\OrderResponse\" />
     <Folder Include="Response\VariantResponse\" />
+    <Folder Include="UserContracts\" />
   </ItemGroup>
 
 </Project>

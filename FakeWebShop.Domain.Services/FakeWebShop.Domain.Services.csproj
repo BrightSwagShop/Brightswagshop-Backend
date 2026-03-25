@@ -18,6 +18,15 @@
     <Folder Include="ServicesMapping\" />
     <Folder Include="ServicesMapping\OrderMapping\" />
     <Folder Include="ServicesMapping\ShoppingCartMapping\" />
+    <Folder Include="MongoServicesMapping\" />
+    <Folder Include="MongoServicesMapping\MongoUserMapping\" />
+    <Folder Include="MongoServicesMapping\ProductTypesMapping\" />
+    <Folder Include="MongoUserServices\" />
+    <Folder Include="MongoUserServices\MongoInterfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
