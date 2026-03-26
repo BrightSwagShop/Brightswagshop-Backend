@@ -15,6 +15,9 @@
 
   <ItemGroup>
     <Folder Include="Imageinterface\" />
+    <Folder Include="ServicesMapping\" />
+    <Folder Include="ServicesMapping\OrderMapping\" />
+    <Folder Include="ServicesMapping\ShoppingCartMapping\" />
     <Folder Include="MongoServicesMapping\" />
     <Folder Include="MongoServicesMapping\MongoUserMapping\" />
     <Folder Include="MongoServicesMapping\ProductTypesMapping\" />

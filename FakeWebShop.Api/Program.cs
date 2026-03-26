@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
+using FakeWebShop.Domain.Services.Interface_s;
 using FakeWebShop.Domain.Services.MongoInterfaces;
 using FakeWebShop.Domain.Services.MongoUserServices;
 using FakeWebShop.Persistence.MongoRepo_s;
@@ -27,9 +28,16 @@ builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
 
-// Repository DI & Service DI 
+// Repository DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+
+// & Service DI 
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
 builder.Services.AddScoped<MongoUserService, MongoUserService>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 // Supabase storage & Interface
