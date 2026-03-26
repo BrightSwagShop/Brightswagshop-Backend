@@ -10,7 +10,7 @@ public class OrderResponse
     public List<OrderItemResponse> Items { get; set; } = new();
     public OrderStatusEnum Status { get; set; }
     public PaymentStatusEnum PaymentStatus { get; set; }
-    public string? PaymentIntentId { get; set; }
+    public string? StripeCheckoutSessionId { get; set; }
     public DateTime CreatedAt { get; set; }
     public decimal TotalPrice { get; set; }
 }
