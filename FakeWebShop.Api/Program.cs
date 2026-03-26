@@ -3,9 +3,12 @@ using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
 using FakeWebShop.Domain.Services.Interface_s;
 using FakeWebShop.Domain.Services.MongoInterfaces;
+using FakeWebShop.Domain.Services.MongoUserServices;
 using FakeWebShop.Persistence.MongoRepo_s;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 using FakeWebShop.Persistence.MongoRepo_s.Options;
+using FakeWebShop.Persistence.PublicUserRepo_s;
+using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using MongoDB.Driver;
@@ -37,6 +40,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
 
+builder.Services.AddScoped<MongoUserService, MongoUserService>();
+builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 // Supabase storage & Interface
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 
