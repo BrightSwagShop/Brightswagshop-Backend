@@ -10,4 +10,5 @@ public interface IShoppingCartService
     Task<ShoppingCartResponse?> GetByUserIdAsync(string userId);
     Task<ShoppingCartResponse?> GetBySessionIdAsync(string sessionId);
     Task<bool> DeleteAsync(string id);
+    Task<ShoppingCartResponse?> ApplyDiscountCodeAsync(string cartId, string code);
 }

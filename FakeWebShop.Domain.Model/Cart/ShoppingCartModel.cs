@@ -16,4 +16,8 @@ public class ShoppingCartModel
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public decimal TotalPrice { get; set; }
+
+    public decimal SubTotal { get; set; }
+
+    public bool DiscountApplied { get; set; } = false;
 }
