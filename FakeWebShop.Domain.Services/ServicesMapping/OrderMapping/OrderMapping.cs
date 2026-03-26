@@ -14,7 +14,6 @@ public static class OrderMapping
         return new OrderModel
         {
             UserId = request.UserId,
-            PaymentIntentId = request.PaymentIntentId,
             Items = request.Items.Select(i => new OrderItemModel
             {
                 ProductId = i.ProductId,
@@ -30,7 +29,7 @@ public static class OrderMapping
         {
             Id = model.Id,
             UserId = model.UserId,
-            PaymentIntentId = model.PaymentIntentId,
+            StripeCheckoutSessionId = model.StripeCheckoutSessionId,
             Status = model.Status,
             PaymentStatus = model.PaymentStatus,
             CreatedAt = model.CreatedAt,
@@ -52,7 +51,7 @@ public static class OrderMapping
         {
             Id = entity.Id,
             UserId = entity.UserId,
-            PaymentIntentId = entity.PaymentIntentId,
+            StripeCheckoutSessionId = entity.StripeCheckoutSessionId,
             Status = entity.Status,
             PaymentStatus = entity.PaymentStatus,
             CreatedAt = entity.CreatedAt,
@@ -74,7 +73,7 @@ public static class OrderMapping
         {
             Id = model.Id,
             UserId = model.UserId,
-            PaymentIntentId = model.PaymentIntentId,
+            StripeCheckoutSessionId = model.StripeCheckoutSessionId,
             Status = model.Status,
             PaymentStatus = model.PaymentStatus,
             CreatedAt = model.CreatedAt,

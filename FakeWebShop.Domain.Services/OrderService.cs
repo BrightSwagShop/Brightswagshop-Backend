@@ -16,7 +16,6 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         var orderModel = new OrderModel
         {
             UserId = request.UserId,
-            PaymentIntentId = request.PaymentIntentId,
             CreatedAt = DateTime.UtcNow,
             Status = OrderStatusEnum.Pending,
             PaymentStatus = PaymentStatusEnum.Pending
@@ -84,5 +83,29 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         var updatedEntity = model.AsEntity();
 
         await orderRepo.UpdateAsync(updatedEntity);
+    }
+    public async Task UpdatePaymentStatusAsync(string id, PaymentStatusEnum status, string? sessionId)
+    {
+        var entity = await orderRepo.GetByIdAsync(id);
+
+        if (entity is null)
+            throw new Exception("Order not found.");
+
+        entity.PaymentStatus = status;
+        entity.StripeCheckoutSessionId = sessionId;
+
+        await orderRepo.UpdateAsync(entity);
+    }
+
+    public async Task SetStripeCheckoutSessionIdAsync(string id, string sessionId)
+    {
+        var entity = await orderRepo.GetByIdAsync(id);
+
+        if (entity is null)
+            throw new Exception("Order not found.");
+
+        entity.StripeCheckoutSessionId = sessionId;
+
+        await orderRepo.UpdateAsync(entity);
     }
 }
