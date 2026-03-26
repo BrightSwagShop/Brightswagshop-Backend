@@ -26,6 +26,8 @@ env:
   DOTNET_VERSION: '10.0.x'
   NODE_VERSION: '20.x'
   SOLUTION_FILE: 'Backend_BrightSwagShop.sln'
+  ASPNETCORE_ENVIRONMENT: Production
+  MongoOptions__ConnectionString: ${{ secrets.MONGO_PROD_CONNECTION_STRING }}
 
 jobs:
   build:
