@@ -16,6 +16,8 @@
   <ItemGroup>
     <Folder Include="Constants\" />
     <Folder Include="MongoRepo's\Options\" />
+    <Folder Include="PublicUserRepo's\" />
+    <Folder Include="PublicUserRepo's\MongoInterfaces\" />
   </ItemGroup>
 
   <ItemGroup>
