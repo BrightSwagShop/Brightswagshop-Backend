@@ -12,6 +12,10 @@ public interface IOrderService
     Task<List<OrderResponse>> GetByUserIdAsync(string userId);
     Task UpdateAsync(string id, OrderRequest request);
 
+    // Payment methods
     Task UpdatePaymentStatusAsync(string id, PaymentStatusEnum status, string? sessionId);
     Task SetStripeCheckoutSessionIdAsync(string id, string sessionId);
+
+    // Cart naar Order method 
+    Task<OrderResponse> CreateFromCartAsync(string userId);
 }
