@@ -34,5 +34,10 @@ public class OrdersController(IOrderService service) : ControllerBase
         return Ok(orders);
     }
 
-    // Geen Put endpoints
+    [HttpPost("from-cart/{userId}")]
+    public async Task<ActionResult<OrderResponse>> CreateFromCart(string userId)
+    {
+        var createdOrder = await service.CreateFromCartAsync(userId);
+        return CreatedAtAction(nameof(GetById), new { id = createdOrder.Id }, createdOrder);
+    }
 }

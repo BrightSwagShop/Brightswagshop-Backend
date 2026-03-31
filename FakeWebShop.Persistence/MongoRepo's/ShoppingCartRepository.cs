@@ -43,6 +43,10 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task UpdateAsync(ShoppingCart cart)
     {
+        await _shoppingCarts.ReplaceOneAsync(
+            existingCart => existingCart.Id == cart.Id,
+            cart
+        );
         await _shoppingCarts.ReplaceOneAsync(c => c.Id == cart.Id, cart);
     }
 

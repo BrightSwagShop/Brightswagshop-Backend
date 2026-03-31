@@ -3,6 +3,7 @@ namespace FakeWebShop.Domain.Enums;
 public enum PaymentStatusEnum
 {
     Pending,
-    Succeeded,
-    Failed
+    Paid,
+    Failed,
+    Cancelled
 }

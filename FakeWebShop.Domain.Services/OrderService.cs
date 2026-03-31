@@ -5,18 +5,18 @@ using FakeWebShop.Domain.Enums;
 using FakeWebShop.Domain.Model.Order;
 using FakeWebShop.Domain.Services.Interface_s;
 using FakeWebShop.Domain.Services.ServicesMapping.OrderMapping;
+using FakeWebShop.Domain.Services.ServicesMapping.ShoppingCartMapping;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 namespace FakeWebShop.Domain.Services;
 
-public class OrderService(IOrderRepository orderRepo, IMongoProductRepository productRepo) : IOrderService
+public class OrderService(IOrderRepository orderRepo, IMongoProductRepository productRepo, IShoppingCartRepository cartRepo) : IOrderService
 {
     public async Task<OrderResponse> CreateAsync(OrderRequest request)
     {
         var orderModel = new OrderModel
         {
             UserId = request.UserId,
-            PaymentIntentId = request.PaymentIntentId,
             CreatedAt = DateTime.UtcNow,
             Status = OrderStatusEnum.Pending,
             PaymentStatus = PaymentStatusEnum.Pending
@@ -84,5 +84,68 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         var updatedEntity = model.AsEntity();
 
         await orderRepo.UpdateAsync(updatedEntity);
+    }
+
+
+    // Payment 
+    public async Task UpdatePaymentStatusAsync(string id, PaymentStatusEnum status, string? sessionId)
+    {
+        var entity = await orderRepo.GetByIdAsync(id);
+
+        if (entity is null)
+            throw new Exception("Order not found.");
+
+        entity.PaymentStatus = status;
+        entity.StripeCheckoutSessionId = sessionId;
+
+        await orderRepo.UpdateAsync(entity);
+    }
+
+    public async Task SetStripeCheckoutSessionIdAsync(string id, string sessionId)
+    {
+        var entity = await orderRepo.GetByIdAsync(id);
+
+        if (entity is null)
+            throw new Exception("Order not found.");
+
+        entity.StripeCheckoutSessionId = sessionId;
+
+        await orderRepo.UpdateAsync(entity);
+    }
+
+    public async Task<OrderResponse> CreateFromCartAsync(string userId)
+    {
+        var cartEntity = await cartRepo.GetByUserIdAsync(userId);
+
+        if (cartEntity is null)
+            throw new Exception($"Shopping cart for user {userId} not found.");
+
+        var cartModel = cartEntity.AsModel();
+
+        if (cartModel.Items is null || cartModel.Items.Count == 0)
+            throw new Exception("Shopping cart is empty.");
+
+        var orderModel = new OrderModel
+        {
+            UserId = cartModel.UserId,
+            Status = OrderStatusEnum.Pending,
+            CreatedAt = DateTime.UtcNow,
+            Items = cartModel.Items.Select(item => new OrderItemModel
+            {
+                ProductId = item.ProductId,
+                ProductName = item.ProductName,
+                UnitPrice = item.UnitPrice,
+                Quantity = item.Quantity
+
+            }).ToList()
+        };
+
+        orderModel.TotalPrice = orderModel.Items.Sum(i => i.UnitPrice * i.Quantity);
+
+        var orderEntity = orderModel.AsEntity();
+
+        await orderRepo.CreateAsync(orderEntity);
+
+        return orderEntity.AsModel().AsResponse();
     }
 }
