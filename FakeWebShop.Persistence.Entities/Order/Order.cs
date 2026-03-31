@@ -1,4 +1,3 @@
-using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using FakeWebShop.Domain.Enums;
@@ -25,8 +24,8 @@ public class Order
     [BsonRepresentation(BsonType.String)]
     public PaymentStatusEnum PaymentStatus { get; set; } = PaymentStatusEnum.Pending;
 
-    [BsonElement("paymentIntentId")]
-    public string? PaymentIntentId { get; set; }
+    [BsonElement("stripeCheckoutSessionId")]
+    public string? StripeCheckoutSessionId { get; set; }
 
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

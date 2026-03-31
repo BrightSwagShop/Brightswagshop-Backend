@@ -15,7 +15,7 @@ public class OrderModel
 
     public PaymentStatusEnum PaymentStatus { get; set; } = PaymentStatusEnum.Pending;
 
-    public string? PaymentIntentId { get; set; }
+    public string? StripeCheckoutSessionId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

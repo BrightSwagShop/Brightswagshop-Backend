@@ -12,6 +12,7 @@ using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using MongoDB.Driver;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ builder.Services.AddSingleton<IMongoClient>(_ =>
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
 
 // Repository DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
@@ -34,10 +37,13 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
-// & Service DI 
+// Services DI 
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+// Payment Service DI
+builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
+builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
 
 builder.Services.AddScoped<MongoUserService, MongoUserService>();

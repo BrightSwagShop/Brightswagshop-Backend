@@ -18,6 +18,7 @@ public static class ShoppingCartMapping
             Items = request.Items.Select(i => new CartItemModel
             {
                 ProductId = i.ProductId,
+                SelectedColor = i.SelectedColor,
                 Quantity = i.Quantity
             }).ToList()
         };
@@ -38,8 +39,10 @@ public static class ShoppingCartMapping
             {
                 ProductId = i.ProductId,
                 ProductName = i.ProductName,
+                SelectedColor = i.SelectedColor,
                 UnitPrice = i.UnitPrice,
-                Quantity = i.Quantity
+                Quantity = i.Quantity,
+                ImageUrl = i.ImageUrl
             }).ToList()
         };
     }
@@ -53,11 +56,16 @@ public static class ShoppingCartMapping
             UserId = entity.UserId,
             SessionId = entity.SessionId,
             UpdatedAt = entity.UpdatedAt,
+            TotalPrice = entity.TotalPrice,
             Items = entity.Items.Select(i => new CartItemModel
             {
                 ProductId = i.ProductId,
                 ProductName = i.ProductName,
+                SelectedColor = i.SelectedColor,
                 UnitPrice = i.UnitPrice,
+                Quantity = i.Quantity,
+                ImageUrl = i.ImageUrl
+            }).ToList()
                 Quantity = i.Quantity
             }).ToList(),
             TotalPrice = entity.TotalPrice,
@@ -80,8 +88,10 @@ public static class ShoppingCartMapping
             {
                 ProductId = i.ProductId,
                 ProductName = i.ProductName,
+                SelectedColor = i.SelectedColor,
                 UnitPrice = i.UnitPrice,
-                Quantity = i.Quantity
+                Quantity = i.Quantity,
+                ImageUrl = i.ImageUrl
             }).ToList()
         };
     }

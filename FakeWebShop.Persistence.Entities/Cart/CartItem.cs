@@ -11,6 +11,10 @@ public class CartItem
 
     [BsonElement("productName")]
     public string ProductName { get; set; } = null!;
+    [BsonElement("selectedColor")]
+    public string? SelectedColor { get; set; }
+    [BsonElement("imageUrl")]
+    public string ImageUrl { get; set; } = null!;
 
     [BsonElement("unitPrice")]
     [BsonRepresentation(BsonType.Decimal128)]
