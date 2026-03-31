@@ -35,6 +35,7 @@ StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 // Services DI 
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
@@ -43,6 +44,7 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 // Payment Service DI
 builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
+builder.Services.AddScoped<IDiscountService, DiscountService>();
 
 builder.Services.AddScoped<MongoUserService, MongoUserService>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();

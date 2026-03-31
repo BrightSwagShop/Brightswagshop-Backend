@@ -10,4 +10,5 @@ public class ShoppingCartResponse
     public List<CartItemResponse> Items { get; set; } = new();
     public DateTime UpdatedAt { get; set; }
     public decimal TotalPrice { get; set; }
+    public decimal SubTotal { get; set; }
 }

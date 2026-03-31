@@ -1,3 +1,4 @@
+using FakeWebShop.Contracts.Request.ApplyDiscountRequest;
 using FakeWebShop.Contracts.Request.CartRequest;
 using FakeWebShop.Contracts.Response.CartResponse;
 using FakeWebShop.Domain.Services.Interface_s;
@@ -16,6 +17,22 @@ public class ShoppingCartController(IShoppingCartService service) : ControllerBa
     {
         var createdCart = await service.CreateAsync(request);
         return CreatedAtAction(nameof(GetByUserId), new { userId = createdCart.UserId }, createdCart);
+    }
+
+    [HttpPost("{cartId}/apply-discount")]
+    public async Task<ActionResult<ShoppingCartResponse>> ApplyDiscount(string cartId, [FromBody] ApplyDiscountRequest request)
+    {
+        try
+        {
+            var updatedCart = await service.ApplyDiscountCodeAsync(cartId, request.Code);
+            if (updatedCart is null)
+                return NotFound();
+            return Ok(updatedCart);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
     }
 
     [HttpGet("user/{userId}")]
