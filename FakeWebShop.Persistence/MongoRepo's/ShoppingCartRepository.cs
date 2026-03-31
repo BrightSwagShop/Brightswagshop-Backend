@@ -47,5 +47,13 @@ public class ShoppingCartRepository : IShoppingCartRepository
             existingCart => existingCart.Id == cart.Id,
             cart
         );
+        await _shoppingCarts.ReplaceOneAsync(c => c.Id == cart.Id, cart);
+    }
+
+    public async Task<ShoppingCart?> GetByIdAsync(string id)
+    {
+        return await _shoppingCarts
+            .Find(cart => cart.Id == id)
+            .FirstOrDefaultAsync();
     }
 }

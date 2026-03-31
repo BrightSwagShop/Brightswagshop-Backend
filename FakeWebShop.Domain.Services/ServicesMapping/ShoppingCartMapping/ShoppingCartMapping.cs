@@ -34,6 +34,7 @@ public static class ShoppingCartMapping
             SessionId = model.SessionId,
             UpdatedAt = model.UpdatedAt,
             TotalPrice = model.TotalPrice,
+            SubTotal = model.SubTotal,
             Items = model.Items.Select(i => new CartItem
             {
                 ProductId = i.ProductId,
@@ -65,6 +66,10 @@ public static class ShoppingCartMapping
                 Quantity = i.Quantity,
                 ImageUrl = i.ImageUrl
             }).ToList()
+                Quantity = i.Quantity
+            }).ToList(),
+            TotalPrice = entity.TotalPrice,
+            SubTotal = entity.SubTotal
         };
     }
 
@@ -78,6 +83,7 @@ public static class ShoppingCartMapping
             SessionId = model.SessionId,
             UpdatedAt = model.UpdatedAt,
             TotalPrice = model.TotalPrice,
+            SubTotal = model.SubTotal,
             Items = model.Items.Select(i => new CartItemResponse
             {
                 ProductId = i.ProductId,
