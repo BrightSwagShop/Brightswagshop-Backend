@@ -53,18 +53,6 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
 
-    - name: Configure Git auth for GitHub dependencies
-      run: |
-        TOKEN="${{ secrets.GH_PAT }}"
-        if [ -z "$TOKEN" ]; then
-          TOKEN="${{ github.token }}"
-          echo "GH_PAT not set; using GITHUB_TOKEN fallback"
-        fi
-
-        git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
-        git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
-        git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "git@github.com:"
-        
     - name: Cache NuGet packages
       uses: actions/cache@v4
       with:
@@ -83,8 +71,28 @@ jobs:
       run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --no-build --verbosity normal
       
     - name: Install API test dependencies
-      run: npm ci
       working-directory: APITests
+      run: |
+        TOKEN="${{ secrets.GH_PAT }}"
+
+        # Always force SSH-style GitHub URLs to HTTPS for npm git dependencies.
+        git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+        git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+        # If a PAT exists, also force authenticated HTTPS for private dependency repos.
+        if [ -n "$TOKEN" ]; then
+          echo "Using GH_PAT for GitHub dependency access"
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "git@github.com:"
+        else
+          echo "GH_PAT not set; using unauthenticated HTTPS rewrite"
+        fi
+
+        echo "Git URL rewrite rules:"
+        git config --global --get-regexp '^url\..*\.insteadof' || true
+
+        npm ci
 
     - name: Start API for integration tests
       run: |
