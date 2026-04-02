@@ -73,16 +73,9 @@ jobs:
     - name: Install API test dependencies
       working-directory: APITests
       run: |
-        TOKEN="${{ secrets.GH_PAT }}"
-        if [ -z "$TOKEN" ]; then
-          echo "::error::Missing GH_PAT secret. Set GH_PAT with read access to BrightSwagShop/TestingFramework."
-          exit 1
-        fi
-
-        echo "Using GH_PAT for GitHub dependency access"
-        git config --global --add url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
-        git config --global --add url."https://x-access-token:${TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
-        git config --global --add url."https://x-access-token:${TOKEN}@github.com/".insteadOf "git@github.com:"
+        # Public dependency repo: ensure any SSH-style GitHub URLs resolve via HTTPS.
+        git config --global --add url."https://github.com/".insteadOf "ssh://git@github.com/"
+        git config --global --add url."https://github.com/".insteadOf "git@github.com:"
 
         echo "Git URL rewrite rules:"
         git config --global --get-regexp '^url\..*\.insteadof' || true
