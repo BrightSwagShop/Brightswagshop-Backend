@@ -17,7 +17,7 @@
     "qaseio": "2.0.2"
   },
   "devDependencies": {
-    "@brightswagshop/testing-framework": "github:BrightSwagShop/TestingFramework#main",
+    "@brightswagshop/testing-framework": "git+https://github.com/BrightSwagShop/TestingFramework.git#main",
     "@cucumber/cucumber": "^12.7.0",
     "@playwright/test": "^1.54.2",
     "allure-commandline": "^2.34.1",
