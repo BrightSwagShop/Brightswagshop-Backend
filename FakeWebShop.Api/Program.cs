@@ -44,7 +44,7 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 // Payment Service DI
 builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
-builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<IDiscountService, FakeWebShop.Domain.Services.DiscountService>();
 
 builder.Services.AddScoped<MongoUserService, MongoUserService>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
