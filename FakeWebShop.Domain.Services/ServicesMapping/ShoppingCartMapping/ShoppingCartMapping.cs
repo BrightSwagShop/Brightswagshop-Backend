@@ -57,6 +57,7 @@ public static class ShoppingCartMapping
             SessionId = entity.SessionId,
             UpdatedAt = entity.UpdatedAt,
             TotalPrice = entity.TotalPrice,
+            SubTotal = entity.SubTotal,
             Items = entity.Items.Select(i => new CartItemModel
             {
                 ProductId = i.ProductId,
@@ -66,10 +67,6 @@ public static class ShoppingCartMapping
                 Quantity = i.Quantity,
                 ImageUrl = i.ImageUrl
             }).ToList()
-                Quantity = i.Quantity
-            }).ToList(),
-            TotalPrice = entity.TotalPrice,
-            SubTotal = entity.SubTotal
         };
     }
 

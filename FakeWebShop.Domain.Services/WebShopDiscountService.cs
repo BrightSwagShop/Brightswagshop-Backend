@@ -7,7 +7,7 @@ using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 namespace FakeWebShop.Domain.Services;
 
-public class DiscountService(IDiscountRepository discountRepo) : IDiscountService
+public class WebShopDiscountService(IDiscountRepository discountRepo) : IDiscountService
 {
     public async Task<DiscountResponse> CreateAsync(DiscountRequest request)
     {
