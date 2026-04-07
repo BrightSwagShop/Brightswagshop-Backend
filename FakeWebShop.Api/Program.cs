@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
+using FakeWebShop.Domain.Services.MongoInterface_s;
 using FakeWebShop.Domain.Services.MongoInterfaces;
 using FakeWebShop.Domain.Services.MongoUserServices;
 using FakeWebShop.Persistence.MongoRepo_s;
@@ -22,6 +23,15 @@ builder.Services.Configure<MongoOptions>(
 builder.Services.AddSingleton<IMongoClient>(_ =>
     new MongoClient(builder.Configuration["Mongo:ConnectionString"]));
 
+ builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var options = sp.GetRequiredService<
+        Microsoft.Extensions.Options.IOptions<MongoOptions>>();
+
+    return client.GetDatabase(options.Value.Database);
+});
+
 // Image Storage
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
@@ -34,7 +44,10 @@ builder.Services.AddScoped<MongoUserService, MongoUserService>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 // Supabase storage & Interface
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
-
+ builder.Services.AddScoped<IFavoriteRepository,FavoriteRepository>();
+ builder.Services.AddScoped<IFavoriteService,FavoriteService>();
+builder.Services.AddScoped<JwtService>();
+ 
 // Cors 
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")

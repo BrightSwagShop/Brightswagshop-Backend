@@ -16,9 +16,9 @@
   <ItemGroup>
     <Folder Include="Imageinterface\" />
     <Folder Include="MongoServicesMapping\" />
+    <Folder Include="MongoServicesMapping\MongoFavoriteMapping\" />
     <Folder Include="MongoServicesMapping\MongoUserMapping\" />
     <Folder Include="MongoServicesMapping\ProductTypesMapping\" />
-    <Folder Include="MongoUserServices\" />
     <Folder Include="MongoUserServices\MongoInterfaces\" />
   </ItemGroup>
 

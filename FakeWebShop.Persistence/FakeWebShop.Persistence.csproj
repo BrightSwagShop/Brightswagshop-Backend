@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FakeWebShop.Domain.Abstractions\FakeWebShop.Domain.Abstractions.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
+     
     <ProjectReference Include="..\FakeWebShop.Persistence.Entities\FakeWebShop.Persistence.Entities.csproj" />
   </ItemGroup>
 
