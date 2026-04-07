@@ -7,6 +7,15 @@ namespace FakeWebShop.Domain.Services.MongoServicesMapping.MongoUserMapping;
 
 public static class UserMapping
 {
+    public static User ToEntity(UserResponseContract contract)
+{
+    return new User
+    {
+        Id = contract.Id,
+        Username = contract.Username,
+         
+    };
+}
      // Request → Model
     public static UserModel ToModel(this UserRequestContract request)
     {

@@ -1,6 +1,7 @@
 using System;
 using FakeWebShop.Domain.Enums;
 using FakeWebShop.Persistence.Entities.BaseProduct;
+using MongoDB.Bson;
 
 
 namespace FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
@@ -16,6 +17,10 @@ public interface IMongoProductRepository
     // Volledige vervanging
     // Task<bool> UpdateAsync(Product product);
 
+    public interface IProductRepository
+{
+    Task<bool> Exists(ObjectId productId);
+}
 
 
 }
