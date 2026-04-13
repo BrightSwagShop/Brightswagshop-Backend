@@ -1,4 +1,6 @@
 using System;
+using FakeWebShop.Contracts.Request;
+using FakeWebShop.Contracts.Response;
 using FakeWebShop.Contracts.UserContracts;
 using FakeWebShop.Domain.Services.MongoServicesMapping.MongoUserMapping;
 using FakeWebShop.Domain.Services.MongoUserServices.MongoInterfaces;
@@ -35,6 +37,21 @@ public class MongoUserService(IMongoUserRepository repo) : IMongoUserInterface
 
         return user.ToModel().ToResponse();
     }
-    
+    //hier moet ik een methode hebben voor de user request te behandelen
+    // met user request bedoel ik dat de request een productId bevat dit request wordt omgezet naar model bij mapping 
+    // en erna wordt met behulp van de repo de productId toegevoegd en wordt de model terug omgezet naar een userResponseContract die moet ik nog aanpassen
+    //wat moet in de userRequest en wat moet in de userResponse
+
+    public async Task<UserResponseContract> VoegFavoriteByUserAsync(UserRequestContract request)
+    {
+        //ik wil de favorites array hier updaten dus ik gebruik de methode van de repo!
+        // de request.UserId de request zelf moet ik nog omzetten naar model en entity
+        var user = await repo.GetByUsernameAsync(request.Username);
+        user.ToModel().ToEntity();
+        await repo.VoegFavoriteByUserAsync(user.Id, user.ProductId);
+        return user.ToModel().ToResponse();
+        
+    }
+
 
 }

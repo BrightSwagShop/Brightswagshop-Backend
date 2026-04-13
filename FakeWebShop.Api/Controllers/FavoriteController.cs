@@ -1,5 +1,6 @@
 using FakeWebShop.Contracts.Request;
 using FakeWebShop.Domain.Services.MongoInterface_s;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace FakeWebShop.Api.Controllers
     [Route("api/favorites")]
     public class FavoriteController(IFavoriteService _service) : ControllerBase
     {
+        
         [HttpPost]
     public async Task<IActionResult> Add(FavoriteRequestContract request)
     {

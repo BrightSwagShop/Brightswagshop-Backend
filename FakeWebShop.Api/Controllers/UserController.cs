@@ -29,8 +29,17 @@ namespace FakeWebShop.Api.Controllers
 
             return Ok(new { user, token });
 
-        return Ok(user);
+        
     }
+
+        [HttpPost("favoriteToevoegen")]
+        public async Task<ActionResult<UserResponseContract>> VoegFavoriteToe([FromBody] UserRequestContract request)
+        {
+            
+
+            
+        }
+            
 
     
     

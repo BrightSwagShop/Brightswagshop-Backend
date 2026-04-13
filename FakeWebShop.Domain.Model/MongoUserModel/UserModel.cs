@@ -9,6 +9,6 @@ public class UserModel
     public string PasswordHash { get; set; } = null!;
 
     public List<string> Favorites { get; set; } = new();
-    public List<string> Cart { get; set; } = new();
+    //public List<string> Cart { get; set; } = new();
 
 }
