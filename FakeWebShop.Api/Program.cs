@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
@@ -11,6 +12,7 @@ using FakeWebShop.Persistence.PublicUserRepo_s;
 using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +49,26 @@ builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
  builder.Services.AddScoped<IFavoriteRepository,FavoriteRepository>();
  builder.Services.AddScoped<IFavoriteService,FavoriteService>();
 builder.Services.AddScoped<JwtService>();
+//jwt bearer injecteren
+ builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = "yourapp",
+            ValidAudience = "yourapp",
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("YOUR_SECRET_KEY_HIER_MIN_16_CHARS")
+            )
+        };
+    });
+
  
 // Cors 
 var allowedOrigins = builder.Configuration
@@ -74,7 +96,8 @@ builder.Services.AddControllers()
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
