@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Favorites\" />
     <Folder Include="PublicUser\" />
     <Folder Include="Variant\BaseColorVaria\" />
   </ItemGroup>

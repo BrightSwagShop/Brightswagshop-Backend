@@ -1,17 +1,27 @@
-using System;
-using FakeWebShop.Contracts.Request;
-using FakeWebShop.Contracts.Response;
-using FakeWebShop.Contracts.UserContracts;
+using FakeWebShop.Contracts.Request.UserRequest;
+using FakeWebShop.Contracts.Response.UserResponse;
 using FakeWebShop.Domain.Services.MongoServicesMapping.MongoUserMapping;
 using FakeWebShop.Domain.Services.MongoUserServices.MongoInterfaces;
-using FakeWebShop.Persistence.Entities.PublicUser;
 using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 
 namespace FakeWebShop.Domain.Services.MongoUserServices;
 
 public class MongoUserService(IMongoUserRepository repo) : IMongoUserInterface
 {
-       public async Task<UserResponseContract> Register(UserRequestContract request)
+    public async Task<UserResponseContract?> Login(UserAuthRequestContract request)
+    {
+        var user = await repo.GetByUsernameAsync(request.Username);
+        if (user == null)
+            return null;
+
+        var valid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+        if (!valid)
+            return null;
+
+        return user.ToModel().ToResponse();
+    }
+
+    public async Task<UserResponseContract> Register(UserAuthRequestContract request)
     {
         var existing = await repo.GetByUsernameAsync(request.Username);
         if (existing != null)
@@ -19,39 +29,52 @@ public class MongoUserService(IMongoUserRepository repo) : IMongoUserInterface
 
         var model = request.ToModel();
         model.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+        model.Favorites = new List<string>();
 
         var entity = model.ToEntity();
-
         var created = await repo.CreateAsync(entity);
 
         return created.ToModel().ToResponse();
     }
 
-    public async Task<UserResponseContract?> Login(UserRequestContract request)
+    public async Task<UserResponseContract> RemoveFavoriteAsync(string userId, FavoriteRequestContract request)
     {
-        var user = await repo.GetByUsernameAsync(request.Username);
-        if (user == null) return null;
+        var user = await repo.GetByIdAsync(userId);
+        if (user == null)
+            throw new Exception("User not found");
 
-        var valid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
-        if (!valid) return null;
+        await repo.RemoveFavoriteAsync(user.Id, request.ProductId);
+
+        var updatedUser = await repo.GetByIdAsync(userId);
+        if (updatedUser == null)
+            throw new Exception("Updated user not found");
+
+        return updatedUser.ToModel().ToResponse();
+    }
+
+    public async Task<UserResponseContract> VoegFavoriteByUserAsync(string userId, FavoriteRequestContract request)
+    {
+        var user = await repo.GetByIdAsync(userId);
+        if (user == null)
+            throw new Exception("User not found");
+
+        await repo.VoegFavoriteByUserAsync(user.Id, request.ProductId);
+
+        var updatedUser = await repo.GetByIdAsync(userId);
+        if (updatedUser == null)
+            throw new Exception("Updated user not found");
+
+        return updatedUser.ToModel().ToResponse();
+    }
+
+    public async Task<UserResponseContract> GetByIdAsync(string userId)
+    {
+        var user = await repo.GetByIdAsync(userId);
+        if (user == null)
+            throw new Exception("User not found");
 
         return user.ToModel().ToResponse();
     }
-    //hier moet ik een methode hebben voor de user request te behandelen
-    // met user request bedoel ik dat de request een productId bevat dit request wordt omgezet naar model bij mapping 
-    // en erna wordt met behulp van de repo de productId toegevoegd en wordt de model terug omgezet naar een userResponseContract die moet ik nog aanpassen
-    //wat moet in de userRequest en wat moet in de userResponse
-
-    public async Task<UserResponseContract> VoegFavoriteByUserAsync(UserRequestContract request)
-    {
-        //ik wil de favorites array hier updaten dus ik gebruik de methode van de repo!
-        // de request.UserId de request zelf moet ik nog omzetten naar model en entity
-        var user = await repo.GetByUsernameAsync(request.Username);
-        user.ToModel().ToEntity();
-        await repo.VoegFavoriteByUserAsync(user.Id, user.ProductId);
-        return user.ToModel().ToResponse();
-        
-    }
-
-
 }
+
+
