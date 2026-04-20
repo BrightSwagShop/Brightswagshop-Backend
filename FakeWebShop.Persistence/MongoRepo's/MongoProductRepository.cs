@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using FakeWebShop.Persistence.Entities.BaseProduct;
 using FakeWebShop.Domain.Enums;
+using FakeWebShop.Persistence.Constants;
 
 namespace FakeWebShop.Persistence.MongoRepo_s;
 
@@ -13,7 +14,7 @@ public class MongoProductRepository : IMongoProductRepository
     public MongoProductRepository(IMongoClient client, IOptions<MongoOptions> options)
     {
         var database = client.GetDatabase(options.Value.Database); // Get Databse
-        _products = database.GetCollection<Product>("products");    // Get Juiste Collection
+        _products = database.GetCollection<Product>(MongoCollectionsNames.Products);    // Get Juiste Collection
     }
 
     // Nieuw product aanmaken

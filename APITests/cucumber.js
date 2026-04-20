@@ -4,13 +4,20 @@ const shared = {
   publishQuiet: true
 };
 
+const allureFormatter = 'allure-cucumberjs/reporter';
+
 module.exports = {
   default: {
     ...shared,
-    format: ['progress']
+    format: ['progress', allureFormatter]
+  },
+  allure: {
+    ...shared,
+    format: ['progress', allureFormatter]
   },
   qase: {
     ...shared,
-    format: ['progress', 'cucumberjs-qase-reporter']
+    tags: '@qase',
+    format: ['progress', allureFormatter, 'cucumberjs-qase-reporter']
   }
 };
