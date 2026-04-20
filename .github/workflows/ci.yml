@@ -84,18 +84,12 @@ jobs:
 
     - name: Start API for integration tests
       run: |
-        dotnet FakeWebShop.Api/bin/Release/net10.0/FakeWebShop.Api.dll --urls http://127.0.0.1:5076 > api.log 2>&1 &
+        dotnet run --project FakeWebShop.Api/FakeWebShop.Api.csproj --launch-profile http > api.log 2>&1 &
         echo $! > api.pid
 
     - name: Wait for API readiness
       run: |
         for i in {1..30}; do
-          if ! kill -0 "$(cat api.pid)" 2>/dev/null; then
-            echo "API process exited before readiness check"
-            cat api.log || true
-            exit 1
-          fi
-
           if curl -fsS http://127.0.0.1:5076/api/categories > /dev/null; then
             echo "API is up"
             exit 0
