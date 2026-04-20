@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
@@ -13,12 +14,16 @@ using FakeWebShop.Persistence.PublicUserRepo_s;
 using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
+using FakeWebShop.Api.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Stripe;
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtKey = builder.Configuration["Jwt:Key"]!;
@@ -126,6 +131,15 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
+builder.Services
+    .AddAuthentication(HeaderAuthDefaults.Scheme)
+    .AddScheme<AuthenticationSchemeOptions, HeaderAuthenticationHandler>(
+        HeaderAuthDefaults.Scheme,
+        _ => { });
+
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthorizationMiddlewareResultHandler>();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -134,6 +148,8 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
 

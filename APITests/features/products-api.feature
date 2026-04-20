@@ -1,6 +1,17 @@
 Feature: Products API
   Basic API checks for products endpoints.
 
+  Scenario: Only admins can create products
+    Given I have a valid mug payload
+    And I am authenticated as a regular user for products API
+    When I POST "/api/products" as a regular user with the payload
+    Then the response status should be 403
+
+  Scenario: Only admins can delete products
+    Given I am authenticated as a regular user for products API
+    When I DELETE "/api/products/000000000000000000000000" as a regular user
+    Then the response status should be 403
+
   @smoke @qase @QaseID=52
   Scenario: GET all products returns 200 and array
     When I GET "/api/products"

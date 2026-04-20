@@ -3,6 +3,7 @@ using FakeWebShop.Contracts.Request.Products.BaseProductRequest;
 using FakeWebShop.Contracts.Response.Products.BaseProductResponse;
 using FakeWebShop.Domain.Enums;
 using FakeWebShop.Domain.Services.MongoInterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FakeWebShop.Api.Controllers;
@@ -31,6 +32,7 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<MongoProductResponse>> Create([FromBody] MongoProductRequest request)
     {
         var created = await service.CreateProduct(request);
@@ -39,6 +41,7 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(string id)
     {
         var deleted = await service.DeleteProduct(id);
