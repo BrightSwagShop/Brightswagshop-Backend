@@ -8,6 +8,11 @@ Feature: Discount API
     When I create a discount with code "NOADMIN20"
     Then I should receive a 403 Forbidden error
 
+  Scenario: Admin can create discounts
+    Given I am authenticated as an admin user
+    When I create a discount with code "ADMIN20"
+    Then I should receive a 201 Created response
+
   Scenario: Apply a valid discount code to a cart
     Given a shopping cart exists with user "user123" and product "productA"
     When I apply the discount code "SPRING20" to the cart
