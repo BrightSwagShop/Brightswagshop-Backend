@@ -102,6 +102,8 @@ jobs:
         exit 1
 
     - name: Run Cucumber API tests
+      id: cucumber_tests
+      continue-on-error: true
       env:
         API_BASE_URL: http://127.0.0.1:5076
         QASE_MODE: testops
@@ -116,7 +118,7 @@ jobs:
       working-directory: APITests
 
     - name: Archive Allure report
-      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true'
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true' && hashFiles('APITests/allure-report/index.html') != ''
       run: |
         cd APITests
         zip -r allure-report.zip allure-report
@@ -180,6 +182,12 @@ jobs:
           exit 1
         fi
       continue-on-error: true
+
+    - name: Fail pipeline if Cucumber tests failed
+      if: always() && steps.cucumber_tests.outcome == 'failure'
+      run: |
+        echo "Cucumber API tests failed. See Allure artifact/email for details."
+        exit 1
       
     - name: Check for vulnerabilities
       run: dotnet list package --vulnerable --include-transitive
