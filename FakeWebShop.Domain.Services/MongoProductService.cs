@@ -37,6 +37,12 @@ public class MongoProductService(IMongoProductRepository repo) : IMongoProductSe
         return product.Select(p => p.ToModel().ToResponse()).ToList();
     }
 
+    public async Task<List<MongoProductResponse>> GetProductsByIdsAsync(List<string> ids)
+    {
+        var products = await repo.GetByIdsAsync(ids);
+        return products.Select(p => p.ToModel().ToResponse()).ToList();
+    }
+
     public async Task<List<MongoProductResponse>> GetProductsByTypeAsync(ProductTypeEnum productType)
     {
         var products = await repo.GetByTypeAsync(productType);

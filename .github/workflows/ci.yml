@@ -52,7 +52,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-        
+
     - name: Cache NuGet packages
       uses: actions/cache@v4
       with:
@@ -71,8 +71,16 @@ jobs:
       run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --no-build --verbosity normal
       
     - name: Install API test dependencies
-      run: npm ci
       working-directory: APITests
+      run: |
+        # Public dependency repo: ensure any SSH-style GitHub URLs resolve via HTTPS.
+        git config --global --add url."https://github.com/".insteadOf "ssh://git@github.com/"
+        git config --global --add url."https://github.com/".insteadOf "git@github.com:"
+
+        echo "Git URL rewrite rules:"
+        git config --global --get-regexp '^url\..*\.insteadof' || true
+
+        npm ci
 
     - name: Start API for integration tests
       run: |

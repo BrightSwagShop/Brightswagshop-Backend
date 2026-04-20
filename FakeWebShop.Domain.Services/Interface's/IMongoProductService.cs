@@ -11,4 +11,5 @@ public interface IMongoProductService
     Task<bool> DeleteProduct(string id);
     // Update Product voor later "Lange code";
     Task<List<MongoProductResponse>> GetProductsByTypeAsync(ProductTypeEnum productType);
+    Task<List<MongoProductResponse>> GetProductsByIdsAsync(List<string> ids);
 }

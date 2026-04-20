@@ -7,9 +7,9 @@ using MongoDB.Driver;
 
 namespace FakeWebShop.Persistence.PublicUserRepo_s;
 
-public class MongoUserRepository :IMongoUserRepository
+public class MongoUserRepository : IMongoUserRepository
 {
-     private readonly IMongoCollection<User> _users;
+    private readonly IMongoCollection<User> _users;
 
     public MongoUserRepository(IMongoClient client, IOptions<MongoOptions> options)
     {
@@ -28,9 +28,35 @@ public class MongoUserRepository :IMongoUserRepository
         return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
     }
 
+    public async Task VoegFavoriteByUserAsync(string userId, string productId)
+    {
+
+        var update = Builders<User>.Update.AddToSet(u => u.Favorites, productId);
+        await _users.UpdateOneAsync(
+            u => u.Id == userId,
+            update
+
+        );
+    }
+
+    public async Task RemoveFavoriteAsync(string userId, string productId)
+    {
+
+        var update = Builders<User>.Update.Pull(u => u.Favorites, productId);
+
+        await _users.UpdateOneAsync(
+            u => u.Id == userId,
+            update
+        );
+    }
+
     public async Task UpdateAsync(string id, User user)
     {
         await _users.ReplaceOneAsync(u => u.Id == id, user);
     }
 
+    public async Task<User?> GetByIdAsync(string id)
+    {
+        return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+    }
 }

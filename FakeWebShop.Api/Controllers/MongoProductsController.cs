@@ -19,6 +19,7 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
         return Ok(products);
     }
 
+    // Alle Products by Id 
     [HttpGet("{id}")]
     public async Task<ActionResult<MongoProductResponse>> GetById(string id)
     {
@@ -63,6 +64,17 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
             return NotFound($"Producttype '{slug}' bestaat niet.");
 
         var products = await service.GetProductsByTypeAsync(productType.Value);
+        return Ok(products);
+    }
+
+    // Voor lijst van product voor Favorites
+    [HttpPost("by-ids")]
+    public async Task<ActionResult<List<MongoProductResponse>>> GetByIds([FromBody] List<string> ids)
+    {
+        if (ids == null || ids.Count == 0)
+            return BadRequest("Geen ids meegegeven.");
+
+        var products = await service.GetProductsByIdsAsync(ids);
         return Ok(products);
     }
 }
