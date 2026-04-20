@@ -11,8 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Request\CartRequest\" />
+    <Folder Include="Request\OrderRequest\" />
     <Folder Include="Request\VariantRequest\" />
+    <Folder Include="Response\CartResponse\" />
+    <Folder Include="Response\OrderResponse\" />
     <Folder Include="Response\VariantResponse\" />
+    <Folder Include="UserContracts\" />
   </ItemGroup>
 
 </Project>

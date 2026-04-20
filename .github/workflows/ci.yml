@@ -3,15 +3,41 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      upload_report:
+        description: Upload Allure report artifact
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      send_email:
+        description: Send Allure report email (requires SENDGRID_API_KEY)
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   DOTNET_VERSION: '10.0.x'
+  NODE_VERSION: '20.x'
   SOLUTION_FILE: 'Backend_BrightSwagShop.sln'
+  ASPNETCORE_ENVIRONMENT: Production
+  MongoOptions__ConnectionString: ${{ secrets.MONGO_PROD_CONNECTION_STRING }}
 
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
     
     steps:
     - name: Checkout code
@@ -21,7 +47,12 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-        
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
     - name: Cache NuGet packages
       uses: actions/cache@v4
       with:
@@ -38,6 +69,116 @@ jobs:
       
     - name: Run tests
       run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --no-build --verbosity normal
+      
+    - name: Install API test dependencies
+      working-directory: APITests
+      run: |
+        # Public dependency repo: ensure any SSH-style GitHub URLs resolve via HTTPS.
+        git config --global --add url."https://github.com/".insteadOf "ssh://git@github.com/"
+        git config --global --add url."https://github.com/".insteadOf "git@github.com:"
+
+        echo "Git URL rewrite rules:"
+        git config --global --get-regexp '^url\..*\.insteadof' || true
+
+        npm ci
+
+    - name: Start API for integration tests
+      run: |
+        dotnet run --project FakeWebShop.Api/FakeWebShop.Api.csproj --launch-profile http > api.log 2>&1 &
+        echo $! > api.pid
+
+    - name: Wait for API readiness
+      run: |
+        for i in {1..30}; do
+          if curl -fsS http://127.0.0.1:5076/api/categories > /dev/null; then
+            echo "API is up"
+            exit 0
+          fi
+          echo "Waiting for API... ($i/30)"
+          sleep 2
+        done
+        echo "API failed to start"
+        cat api.log || true
+        exit 1
+
+    - name: Run Cucumber API tests
+      env:
+        API_BASE_URL: http://127.0.0.1:5076
+        QASE_MODE: testops
+        QASE_TESTOPS_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
+        QASE_TESTOPS_PROJECT: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
+      run: npm run test:qase
+      working-directory: APITests
+
+    - name: Generate Allure report
+      if: always() && github.event_name == 'workflow_dispatch' && (inputs.upload_report == 'true' || inputs.send_email == 'true')
+      run: npm run report:allure:generate
+      working-directory: APITests
+
+    - name: Archive Allure report
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true'
+      run: |
+        cd APITests
+        zip -r allure-report.zip allure-report
+
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v4
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true'
+      continue-on-error: true
+      with:
+        name: backend-allure-report
+        path: APITests/allure-report.zip
+        retention-days: 30
+
+    - name: Send Allure Report via Email (SendGrid API)
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.send_email == 'true'
+      run: |
+        if [ -z "${{ secrets.SENDGRID_API_KEY }}" ]; then
+          echo "SENDGRID_API_KEY not configured, skipping email"
+          exit 0
+        fi
+
+        if [ ! -f APITests/allure-report/index.html ]; then
+          echo "Allure report not found, skipping email"
+          exit 0
+        fi
+
+        cat > email_payload.json << 'EOF'
+        {
+          "personalizations": [{
+            "to": [{"email": "boonenwout@gmail.com"}]
+          }],
+          "from": {"email": "wout.boonen@brightest.be", "name": "GitHub Actions"},
+          "subject": "Backend Allure Report - REPO [BRANCH]",
+          "content": [{
+            "type": "text/html",
+            "value": "HTML_CONTENT"
+          }]
+        }
+        EOF
+
+        sed -i "s|REPO|${{ github.repository }}|g" email_payload.json
+        sed -i "s|BRANCH|${{ github.ref_name }}|g" email_payload.json
+        sed -i "s|HTML_CONTENT|<h2>Backend Allure Test Report</h2><p><strong>Repository:</strong> ${{ github.repository }}</p><p><strong>Branch:</strong> ${{ github.ref_name }}</p><p><strong>Commit:</strong> ${{ github.sha }}</p><p><strong>Triggered by:</strong> ${{ github.actor }}</p><p><strong>Workflow:</strong> ${{ github.workflow }}</p><p><strong>Run ID:</strong> ${{ github.run_id }}</p><hr><p><strong>View the full HTML report in GitHub Actions artifacts:</strong></p><p><a href='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' style='display:inline-block;padding:10px 20px;background-color:#F4C709;color:#3C3C3B;text-decoration:none;border-radius:5px;font-weight:bold;'>Download Allure Report</a></p><p>Click the link above, scroll to the Artifacts section, and download the <code>backend-allure-report</code> artifact.</p>|g" email_payload.json
+
+        HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST https://api.sendgrid.com/v3/mail/send \
+          -H "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d @email_payload.json)
+
+        HTTP_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+        RESPONSE_BODY=$(echo "$HTTP_RESPONSE" | head -n-1)
+
+        echo "HTTP Status Code: $HTTP_CODE"
+        echo "Response: $RESPONSE_BODY"
+
+        if [ "$HTTP_CODE" -eq 202 ]; then
+          echo "Email sent successfully to boonenwout@gmail.com!"
+        else
+          echo "Failed to send email"
+          echo "Response body: $RESPONSE_BODY"
+          exit 1
+        fi
       continue-on-error: true
       
     - name: Check for vulnerabilities
