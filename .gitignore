@@ -16,3 +16,9 @@ obj/
 ## OS
 .DS_Store
 Thumbs.db
+
+## Local temp clones
+_tmp_testingframework/
+
+## API test generated artifacts
+APITests/allure-results/

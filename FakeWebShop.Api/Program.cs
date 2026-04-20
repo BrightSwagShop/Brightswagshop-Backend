@@ -2,14 +2,19 @@ using System.Net;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
+using FakeWebShop.Domain.Services.Interface_s;
 using FakeWebShop.Domain.Services.MongoInterfaces;
+using FakeWebShop.Domain.Services.MongoUserServices;
 using FakeWebShop.Persistence.MongoRepo_s;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 using FakeWebShop.Persistence.MongoRepo_s.Options;
+using FakeWebShop.Persistence.PublicUserRepo_s;
+using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using FakeWebShop.Api.Security;
 using MongoDB.Driver;
+using Stripe;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -28,11 +33,26 @@ builder.Services.AddSingleton<IMongoClient>(_ =>
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
-// Repository DI & Service DI 
+
+// Repository DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
-builder.Services.AddScoped<IMongoProductService, MongoProductService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
+// Services DI 
+builder.Services.AddScoped<IMongoProductService, MongoProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+// Payment Service DI
+builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
+builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
+builder.Services.AddScoped<IDiscountService, FakeWebShop.Domain.Services.DiscountService>();
+
+builder.Services.AddScoped<MongoUserService, MongoUserService>();
+builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 // Supabase storage & Interface
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 
