@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
+using FakeWebShop.Domain.Services.Interface_s;
 using FakeWebShop.Domain.Services.MongoInterfaces;
 using FakeWebShop.Domain.Services.MongoUserServices;
 using FakeWebShop.Domain.Services.MongoUserServices.MongoInterfaces;
@@ -14,6 +15,7 @@ using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,12 +44,27 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
-// Repository DI & Service DI 
+
+// Repository DI 
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+
+// Services DI 
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
 builder.Services.AddScoped<IMongoUserInterface, MongoUserService>();
 builder.Services.AddScoped<MongoUserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+// Payment Service DI
+builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
+builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
+builder.Services.AddScoped<IDiscountService, FakeWebShop.Domain.Services.DiscountService>();
+
+builder.Services.AddScoped<MongoUserService, MongoUserService>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 builder.Services.AddScoped<JwtService>();
 

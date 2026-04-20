@@ -1,8 +1,7 @@
 const { Before, After, Given, When, Then } = require('@cucumber/cucumber');
 const assert = require('node:assert/strict');
 const { request } = require('@playwright/test');
-const { ProductsApiSom } = require('../../tests/som/products-api.som');
-const { createMugPayload } = require('../../tests/data/product-payloads');
+const { ProductsApiSom, createMugPayload } = require('@brightswagshop/testing-framework');
 
 const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:5076';
 
