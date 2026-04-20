@@ -28,7 +28,7 @@ async function createApiContext(role = 'anonymous') {
 }
 
 Before(async function () {
-  this.apiContext = await request.newContext({ baseURL: BASE_URL });
+  this.apiContext = await createApiContext('admin');
   this.backendApi = new BackendApiSom(this.apiContext);
 });
 
@@ -63,19 +63,19 @@ When('I POST backend image upload as a regular user without file', async functio
   await storeResponse(this, response);
 });
 
-Given('I am authenticated as a regular user', async function () {
+Given('I am authenticated as a regular user for backend API', async function () {
   await authApiContext?.dispose();
   authApiContext = await createApiContext('user');
   authBackendApi = new BackendApiSom(authApiContext);
 });
 
-Given('I am authenticated as an admin user', async function () {
+Given('I am authenticated as an admin user for backend API', async function () {
   await authApiContext?.dispose();
   authApiContext = await createApiContext('admin');
   authBackendApi = new BackendApiSom(authApiContext);
 });
 
-Given('I am not authenticated', async function () {
+Given('I am not authenticated for backend API', async function () {
   await authApiContext?.dispose();
   authApiContext = await createApiContext('anonymous');
   authBackendApi = new BackendApiSom(authApiContext);

@@ -28,7 +28,7 @@ async function createApiContext(role = 'anonymous') {
 }
 
 Before(async function () {
-  this.apiContext = await request.newContext({ baseURL: BASE_URL });
+  this.apiContext = await createApiContext('admin');
   this.productsApi = new ProductsApiSom(this.apiContext);
 });
 
@@ -51,19 +51,19 @@ Given('I have a valid mug payload', function () {
   this.payload = createMugPayload();
 });
 
-Given('I am authenticated as a regular user', async function () {
+Given('I am authenticated as a regular user for products API', async function () {
   await authApiContext?.dispose();
   authApiContext = await createApiContext('user');
   authProductsApi = new ProductsApiSom(authApiContext);
 });
 
-Given('I am authenticated as an admin user', async function () {
+Given('I am authenticated as an admin user for products API', async function () {
   await authApiContext?.dispose();
   authApiContext = await createApiContext('admin');
   authProductsApi = new ProductsApiSom(authApiContext);
 });
 
-Given('I am not authenticated', async function () {
+Given('I am not authenticated for products API', async function () {
   await authApiContext?.dispose();
   authApiContext = await createApiContext('anonymous');
   authProductsApi = new ProductsApiSom(authApiContext);

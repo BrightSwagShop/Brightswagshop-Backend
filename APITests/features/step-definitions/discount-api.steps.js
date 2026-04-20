@@ -38,15 +38,18 @@ async function createApiContext(role = 'anonymous') {
 BeforeAll(async function () {
   apiContext = await request.newContext({ baseURL: BASE_URL });
   shoppingCartApi = new ShoppingCartApiSom(apiContext);
-  // Create a product to use in all tests
-  const response = await shoppingCartApi.createProduct(createMugPayload());
-  const result = await shoppingCartApi.readResponse(response);
-  assert.equal(result.status, 201);
-  assert.ok(result.body?.id);
-  seededProductId = result.body.id;
+  authApiContext = await createApiContext('admin');
+
+  // Create a product to use in all tests via admin context (POST /api/products is protected)
+  const productResponse = await authApiContext.post('/api/products', {
+    data: createMugPayload()
+  });
+  const productBody = await productResponse.json();
+  assert.equal(productResponse.status(), 201);
+  assert.ok(productBody?.id);
+  seededProductId = productBody.id;
 
   const now = new Date();
-  authApiContext = await createApiContext('admin');
   const discountResponse = await authApiContext.post('/api/discounts', {
     data: {
       name: 'Spring 20',
@@ -75,7 +78,7 @@ AfterAll(async function () {
     await apiContext.delete(`/api/discounts/${seededDiscountId}`);
   }
   if (seededProductId) {
-    await shoppingCartApi.deleteProduct(seededProductId);
+    await authApiContext.delete(`/api/products/${seededProductId}`);
   }
   await authApiContext?.dispose();
   await apiContext?.dispose();
@@ -162,4 +165,9 @@ Then('I should receive a 404 Not Found error', async function () {
 
 Then('I should receive a 403 Forbidden error', function () {
   assert.equal(lastResponse.status(), 403);
+});
+
+Then('I should receive a 201 Created response', function () {
+  assert.equal(lastResponse.status(), 201);
+  assert.ok(lastBody?.id);
 });

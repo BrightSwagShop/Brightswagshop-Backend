@@ -6,6 +6,7 @@ const { ShoppingCartApiSom, createMugPayload } = require('@brightswagshop/testin
 const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:5076';
 
 let apiContext;
+let authApiContext;
 let shoppingCartApi;
 let seededProductId;
 const createdCartIds = new Set();
@@ -14,17 +15,39 @@ const unique = Date.now();
 const smokeUserId = `pw-user-${unique}`;
 const deleteUserId = `${smokeUserId}-delete`;
 
+async function createApiContext(role = 'anonymous') {
+  const headers = {};
+
+  if (role !== 'anonymous') {
+    headers['X-User-Id'] = `test-${role}-user`;
+  }
+
+  if (role === 'admin') {
+    headers['X-User-Role'] = 'Admin';
+  } else if (role === 'user') {
+    headers['X-User-Role'] = 'User';
+  }
+
+  return request.newContext({
+    baseURL: BASE_URL,
+    extraHTTPHeaders: headers
+  });
+}
+
 BeforeAll(async function () {
   apiContext = await request.newContext({ baseURL: BASE_URL });
+  authApiContext = await createApiContext('admin');
   shoppingCartApi = new ShoppingCartApiSom(apiContext);
 
-  const response = await shoppingCartApi.createProduct(createMugPayload());
-  const result = await shoppingCartApi.readResponse(response);
+  const productResponse = await authApiContext.post('/api/products', {
+    data: createMugPayload()
+  });
+  const productBody = await productResponse.json();
 
-  assert.equal(result.status, 201);
-  assert.ok(result.body?.id);
+  assert.equal(productResponse.status(), 201);
+  assert.ok(productBody?.id);
 
-  seededProductId = result.body.id;
+  seededProductId = productBody.id;
 });
 
 Before(function () {
@@ -40,9 +63,10 @@ AfterAll(async function () {
   }
 
   if (seededProductId) {
-    await shoppingCartApi.deleteProduct(seededProductId);
+    await authApiContext.delete(`/api/products/${seededProductId}`);
   }
 
+  await authApiContext?.dispose();
   await apiContext?.dispose();
 });
 
