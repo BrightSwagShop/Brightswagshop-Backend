@@ -1,6 +1,11 @@
 Feature: Backend API
   Basic API checks for categories, product types, and image upload validation.
 
+  Scenario: Only admins can upload images
+    Given I am authenticated as a regular user
+    When I POST backend image upload as a regular user without file
+    Then the backend response status should be 403
+
   @smoke @qase
   Scenario: GET categories returns 200 and list with id and name
     When I GET backend categories
