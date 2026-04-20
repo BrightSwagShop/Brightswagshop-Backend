@@ -1,12 +1,16 @@
 using System;
-using FakeWebShop.Contracts.UserContracts;
-using FakeWebShop.Persistence.Entities.PublicUser;
+using FakeWebShop.Contracts.Request.UserRequest;
+using FakeWebShop.Contracts.Response.UserResponse;
+
 
 namespace FakeWebShop.Domain.Services.MongoUserServices.MongoInterfaces;
 
 public interface IMongoUserInterface
 {
-    Task<UserResponseContract> Register(UserRequestContract request);
-    Task<UserResponseContract?> Login(UserRequestContract request);
+    Task<UserResponseContract> Register(UserAuthRequestContract request);
+    Task<UserResponseContract?> Login(UserAuthRequestContract request);
+    Task<UserResponseContract> VoegFavoriteByUserAsync(string userId, FavoriteRequestContract request);
+    Task<UserResponseContract> RemoveFavoriteAsync(string userId, FavoriteRequestContract request);
+    Task<UserResponseContract> GetByIdAsync(string userId);
 
 }

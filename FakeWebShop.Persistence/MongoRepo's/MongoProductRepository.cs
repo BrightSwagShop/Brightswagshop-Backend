@@ -44,6 +44,14 @@ public class MongoProductRepository : IMongoProductRepository
             .Find(Product => Product.Id == id)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<List<Product>> GetByIdsAsync(List<string> ids)
+    {
+        return await _products
+            .Find(product => ids.Contains(product.Id))
+            .ToListAsync();
+    }
+
     // Product Type teruggeven
     public async Task<List<Product>> GetByTypeAsync(ProductTypeEnum productType)
     {

@@ -1,32 +1,86 @@
-using FakeWebShop.Contracts.UserContracts;
+using System.Security.Claims;
+using FakeWebShop.Contracts.Request.UserRequest;
+using FakeWebShop.Contracts.Response.UserResponse;
+using FakeWebShop.Domain.Services;
 using FakeWebShop.Domain.Services.MongoUserServices;
-using Microsoft.AspNetCore.Http;
+using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FakeWebShop.Api.Controllers
+namespace FakeWebShop.Api.Controllers;
+
+[ApiController]
+[Route("api/users")]
+public class UserController(
+    MongoUserService service,
+    JwtService jwtService,
+    IMongoUserRepository userRepo) : ControllerBase
 {
-    [ApiController]
-    [Route("api/users")]
-    public class UserController(MongoUserService service) : ControllerBase
-    {
-        [HttpPost("register")]
-    public async Task<ActionResult<UserResponseContract>> Register([FromBody] UserRequestContract request)
+    [HttpPost("register")]
+    public async Task<ActionResult<UserResponseContract>> Register([FromBody] UserAuthRequestContract request)
     {
         var user = await service.Register(request);
         return Ok(user);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<UserResponseContract>> Login([FromBody] UserRequestContract request)
+    public async Task<IActionResult> Login([FromBody] UserAuthRequestContract request)
     {
-         var user = await service.Login(request);
+        var user = await service.Login(request);
+
         if (user == null)
             return Unauthorized();
 
-        return Ok(user);
+        var userEntity = await userRepo.GetByUsernameAsync(request.Username);
+        if (userEntity == null)
+            return Unauthorized();
+
+        var token = jwtService.GenerateJwtToken(userEntity);
+
+        return Ok(new
+        {
+            user,
+            token
+        });
     }
 
-    
-        
+    [Authorize]
+    [HttpPost("favoriteToevoegen")]
+    public async Task<ActionResult<UserResponseContract>> VoegFavoriteToe([FromBody] FavoriteRequestContract request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var updatedUser = await service.VoegFavoriteByUserAsync(userId, request);
+        return Ok(updatedUser);
+    }
+
+    [Authorize]
+    [HttpPost("favoriteVerwijderen")]
+    public async Task<ActionResult<UserResponseContract>> VerwijderFavorite([FromBody] FavoriteRequestContract request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var updatedUser = await service.RemoveFavoriteAsync(userId, request);
+        return Ok(updatedUser);
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<ActionResult<UserResponseContract>> GetMe()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var user = await service.GetByIdAsync(userId); // moet je nog toevoegen in service
+
+        return Ok(user);
     }
 }
