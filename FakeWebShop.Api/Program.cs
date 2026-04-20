@@ -13,6 +13,8 @@ using FakeWebShop.Persistence.PublicUserRepo_s;
 using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Stripe;
@@ -46,23 +48,32 @@ builder.Services.Configure<SupabaseStorageSettings>(
 
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-// Repository DI 
+builder.Services.AddAuthorization();
+
+// Repository DI
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
-// Services DI 
+// Services DI
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
 builder.Services.AddScoped<IMongoUserInterface, MongoUserService>();
 builder.Services.AddScoped<MongoUserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
-// Payment Service DI
 builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
-builder.Services.AddScoped<IDiscountService, FakeWebShop.Domain.Services.DiscountService>();
+builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
+
+builder.Services.AddScoped<MongoUserService, MongoUserService>();
+builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
+builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
+
 
 builder.Services.AddScoped<MongoUserService, MongoUserService>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
@@ -97,27 +108,27 @@ builder.Services.AddAuthorization();
 // Cors 
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
-    .Get<String[]>();
+    .Get<string[]>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy
-            .WithOrigins(allowedOrigins!)
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+        policy.WithOrigins(allowedOrigins!)
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(
-            new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 var app = builder.Build();
+
+app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
@@ -126,3 +137,6 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
 
+app.MapControllers();
+
+app.Run();
