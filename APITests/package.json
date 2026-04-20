@@ -9,7 +9,7 @@
     "test:allure": "npm run allure:clean && cucumber-js --profile allure",
     "report:allure:generate": "allure generate allure-results --clean -o allure-report",
     "report:allure:open": "allure open allure-report",
-    "qase:check-env": "node ./scripts/require-qase-env.js",
+    "qase:check-env": "node -e \"require('@brightswagshop/testing-framework/qase/check-env')\"",
     "test:cucumber:qase": "npm run allure:clean && npm run qase:check-env && cucumber-js --profile qase",
     "test:qase": "npm run test:cucumber:qase"
   },
@@ -17,6 +17,7 @@
     "qaseio": "2.0.2"
   },
   "devDependencies": {
+    "@brightswagshop/testing-framework": "git+https://github.com/BrightSwagShop/TestingFramework.git#main",
     "@cucumber/cucumber": "^12.7.0",
     "@playwright/test": "^1.54.2",
     "allure-commandline": "^2.34.1",
