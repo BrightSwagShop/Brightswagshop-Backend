@@ -27,7 +27,6 @@ env:
   NODE_VERSION: '20.x'
   SOLUTION_FILE: 'Backend_BrightSwagShop.sln'
   ASPNETCORE_ENVIRONMENT: Production
-  MongoOptions__ConnectionString: ${{ secrets.MONGO_PROD_CONNECTION_STRING }}
 
 jobs:
   build:
@@ -83,6 +82,20 @@ jobs:
         npm ci
 
     - name: Start API for integration tests
+      env:
+        Mongo__ConnectionString: ${{ secrets.MONGO_PROD_CONNECTION_STRING }}
+        Mongo__Database: BrightSwagShop
+        Supabase__Url: ${{ secrets.SUPABASE_URL }}
+        Supabase__AnonKey: ${{ secrets.SUPABASE_ANON_KEY }}
+        Supabase__ServiceRoleKey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        Stripe__SecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
+        Stripe__WebhookSecret: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        Jwt__Key: ${{ secrets.JWT_KEY }}
+        Jwt__Issuer: ${{ secrets.JWT_ISSUER }}
+        Jwt__Audience: ${{ secrets.JWT_AUDIENCE }}
+        AzureAd__TenantId: ${{ secrets.AZURE_AD_TENANT_ID }}
+        AzureAd__ClientId: ${{ secrets.AZURE_AD_CLIENT_ID }}
+        AzureAd__Audience: ${{ secrets.AZURE_AD_AUDIENCE }}
       run: |
         dotnet run --project FakeWebShop.Api/FakeWebShop.Api.csproj --launch-profile http > api.log 2>&1 &
         echo $! > api.pid
@@ -102,6 +115,8 @@ jobs:
         exit 1
 
     - name: Run Cucumber API tests
+      id: cucumber_tests
+      continue-on-error: true
       env:
         API_BASE_URL: http://127.0.0.1:5076
         QASE_MODE: testops
@@ -116,7 +131,7 @@ jobs:
       working-directory: APITests
 
     - name: Archive Allure report
-      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true'
+      if: always() && github.event_name == 'workflow_dispatch' && inputs.upload_report == 'true' && hashFiles('APITests/allure-report/index.html') != ''
       run: |
         cd APITests
         zip -r allure-report.zip allure-report
@@ -180,6 +195,12 @@ jobs:
           exit 1
         fi
       continue-on-error: true
+
+    - name: Fail pipeline if Cucumber tests failed
+      if: always() && steps.cucumber_tests.outcome == 'failure'
+      run: |
+        echo "Cucumber API tests failed. See Allure artifact/email for details."
+        exit 1
       
     - name: Check for vulnerabilities
       run: dotnet list package --vulnerable --include-transitive

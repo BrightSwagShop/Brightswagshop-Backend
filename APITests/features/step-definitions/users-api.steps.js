@@ -80,5 +80,6 @@ Then('the users response should contain a user id', function () {
 });
 
 Then('the users response username should match the request', function () {
-  assert.equal(this.userBody.username, this.userPayload.username);
+  const responseUsername = this.userBody?.username ?? this.userBody?.user?.username;
+  assert.equal(responseUsername, this.userPayload.username);
 });

@@ -1,6 +1,7 @@
 using FakeWebShop.Contracts.Request.DiscountRequest;
 using FakeWebShop.Contracts.Response.DiscountResponse;
 using FakeWebShop.Domain.Services.Interface_s;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FakeWebShop.Api.Controllers
@@ -10,6 +11,7 @@ namespace FakeWebShop.Api.Controllers
     public class DiscountController(IDiscountService service) : ControllerBase
     {
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<DiscountResponse>> CreateDiscount([FromBody] DiscountRequest discount)
         {
             var createdDiscount = await service.CreateAsync(discount);
