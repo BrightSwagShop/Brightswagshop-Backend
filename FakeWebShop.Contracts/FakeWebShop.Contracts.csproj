@@ -11,7 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Request\UserRequest\" />
     <Folder Include="Request\VariantRequest\" />
+    <Folder Include="Response\UserResponse\" />
+    <Folder Include="Request\CartRequest\" />
+    <Folder Include="Request\OrderRequest\" />
+    <Folder Include="Request\VariantRequest\" />
+    <Folder Include="Response\CartResponse\" />
+    <Folder Include="Response\OrderResponse\" />
     <Folder Include="Response\VariantResponse\" />
   </ItemGroup>
 

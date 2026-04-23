@@ -8,15 +8,22 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.3" />
     <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+    <PackageReference Include="Supabase" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MongoRepo's\MongoInterface's\" />
+    <Folder Include="Constants\" />
     <Folder Include="MongoRepo's\Options\" />
+    <Folder Include="PublicUserRepo's\" />
+    <Folder Include="PublicUserRepo's\MongoInterfaces\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FakeWebShop.Domain.Abstractions\FakeWebShop.Domain.Abstractions.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
+     
     <ProjectReference Include="..\FakeWebShop.Persistence.Entities\FakeWebShop.Persistence.Entities.csproj" />
   </ItemGroup>
 

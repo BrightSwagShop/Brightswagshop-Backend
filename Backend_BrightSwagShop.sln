@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeWebShop.Persistence.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeWebShop.Domain.Enums", "FakeWebShop.Persistence.Enums\FakeWebShop.Domain.Enums.csproj", "{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeWebShop.Domain.Abstractions", "FakeWebShop.Domain.Abstractions\FakeWebShop.Domain.Abstractions.csproj", "{F2715BBD-827C-4725-8B34-3725AAD8E435}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x64.Build.0 = Release|Any CPU
 		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x86.ActiveCfg = Release|Any CPU
 		{6A1A6488-14CC-4326-A76D-DD9F5A32AAA0}.Release|x86.Build.0 = Release|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Debug|x64.Build.0 = Debug|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Debug|x86.Build.0 = Debug|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Release|x64.ActiveCfg = Release|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Release|x64.Build.0 = Release|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Release|x86.ActiveCfg = Release|Any CPU
+		{F2715BBD-827C-4725-8B34-3725AAD8E435}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

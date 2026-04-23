@@ -14,4 +14,11 @@
     <ProjectReference Include="..\FakeWebShop.Persistence.Enums\FakeWebShop.Domain.Enums.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cart\" />
+    <Folder Include="Order\" />
+    <Folder Include="PublicUser\" />
+    <Folder Include="Variant\BaseColorVaria\" />
+  </ItemGroup>
+
 </Project>

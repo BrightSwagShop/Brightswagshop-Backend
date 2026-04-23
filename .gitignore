@@ -16,3 +16,13 @@ obj/
 ## OS
 .DS_Store
 Thumbs.db
+
+## Local temp clones
+_tmp_testingframework/
+
+## API test generated artifacts
+APITests/allure-results/
+
+## Local secret overrides
+FakeWebShop.Api/appsettings.Local.json
+FakeWebShop.Api/appsettings.Development.Local.json

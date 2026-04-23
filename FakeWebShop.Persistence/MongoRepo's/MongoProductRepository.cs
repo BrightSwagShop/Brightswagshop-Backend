@@ -3,6 +3,8 @@ using FakeWebShop.Persistence.MongoRepo_s.Options;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using FakeWebShop.Persistence.Entities.BaseProduct;
+using FakeWebShop.Domain.Enums;
+using FakeWebShop.Persistence.Constants;
 
 namespace FakeWebShop.Persistence.MongoRepo_s;
 
@@ -12,7 +14,7 @@ public class MongoProductRepository : IMongoProductRepository
     public MongoProductRepository(IMongoClient client, IOptions<MongoOptions> options)
     {
         var database = client.GetDatabase(options.Value.Database); // Get Databse
-        _products = database.GetCollection<Product>("products");    // Get Juiste Collection
+        _products = database.GetCollection<Product>(MongoCollectionsNames.Products);    // Get Juiste Collection
     }
 
     // Nieuw product aanmaken
@@ -42,6 +44,22 @@ public class MongoProductRepository : IMongoProductRepository
             .Find(Product => Product.Id == id)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<List<Product>> GetByIdsAsync(List<string> ids)
+    {
+        return await _products
+            .Find(product => ids.Contains(product.Id))
+            .ToListAsync();
+    }
+
+    // Product Type teruggeven
+    public async Task<List<Product>> GetByTypeAsync(ProductTypeEnum productType)
+    {
+        return await _products
+            .Find(p => p.ProductType == productType)
+            .ToListAsync();
+    }
+
 
 
     // Product updaten

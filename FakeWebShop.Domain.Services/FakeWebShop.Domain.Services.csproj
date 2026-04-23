@@ -8,13 +8,24 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FakeWebShop.Contracts\FakeWebShop.Contracts.csproj" />
+    <ProjectReference Include="..\FakeWebShop.Domain.Abstractions\FakeWebShop.Domain.Abstractions.csproj" />
     <ProjectReference Include="..\FakeWebShop.Domain.Model\FakeWebShop.Domain.Model.csproj" />
     <ProjectReference Include="..\FakeWebShop.Persistence\FakeWebShop.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ServicesMapping\" />
+    <Folder Include="ServicesMapping\OrderMapping\" />
+    <Folder Include="ServicesMapping\ShoppingCartMapping\" />
     <Folder Include="MongoServicesMapping\" />
+    <Folder Include="MongoServicesMapping\MongoUserMapping\" />
     <Folder Include="MongoServicesMapping\ProductTypesMapping\" />
+    <Folder Include="MongoUserServices\MongoInterfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="Stripe.net" Version="51.0.0" />
   </ItemGroup>
 
 </Project>
