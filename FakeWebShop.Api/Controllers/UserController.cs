@@ -2,7 +2,7 @@ using System.Security.Claims;
 using FakeWebShop.Contracts.Request.UserRequest;
 using FakeWebShop.Contracts.Response.UserResponse;
 using FakeWebShop.Domain.Services;
-using FakeWebShop.Domain.Services.MongoUserServices;
+using FakeWebShop.Domain.Services.MongoUserServices.MongoInterfaces;
 using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ namespace FakeWebShop.Api.Controllers;
 [ApiController]
 [Route("api/users")]
 public class UserController(
-    MongoUserService service,
+    IMongoUserInterface service,
     JwtService jwtService,
     IMongoUserRepository userRepo) : ControllerBase
 {
@@ -44,7 +44,7 @@ public class UserController(
         });
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "CustomJwt", Roles = "User")]
     [HttpPost("favoriteToevoegen")]
     public async Task<ActionResult<UserResponseContract>> VoegFavoriteToe([FromBody] FavoriteRequestContract request)
     {
@@ -57,7 +57,7 @@ public class UserController(
         return Ok(updatedUser);
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "CustomJwt", Roles = "User")]
     [HttpPost("favoriteVerwijderen")]
     public async Task<ActionResult<UserResponseContract>> VerwijderFavorite([FromBody] FavoriteRequestContract request)
     {
@@ -70,7 +70,7 @@ public class UserController(
         return Ok(updatedUser);
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "CustomJwt", Roles = "User")]
     [HttpGet("me")]
     public async Task<ActionResult<UserResponseContract>> GetMe()
     {
@@ -79,8 +79,7 @@ public class UserController(
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        var user = await service.GetByIdAsync(userId); // moet je nog toevoegen in service
-
+        var user = await service.GetByIdAsync(userId);
         return Ok(user);
     }
 }

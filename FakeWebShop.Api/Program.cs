@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
 using FakeWebShop.Domain.Services;
@@ -21,8 +23,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 var builder = WebApplication.CreateBuilder(args);
 
+var jwtKey = builder.Configuration["Jwt:Key"]!;
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;
+var jwtAudience = builder.Configuration["Jwt:Audience"]!;
 
-// MongoOptions binden (voor IOptions<MongoOptions>)
+// Mongo
 builder.Services.Configure<MongoOptions>(
     builder.Configuration.GetSection("Mongo"));
 
@@ -32,38 +37,69 @@ builder.Services.AddSingleton<IMongoClient>(_ =>
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var client = sp.GetRequiredService<IMongoClient>();
-    var options = sp.GetRequiredService<
-        Microsoft.Extensions.Options.IOptions<MongoOptions>>();
-
+    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<MongoOptions>>();
     return client.GetDatabase(options.Value.Database);
 });
 
-// Image Storage
+// Supabase
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+// Authentication
+var authBuilder = builder.Services.AddAuthentication();
+
+authBuilder.AddMicrosoftIdentityWebApi(
+    builder.Configuration.GetSection("AzureAd"),
+    jwtBearerScheme: "AzureAd"
+);
+
+authBuilder.AddJwtBearer("CustomJwt", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey)),
+        NameClaimType = ClaimTypes.NameIdentifier,
+        RoleClaimType = ClaimTypes.Role
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserOrAdmin", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("User", "App.Admin");
+    });
+});
 
 // Repository DI
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 
 // Services DI
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
 builder.Services.AddScoped<IMongoUserInterface, MongoUserService>();
-builder.Services.AddScoped<MongoUserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
-builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 builder.Services.AddScoped<JwtService>();
 
-// Cors 
+// CORS
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>();
@@ -96,9 +132,10 @@ builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthori
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();
