@@ -17,10 +17,11 @@ using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using FakeWebShop.Api.Security;
 using MongoDB.Driver;
 using Stripe;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtKey = builder.Configuration["Jwt:Key"]!;
