@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using FakeWebShop.Domain.Abstractions.Storage;
@@ -64,7 +65,9 @@ authBuilder.AddJwtBearer("CustomJwt", options =>
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtKey))
+            Encoding.UTF8.GetBytes(jwtKey)),
+        NameClaimType = ClaimTypes.NameIdentifier,
+        RoleClaimType = ClaimTypes.Role
     };
 });
 
