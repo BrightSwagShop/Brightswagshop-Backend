@@ -25,8 +25,7 @@ var jwtKey = builder.Configuration["Jwt:Key"]!;
 var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;
 var jwtAudience = builder.Configuration["Jwt:Audience"]!;
 
-
-// MongoOptions binden (voor IOptions<MongoOptions>)
+// Mongo
 builder.Services.Configure<MongoOptions>(
     builder.Configuration.GetSection("Mongo"));
 
@@ -36,76 +35,67 @@ builder.Services.AddSingleton<IMongoClient>(_ =>
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var client = sp.GetRequiredService<IMongoClient>();
-    var options = sp.GetRequiredService<
-        Microsoft.Extensions.Options.IOptions<MongoOptions>>();
-
+    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<MongoOptions>>();
     return client.GetDatabase(options.Value.Database);
 });
 
-// Image Storage
+// Supabase
 builder.Services.Configure<SupabaseStorageSettings>(
     builder.Configuration.GetSection("Supabase"));
 
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+// Authentication
+var authBuilder = builder.Services.AddAuthentication();
 
-builder.Services.AddAuthorization();
+authBuilder.AddMicrosoftIdentityWebApi(
+    builder.Configuration.GetSection("AzureAd"),
+    jwtBearerScheme: "AzureAd"
+);
+
+authBuilder.AddJwtBearer("CustomJwt", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserOrAdmin", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("User", "App.Admin");
+    });
+});
 
 // Repository DI
 builder.Services.AddScoped<IMongoProductRepository, MongoProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 
 // Services DI
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
 builder.Services.AddScoped<IMongoUserInterface, MongoUserService>();
-builder.Services.AddScoped<MongoUserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IStripeWebhookService, StripeWebhookService>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
-
-builder.Services.AddScoped<MongoUserService, MongoUserService>();
-builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
-
-
-builder.Services.AddScoped<MongoUserService, MongoUserService>();
-builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
 builder.Services.AddScoped<JwtService>();
 
-// Supabase storage & Interface
-builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
-
-
-//jwt bearer injecteren
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-
-            ValidIssuer = jwtIssuer,
-            ValidAudience = jwtAudience,
-
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey)
-            )
-        };
-    });
-
-builder.Services.AddAuthorization();
-
-// Cors 
+// CORS
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>();
@@ -129,13 +119,9 @@ builder.Services.AddControllers()
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHttpsRedirection();
-app.MapControllers();
-app.Run();
 
 app.MapControllers();
 

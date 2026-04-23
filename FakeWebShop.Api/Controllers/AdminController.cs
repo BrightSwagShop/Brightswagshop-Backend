@@ -9,7 +9,7 @@ namespace FakeWebShop.Api.Controllers;
 [Route("api/admins")]
 public class AdminController : ControllerBase
 {
-    [Authorize(Roles = "App.Admin")]
+    [Authorize(AuthenticationSchemes = "AzureAd", Roles = "App.Admin")]
     [HttpGet("admin-only")]
     public IActionResult Get()
     {
