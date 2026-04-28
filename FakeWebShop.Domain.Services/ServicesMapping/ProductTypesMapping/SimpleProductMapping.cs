@@ -1,4 +1,3 @@
-using System;
 using FakeWebShop.Contracts.Request;
 using FakeWebShop.Contracts.Response;
 using FakeWebShop.Contracts.Response.VariantResponse;
@@ -7,17 +6,18 @@ using FakeWebShop.Domain.Model.VariantModel;
 using FakeWebShop.Persistence.Entities;
 using FakeWebShop.Persistence.Entities.Variant;
 
+
+
 namespace FakeWebShop.Domain.Services.MongoServicesMapping.ProductTypesMapping;
 
-internal static class ClothingProductMapping
+internal static class SimpleProductMapping
 {
     // Create & Put           // Get
     // Request -> Model -> Entity -> Model -> Response
-
-    // Request naar Model
-    public static ClothingProductModel AsModel(this ClothingProductRequest request)
+    // Request -> Model
+    public static SimpleProductModel AsModel(this SimpleProductRequest request)
     {
-        return new ClothingProductModel
+        return new SimpleProductModel
         {
             Name = request.Name,
             Description = request.Description,
@@ -25,76 +25,20 @@ internal static class ClothingProductMapping
             Category = request.Category,
             ProductType = request.ProductType,
             IsActive = request.IsActive,
-            Kleuren = request.Kleuren.Select(k => new ColorVariantClothesModel
+            Kleuren = request.Kleuren.Select(k => new ColorVariantModel
             {
                 Kleur = k.Kleur,
                 ImageUrl = k.ImageUrl,
-                Maten = k.Maten.Select(m => new SizeVariantModel
-                {
-                    Maat = m.Maat,
-                    Stock = m.Stock,
-                    Sku = m.Sku
-                }).ToList()
-            }).ToList()
-        };
-
-    }
-
-    // Model naar Entity
-    public static ClothingProduct AsEntity(this ClothingProductModel model)
-    {
-        return new ClothingProduct
-        {
-            Name = model.Name,
-            Description = model.Description,
-            Price = model.Price,
-            Category = model.Category,
-            ProductType = model.ProductType,
-            IsActive = model.IsActive,
-            Kleuren = model.Kleuren.Select(k => new ColorVariantClothes
-            {
-                Kleur = k.Kleur,
-                ImageUrl = k.ImageUrl,
-                Maten = k.Maten.Select(m => new SizeVariant
-                {
-                    Maat = m.Maat,
-                    Stock = m.Stock,
-                    Sku = m.Sku
-                }).ToList()
+                Stock = k.Stock,
+                Sku = k.Sku
             }).ToList()
         };
     }
 
-    // Entity Naar Model
-    public static ClothingProductModel AsModel(this ClothingProduct entity)
+    // Model -> Entity
+    public static SimpleProduct AsEntity(this SimpleProductModel model)
     {
-        return new ClothingProductModel
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Description = entity.Description,
-            Price = entity.Price,
-            Category = entity.Category,
-            ProductType = entity.ProductType,
-            IsActive = entity.IsActive,
-            Kleuren = entity.Kleuren.Select(k => new ColorVariantClothesModel
-            {
-                Kleur = k.Kleur,
-                ImageUrl = k.ImageUrl,
-                Maten = k.Maten.Select(m => new SizeVariantModel
-                {
-                    Maat = m.Maat,
-                    Stock = m.Stock,
-                    Sku = m.Sku
-                }).ToList()
-            }).ToList()
-        };
-    }
-
-    // Model naar Response
-    public static ClothingProductResponse AsResponse(this ClothingProductModel model)
-    {
-        return new ClothingProductResponse
+        return new SimpleProduct
         {
             Id = model.Id,
             Name = model.Name,
@@ -103,17 +47,60 @@ internal static class ClothingProductMapping
             Category = model.Category,
             ProductType = model.ProductType,
             IsActive = model.IsActive,
-            Kleuren = model.Kleuren.Select(k => new ColorVariantClothesResponse
+            Kleuren = model.Kleuren.Select(k => new ColorVariant
             {
                 Kleur = k.Kleur,
                 ImageUrl = k.ImageUrl,
-                Maten = k.Maten.Select(m => new SizeVariantResponse
-                {
-                    Maat = m.Maat,
-                    Stock = m.Stock,
-                    Sku = m.Sku
-                }).ToList()
+                Stock = k.Stock,
+                Sku = k.Sku
             }).ToList()
         };
     }
+
+    // Entity -> Model
+    public static SimpleProductModel AsModel(this SimpleProduct entity)
+    {
+        return new SimpleProductModel
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+            Price = entity.Price,
+            Category = entity.Category,
+            ProductType = entity.ProductType,
+            IsActive = entity.IsActive,
+            Kleuren = entity.Kleuren.Select(k => new ColorVariantModel
+            {
+                Kleur = k.Kleur,
+                ImageUrl = k.ImageUrl,
+                Stock = k.Stock,
+                Sku = k.Sku
+            }).ToList()
+        };
+    }
+
+
+    // Model -> Response
+    public static SimpleProductResponse AsResponse(this SimpleProductModel model)
+    {
+        return new SimpleProductResponse
+        {
+            Id = model.Id,
+            Name = model.Name,
+            Description = model.Description,
+            Price = model.Price,
+            Category = model.Category,
+            ProductType = model.ProductType,
+            IsActive = model.IsActive,
+            Kleuren = model.Kleuren.Select(k => new ColorVariantResponse
+            {
+                Kleur = k.Kleur,
+                ImageUrl = k.ImageUrl,
+                Stock = k.Stock,
+                Sku = k.Sku
+            }).ToList()
+        };
+    }
+
+
 }

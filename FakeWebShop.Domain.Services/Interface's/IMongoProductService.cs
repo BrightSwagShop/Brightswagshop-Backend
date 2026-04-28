@@ -7,9 +7,10 @@ public interface IMongoProductService
 {
     Task<MongoProductResponse> CreateProduct(MongoProductRequest product);
     Task<List<MongoProductResponse>> GetProducts();
-    Task<MongoProductResponse> GetProductById(string id);
+    Task<MongoProductResponse?> GetProductById(string id);
     Task<bool> DeleteProduct(string id);
     // Update Product voor later "Lange code";
+    Task<MongoProductResponse?> UpdateProduct(string id, MongoProductRequest product);
     Task<List<MongoProductResponse>> GetProductsByTypeAsync(ProductTypeEnum productType);
     Task<List<MongoProductResponse>> GetProductsByIdsAsync(List<string> ids);
 }

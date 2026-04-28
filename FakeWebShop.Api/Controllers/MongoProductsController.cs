@@ -32,16 +32,22 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<MongoProductResponse>> Create([FromBody] MongoProductRequest request)
     {
-        var created = await service.CreateProduct(request);
-
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        try
+        {
+            var created = await service.CreateProduct(request);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(string id)
     {
         var deleted = await service.DeleteProduct(id);
@@ -58,8 +64,18 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
         {
             "tshirt" => ProductTypeEnum.TShirt,
             "hoodie" => ProductTypeEnum.Hoodie,
+            "sportkledij" => ProductTypeEnum.Sportkledij,
+            "sokken" => ProductTypeEnum.Sokken,
+            "drinkfles" => ProductTypeEnum.Drinkfles,
+            "drinkflessen" => ProductTypeEnum.Drinkfles,
             "mok" => ProductTypeEnum.Mok,
-            "sticker" => ProductTypeEnum.Sticker,
+            "mokken" => ProductTypeEnum.Mok,
+            "onderlegger" => ProductTypeEnum.Onderlegger,
+            "onderleggers" => ProductTypeEnum.Onderlegger,
+            "balpen" => ProductTypeEnum.Balpen,
+            "balpennen" => ProductTypeEnum.Balpen,
+            "eendje" => ProductTypeEnum.Eendje,
+            "eendjes" => ProductTypeEnum.Eendje,
             _ => null
         };
 
@@ -79,5 +95,17 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
 
         var products = await service.GetProductsByIdsAsync(ids);
         return Ok(products);
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<ActionResult<MongoProductResponse>> Update(string id, [FromBody] MongoProductRequest request)
+    {
+        var updated = await service.UpdateProduct(id, request);
+
+        if (updated is null)
+            return NotFound();
+
+        return Ok(updated);
     }
 }
