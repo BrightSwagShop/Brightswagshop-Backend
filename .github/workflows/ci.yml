@@ -216,7 +216,7 @@ jobs:
         token: ${{ env.CROSS_REPO_PAT }}
         repository: BrightSwagShop/TestingFramework
         event-type: run-cross-e2e
-        client-payload: '{"source_repository":"${{ github.repository }}","source_workflow":"${{ github.workflow }}","source_run_id":"${{ github.run_id }}","sha":"${{ github.sha }}","ref":"${{ github.ref }}"}'
+        client-payload: '{"source_repository":"${{ github.repository }}","source_workflow":"${{ github.workflow }}","source_run_id":"${{ github.run_id }}","sha":"${{ github.sha }}","ref":"${{ github.ref }}","status_context":"cross-repo-e2e/${{ github.run_id }}"}'
 
     - name: Wait for E2E workflow to complete
       if: github.event_name == 'push' && steps.trigger_e2e.outcome == 'success'
@@ -225,13 +225,29 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const maxAttempts = 120; // 10 minutes max
-          const sourceRunId = '${{ github.run_id }}';
+          const sourceSha = '${{ github.sha }}';
+          const statusContext = `cross-repo-e2e/${{ github.run_id }}`;
           let attempts = 0;
-          let targetRunId = null;
           let workflowConclusion = null;
 
           while (attempts < maxAttempts && workflowConclusion === null) {
-            if (!targetRunId) {
+            const statuses = await github.rest.repos.listCommitStatusesForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: sourceSha,
+            });
+
+            const matchingStatus = statuses.data.find(status => status.context === statusContext);
+
+            if (matchingStatus) {
+              if (matchingStatus.state === 'success') {
+                workflowConclusion = 'success';
+              } else if (matchingStatus.state === 'failure' || matchingStatus.state === 'error') {
+                workflowConclusion = 'failure';
+              } else {
+                console.log(`E2E status ${statusContext} is currently ${matchingStatus.state}; waiting for completion.`);
+              }
+            } else {
               const runs = await github.rest.actions.listWorkflowRuns({
                 owner: 'BrightSwagShop',
                 repo: 'TestingFramework',
@@ -242,30 +258,26 @@ jobs:
               });
 
               const matchingRuns = runs.data.workflow_runs
-                .filter(run => (run.display_title || run.name || '').includes(`source run ${sourceRunId}`))
+                .filter(run => (run.display_title || run.name || '').includes(`source run ${{ github.run_id }}`))
                 .sort((left, right) => new Date(left.created_at) - new Date(right.created_at));
 
               if (matchingRuns.length > 0) {
-                targetRunId = matchingRuns[0].id;
-              }
-            }
+                const run = await github.rest.actions.getWorkflowRun({
+                  owner: 'BrightSwagShop',
+                  repo: 'TestingFramework',
+                  run_id: matchingRuns[0].id,
+                });
 
-            if (targetRunId) {
-              const run = await github.rest.actions.getWorkflowRun({
-                owner: 'BrightSwagShop',
-                repo: 'TestingFramework',
-                run_id: targetRunId,
-              });
-
-              if (run.data.status === 'completed') {
-                workflowConclusion = run.data.conclusion;
-              } else {
-                console.log(`E2E run ${targetRunId} is currently ${run.data.status}; waiting for completion.`);
+                if (run.data.status === 'completed') {
+                  workflowConclusion = run.data.conclusion;
+                } else {
+                  console.log(`E2E run ${matchingRuns[0].id} is currently ${run.data.status}; waiting for completion.`);
+                }
               }
             }
 
             if (workflowConclusion === null) {
-              console.log(`Waiting for E2E workflow for source run ${sourceRunId}... (${attempts + 1}/${maxAttempts})`);
+              console.log(`Waiting for E2E status ${statusContext} on ${sourceSha}... (${attempts + 1}/${maxAttempts})`);
               await new Promise(resolve => setTimeout(resolve, 5000));
               attempts++;
             }
