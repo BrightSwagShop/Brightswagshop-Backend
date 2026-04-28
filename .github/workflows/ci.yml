@@ -247,33 +247,6 @@ jobs:
               } else {
                 console.log(`E2E status ${statusContext} is currently ${matchingStatus.state}; waiting for completion.`);
               }
-            } else {
-              const runs = await github.rest.actions.listWorkflowRuns({
-                owner: 'BrightSwagShop',
-                repo: 'TestingFramework',
-                workflow_id: 'e2e.yml',
-                event: 'repository_dispatch',
-                status: 'all',
-                per_page: 20
-              });
-
-              const matchingRuns = runs.data.workflow_runs
-                .filter(run => (run.display_title || run.name || '').includes(`source run ${{ github.run_id }}`))
-                .sort((left, right) => new Date(left.created_at) - new Date(right.created_at));
-
-              if (matchingRuns.length > 0) {
-                const run = await github.rest.actions.getWorkflowRun({
-                  owner: 'BrightSwagShop',
-                  repo: 'TestingFramework',
-                  run_id: matchingRuns[0].id,
-                });
-
-                if (run.data.status === 'completed') {
-                  workflowConclusion = run.data.conclusion;
-                } else {
-                  console.log(`E2E run ${matchingRuns[0].id} is currently ${run.data.status}; waiting for completion.`);
-                }
-              }
             }
 
             if (workflowConclusion === null) {
