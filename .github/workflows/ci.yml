@@ -224,44 +224,76 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const maxAttempts = 120; // 10 minutes max
+          const maxAttempts = 120; // ~10 minutes (120 * 5s)
+          const sleepMs = 5000;
           const sourceSha = '${{ github.sha }}';
           const statusContext = `cross-repo-e2e/${{ github.run_id }}`;
-          let attempts = 0;
-          let workflowConclusion = null;
 
-          while (attempts < maxAttempts && workflowConclusion === null) {
+          let attempts = 0;
+          let concluded = false;
+
+          while (attempts < maxAttempts && !concluded) {
+            // Check commit statuses on this repo first
             const statuses = await github.rest.repos.listCommitStatusesForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: sourceSha,
             });
 
-            const matchingStatus = statuses.data.find(status => status.context === statusContext);
+            const matchingStatus = statuses.data.find(s => s.context === statusContext);
 
             if (matchingStatus) {
+              console.log(`Found cross-repo status: ${matchingStatus.state} (${matchingStatus.target_url || 'no-url'})`);
               if (matchingStatus.state === 'success') {
-                workflowConclusion = 'success';
-              } else if (matchingStatus.state === 'failure' || matchingStatus.state === 'error') {
-                workflowConclusion = 'failure';
-              } else {
-                console.log(`E2E status ${statusContext} is currently ${matchingStatus.state}; waiting for completion.`);
+                console.log('E2E workflow completed successfully via commit status.');
+                concluded = true;
+                break;
               }
+              if (matchingStatus.state === 'failure' || matchingStatus.state === 'error') {
+                throw new Error('E2E workflow reported failure via commit status. Blocking deployment.');
+              }
+            } else {
+              console.log(`No commit status yet for context ${statusContext} (attempt ${attempts + 1}/${maxAttempts}).`);
             }
 
-            if (workflowConclusion === null) {
-              console.log(`Waiting for E2E status ${statusContext} on ${sourceSha}... (${attempts + 1}/${maxAttempts})`);
-              await new Promise(resolve => setTimeout(resolve, 5000));
+            // Fallback: query TestingFramework workflow runs for this SHA
+            try {
+              const [owner, repo] = 'BrightSwagShop/TestingFramework'.split('/');
+              const runs = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                per_page: 10,
+                head_sha: sourceSha,
+              });
+
+              if (runs.data.workflow_runs && runs.data.workflow_runs.length > 0) {
+                for (const run of runs.data.workflow_runs) {
+                  console.log(`Found TF run: id=${run.id} conclusion=${run.conclusion} status=${run.status} url=${run.html_url}`);
+                  if (run.status === 'completed') {
+                    if (run.conclusion === 'success') {
+                      console.log('E2E workflow completed successfully (fallback run).');
+                      concluded = true;
+                      break;
+                    } else {
+                      throw new Error(`E2E workflow run concluded with ${run.conclusion}. Blocking deployment.`);
+                    }
+                  }
+                }
+              } else {
+                console.log('No TestingFramework workflow runs found for this SHA yet.');
+              }
+            } catch (err) {
+              console.log('Error checking TestingFramework runs fallback:', String(err));
+            }
+
+            if (!concluded) {
+              await new Promise(resolve => setTimeout(resolve, sleepMs));
               attempts++;
             }
           }
 
-          if (workflowConclusion === 'success') {
-            console.log('E2E workflow completed successfully!');
-          } else if (workflowConclusion === 'failure') {
-            core.setFailed('E2E workflow failed. Blocking deployment.');
-          } else {
-            core.setFailed(`E2E workflow did not complete in time or had unknown status: ${workflowConclusion}`);
+          if (!concluded) {
+            throw new Error('E2E workflow did not complete in time or had unknown status; blocking deployment.');
           }
   
   deploy:
