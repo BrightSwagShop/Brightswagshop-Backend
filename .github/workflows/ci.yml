@@ -216,7 +216,7 @@ jobs:
         token: ${{ env.CROSS_REPO_PAT }}
         repository: BrightSwagShop/TestingFramework
         event-type: run-cross-e2e
-        client-payload: '{"source_repository":"${{ github.repository }}","source_workflow":"${{ github.workflow }}","source_run_id":"${{ github.run_id }}","sha":"${{ github.sha }}","ref":"${{ github.ref }}","status_context":"cross-repo-e2e/${{ github.run_id }}"}'
+        client-payload: '{"source_repository":"${{ github.repository }}","source_workflow":"${{ github.workflow }}","source_run_id":"${{ github.run_id }}","sha":"${{ github.sha }}","ref":"${{ github.ref }}","frontend_ref":"frontend-framework-integration","status_context":"cross-repo-e2e/${{ github.run_id }}"}'
 
     - name: Wait for E2E workflow to complete
       if: github.event_name == 'push' && steps.trigger_e2e.outcome == 'success'
