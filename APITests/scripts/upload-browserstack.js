@@ -27,14 +27,20 @@ async function makeRequest(method, endpoint, body = null) {
   if (body) options.body = JSON.stringify(body);
 
   try {
+    console.log(`[BrowserStack] ${method} ${endpoint}`);
     const response = await fetch(url, options);
+    const responseText = await response.text();
+    
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
+      console.error(`[BrowserStack] HTTP ${response.status} - ${responseText}`);
+      throw new Error(`HTTP ${response.status}: ${responseText}`);
     }
-    return await response.json();
+    
+    const jsonResponse = JSON.parse(responseText);
+    console.log(`[BrowserStack] Response:`, JSON.stringify(jsonResponse).substring(0, 200));
+    return jsonResponse;
   } catch (error) {
-    console.error(`[BrowserStack] API Error: ${error.message}`);
+    console.error(`[BrowserStack] Request failed:`, error.message);
     throw error;
   }
 }
@@ -48,25 +54,32 @@ async function uploadResults() {
 
     // Get or create project
     console.log(`[BrowserStack] Getting or creating project: ${PROJECT_NAME}`);
-    let projects = await makeRequest('GET', '/projects');
-    let project = projects.find(p => p.name === PROJECT_NAME);
+    const projectsResponse = await makeRequest('GET', '/projects');
+    
+    // Handle different response formats (array or object with projects property)
+    const projectsList = Array.isArray(projectsResponse) ? projectsResponse : 
+                        (projectsResponse.projects || projectsResponse.data || []);
+    
+    let project = projectsList.find(p => p.name === PROJECT_NAME);
 
     if (!project) {
       console.log('[BrowserStack] Creating project...');
-      project = await makeRequest('POST', '/projects', { name: PROJECT_NAME });
+      const createResponse = await makeRequest('POST', '/projects', { name: PROJECT_NAME });
+      project = createResponse.project || createResponse.data || createResponse;
     }
 
-    const projectId = project.id;
+    const projectId = project.id || project.identifier;
     console.log(`[BrowserStack] Using project: ${projectId}`);
 
     // Create test run
     console.log(`[BrowserStack] Creating test run: ${BUILD_NAME}`);
-    const testRun = await makeRequest('POST', `/projects/${projectId}/test-runs`, {
+    const testRunResponse = await makeRequest('POST', `/projects/${projectId}/test-runs`, {
       name: BUILD_NAME,
       description: `Automated API test run for ${BUILD_NAME}`,
     });
 
-    const testRunId = testRun.id;
+    const testRun = testRunResponse.testRun || testRunResponse.data || testRunResponse;
+    const testRunId = testRun.id || testRun.identifier;
     console.log(`[BrowserStack] Test run created: ${testRunId}`);
 
     // Parse Cucumber JSON report
