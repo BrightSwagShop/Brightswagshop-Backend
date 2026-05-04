@@ -74,8 +74,10 @@ async function uploadResults() {
     // Create test run
     console.log(`[BrowserStack] Creating test run: ${BUILD_NAME}`);
     const testRunResponse = await makeRequest('POST', `/projects/${projectId}/test-runs`, {
-      name: BUILD_NAME,
-      description: `Automated API test run for ${BUILD_NAME}`,
+      test_run: {
+        name: BUILD_NAME,
+        description: `Automated API test run for ${BUILD_NAME}`,
+      }
     });
 
     const testRun = testRunResponse.testRun || testRunResponse.data || testRunResponse;
@@ -124,9 +126,11 @@ async function uploadResults() {
       try {
         console.log(`[BrowserStack] Uploading result for: ${testCase.name}`);
         await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/results`, {
-          name: testCase.name,
-          status: testCase.status,
-          duration: testCase.duration,
+          result: {
+            name: testCase.name,
+            status: testCase.status,
+            duration: testCase.duration,
+          }
         });
       } catch (e) {
         console.warn(`[BrowserStack] Warning: Could not upload result for ${testCase.name}:`, e.message);
