@@ -45,6 +45,92 @@ async function makeRequest(method, endpoint, body = null) {
   }
 }
 
+function pickList(response, ...keys) {
+  if (Array.isArray(response)) {
+    return response;
+  }
+  for (const key of keys) {
+    const value = response && response[key];
+    if (Array.isArray(value)) {
+      return value;
+    }
+  }
+  return [];
+}
+
+function pickObject(response, ...keys) {
+  for (const key of keys) {
+    const value = response && response[key];
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return value;
+    }
+  }
+  return response;
+}
+
+function pickIdentifier(entity) {
+  if (!entity) {
+    return undefined;
+  }
+  return entity.identifier
+    || entity.id
+    || entity.test_case_id
+    || entity.testCaseId
+    || (entity.urls && entity.urls.self && entity.urls.self.split('/').pop());
+}
+
+function toBrowserStackStatus(status) {
+  const normalized = String(status || '').toLowerCase();
+  if (normalized.includes('pass')) return 'passed';
+  if (normalized.includes('skip')) return 'blocked';
+  return 'failed';
+}
+
+async function getOrCreateFolder(projectId, folderName) {
+  const foldersResponse = await makeRequest('GET', `/projects/${projectId}/folders`);
+  const folders = pickList(foldersResponse, 'folders', 'data');
+  let folder = folders.find((f) => f.name === folderName);
+
+  if (!folder) {
+    const createFolderResponse = await makeRequest('POST', `/projects/${projectId}/folders`, {
+      folder: { name: folderName }
+    });
+    folder = pickObject(createFolderResponse, 'folder', 'data');
+  }
+
+  const folderId = folder.id || folder.folder_id;
+  if (!folderId) {
+    throw new Error(`Could not resolve folder id for '${folderName}'`);
+  }
+  return folderId;
+}
+
+async function ensureTestCases(projectId, folderId, testCaseNames) {
+  const existingCasesResponse = await makeRequest('GET', `/projects/${projectId}/test-cases`);
+  const existingCases = pickList(existingCasesResponse, 'test_cases', 'data');
+  const byName = new Map(existingCases.map((tc) => [tc.name, pickIdentifier(tc)]));
+
+  for (const name of testCaseNames) {
+    if (byName.has(name)) {
+      continue;
+    }
+
+    const createdResponse = await makeRequest('POST', `/projects/${projectId}/folders/${folderId}/test-cases`, {
+      test_case: { name }
+    });
+
+    const created = pickObject(createdResponse, 'test_case', 'data');
+    const createdCase = created.test_case || created;
+    const caseId = pickIdentifier(createdCase);
+    if (!caseId) {
+      throw new Error(`Created test case '${name}' but no identifier was returned`);
+    }
+    byName.set(name, caseId);
+  }
+
+  return byName;
+}
+
 async function uploadResults() {
   try {
     if (!fs.existsSync(REPORT_FILE)) {
@@ -57,15 +143,14 @@ async function uploadResults() {
     const projectsResponse = await makeRequest('GET', '/projects');
     
     // Handle different response formats (array or object with projects property)
-    const projectsList = Array.isArray(projectsResponse) ? projectsResponse : 
-                        (projectsResponse.projects || projectsResponse.data || []);
+    const projectsList = pickList(projectsResponse, 'projects', 'data');
     
     let project = projectsList.find(p => p.name === PROJECT_NAME);
 
     if (!project) {
       console.log('[BrowserStack] Creating project...');
-      const createResponse = await makeRequest('POST', '/projects', { name: PROJECT_NAME });
-      project = createResponse.project || createResponse.data || createResponse;
+      const createResponse = await makeRequest('POST', '/projects', { project: { name: PROJECT_NAME } });
+      project = pickObject(createResponse, 'project', 'data');
     }
 
     const projectId = project.id || project.identifier;
@@ -80,8 +165,17 @@ async function uploadResults() {
       }
     });
 
-    const testRun = testRunResponse.testRun || testRunResponse.data || testRunResponse;
-    const testRunId = testRun.id || testRun.identifier;
+    const testRun = testRunResponse.test_run || testRunResponse.testRun || testRunResponse.data || testRunResponse;
+    const testRunId = testRun.identifier
+      || testRun.id
+      || testRun.test_run_id
+      || testRun.run_id
+      || (testRun.urls && testRun.urls.self && testRun.urls.self.split('/').pop());
+
+    if (!testRunId) {
+      throw new Error(`Could not resolve test run identifier from response: ${JSON.stringify(testRunResponse)}`);
+    }
+
     console.log(`[BrowserStack] Test run created: ${testRunId}`);
 
     // Parse Cucumber JSON report
@@ -121,14 +215,26 @@ async function uploadResults() {
 
     console.log(`[BrowserStack] Found ${testCases.length} test cases`);
 
+    const folderId = await getOrCreateFolder(projectId, 'API Tests');
+    const testCaseIdByName = await ensureTestCases(
+      projectId,
+      folderId,
+      [...new Set(testCases.map((tc) => tc.name))]
+    );
+
     // Upload results for each test case
     for (const testCase of testCases) {
       try {
+        const testCaseId = testCaseIdByName.get(testCase.name);
+        if (!testCaseId) {
+          console.warn(`[BrowserStack] Warning: Missing test case id for ${testCase.name}`);
+          continue;
+        }
+
         console.log(`[BrowserStack] Uploading result for: ${testCase.name}`);
-        await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/results`, {
+        await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/test-cases/${encodeURIComponent(testCaseId)}/results`, {
           result: {
-            name: testCase.name,
-            status: testCase.status,
+            status: toBrowserStackStatus(testCase.status),
             duration: testCase.duration,
           }
         });

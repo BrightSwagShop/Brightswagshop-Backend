@@ -122,7 +122,7 @@ jobs:
         BROWSERSTACK_USERNAME: ${{ secrets['BROWSERSTACK_USERNAME'] }}
         BROWSERSTACK_ACCESS_KEY: ${{ secrets['BROWSERSTACK_ACCESS_KEY'] }}
         BROWSERSTACK_PROJECT_NAME: BrightSwagShop - JIRA
-        BROWSERSTACK_BUILD_NAME: Build #${{ github.run_number }}
+        BROWSERSTACK_BUILD_NAME: 'Build #${{ github.run_number }}'
       run: npm run test:browserstack
       working-directory: APITests
 
