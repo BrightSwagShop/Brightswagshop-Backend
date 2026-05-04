@@ -17,6 +17,6 @@ module.exports = {
   },
   browserstack: {
     ...shared,
-    format: ['progress', allureFormatter]
+    format: ['progress', allureFormatter, 'json:test-results/cucumber.json']
   }
 };

@@ -10,11 +10,13 @@
     "report:allure:generate": "allure generate allure-results --clean -o allure-report",
     "report:allure:open": "allure open allure-report",
     "browserstack:check-env": "node -e \"const missing=[]; if(!process.env.BROWSERSTACK_USERNAME) missing.push('BROWSERSTACK_USERNAME'); if(!process.env.BROWSERSTACK_ACCESS_KEY) missing.push('BROWSERSTACK_ACCESS_KEY'); if(missing.length){ console.error('[BrowserStack] Missing required environment variables for reporting:'); missing.forEach(name => console.error('- ' + name)); process.exit(1); } console.log('[BrowserStack] Environment is configured for reporting.');\"",
-    "test:browserstack": "npm run allure:clean && npm run browserstack:check-env && cucumber-js --profile browserstack"
+    "test:browserstack": "npm run allure:clean && npm run browserstack:check-env && cucumber-js --profile browserstack && npm run upload:browserstack",
+    "upload:browserstack": "node scripts/upload-browserstack.js test-results/cucumber.json"
   },
   "devDependencies": {
     "@brightswagshop/testing-framework": "git+https://github.com/BrightSwagShop/TestingFramework.git#main",
     "@cucumber/cucumber": "^12.7.0",
+    "@dot-slash/browserstack-test-management": "^6.1.0",
     "@playwright/test": "^1.54.2",
     "allure-commandline": "^2.34.1",
     "allure-cucumberjs": "^3.4.1",
