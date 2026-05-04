@@ -79,6 +79,10 @@ function pickIdentifier(entity) {
     || (entity.urls && entity.urls.self && entity.urls.self.split('/').pop());
 }
 
+function normalizeName(name) {
+  return String(name || '').trim().replace(/::/g, '.').replace(/\s+/g, ' ').toLowerCase();
+}
+
 function toBrowserStackStatus(status) {
   const normalized = String(status || '').toLowerCase();
   if (normalized.includes('pass')) return 'passed';
@@ -109,13 +113,23 @@ async function ensureTestCases(projectId, folderId, testCaseNames) {
   // Fetch all existing test cases in the project with pagination
   const existingCasesResponse = await makeRequest('GET', `/projects/${projectId}/test-cases?per_page=1000`);
   const existingCases = pickList(existingCasesResponse, 'test_cases', 'data');
-  const byName = new Map(existingCases.map((tc) => [tc.name, pickIdentifier(tc)]));
+    const byName = new Map();
+    for (const tc of existingCases) {
+      const id = pickIdentifier(tc);
+      if (!id) continue;
+      byName.set(tc.name, id);
+      byName.set(normalizeName(tc.name), id);
+    }
 
   for (const name of testCaseNames) {
-    if (byName.has(name)) {
-      console.log(`[BrowserStack] Reusing existing test case: ${name}`);
-      continue;
-    }
+      const n = normalizeName(name);
+      if (byName.has(name) || byName.has(n)) {
+        const usedId = byName.get(name) || byName.get(n);
+        console.log(`[BrowserStack] Reusing existing test case: ${name} -> ${usedId}`);
+        byName.set(name, usedId);
+        byName.set(n, usedId);
+        continue;
+      }
 
     const detail = (ensureTestCases.details && ensureTestCases.details.get && ensureTestCases.details.get(name)) || null;
     const payload = { name };
@@ -268,18 +282,16 @@ async function uploadResults() {
 
         console.log(`[BrowserStack] Uploading result for: ${testCase.name}`);
         const detail = testCaseDetails.get(testCase.name) || null;
-        const resultPayload = {
-          test_case_id: testCaseId,
-          status: toBrowserStackStatus(testCase.status),
-          duration: testCase.duration,
-        };
-        if (detail && detail.steps && detail.steps.length) {
-          resultPayload.steps = detail.steps.map((s, idx) => ({ index: idx + 1, name: s.name, action: s.action, status: s.status }));
-        }
+          const testResult = {
+            status: toBrowserStackStatus(testCase.status),
+            duration: testCase.duration,
+          };
+          if (detail && detail.steps && detail.steps.length) {
+            testResult.steps = detail.steps.map((s, idx) => ({ index: idx + 1, name: s.name, action: s.action, status: s.status }));
+          }
 
-        await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/results`, {
-          result: resultPayload
-        });
+          const batch = { results: [ { test_case_id: testCaseId, test_result: testResult } ] };
+          await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/results`, batch);
       } catch (e) {
         console.warn(`[BrowserStack] Warning: Could not upload result for ${testCase.name}:`, e.message);
       }
