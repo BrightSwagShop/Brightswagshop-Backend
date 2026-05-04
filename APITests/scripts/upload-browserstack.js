@@ -106,17 +106,25 @@ async function getOrCreateFolder(projectId, folderName) {
 }
 
 async function ensureTestCases(projectId, folderId, testCaseNames) {
-  const existingCasesResponse = await makeRequest('GET', `/projects/${projectId}/test-cases`);
+  // Fetch all existing test cases in the project with pagination
+  const existingCasesResponse = await makeRequest('GET', `/projects/${projectId}/test-cases?per_page=1000`);
   const existingCases = pickList(existingCasesResponse, 'test_cases', 'data');
   const byName = new Map(existingCases.map((tc) => [tc.name, pickIdentifier(tc)]));
 
   for (const name of testCaseNames) {
     if (byName.has(name)) {
+      console.log(`[BrowserStack] Reusing existing test case: ${name}`);
       continue;
     }
 
+    const detail = (ensureTestCases.details && ensureTestCases.details.get && ensureTestCases.details.get(name)) || null;
+    const payload = { name };
+    if (detail && detail.description) payload.description = detail.description;
+    if (detail && detail.steps) payload.steps = detail.steps;
+
+    console.log(`[BrowserStack] Creating new test case: ${name}`);
     const createdResponse = await makeRequest('POST', `/projects/${projectId}/folders/${folderId}/test-cases`, {
-      test_case: { name }
+      test_case: payload
     });
 
     const created = pickObject(createdResponse, 'test_case', 'data');
@@ -129,6 +137,19 @@ async function ensureTestCases(projectId, folderId, testCaseNames) {
   }
 
   return byName;
+}
+
+async function addTestCasesToTestRun(projectId, testRunId, testCaseIds) {
+  // Add test cases to the test run so they appear in the UI
+  for (const testCaseId of testCaseIds) {
+    try {
+      await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/test-cases`, {
+        test_case_id: testCaseId
+      });
+    } catch (e) {
+      console.warn(`[BrowserStack] Warning: Could not add test case ${testCaseId} to test run:`, e.message);
+    }
+  }
 }
 
 async function uploadResults() {
@@ -183,6 +204,7 @@ async function uploadResults() {
     const suites = JSON.parse(rawJson);
 
     const testCases = [];
+    const testCaseDetails = new Map();
 
     for (const suite of suites) {
       if (suite.elements) {
@@ -190,19 +212,26 @@ async function uploadResults() {
           const name = `${suite.name} - ${element.name}`;
           const steps = element.steps || [];
           
-          // Status is determined by step results
+          // Build step details and overall status/duration
           let status = 'PASSED';
           let duration = 0;
+          const stepDetails = [];
 
           for (const step of steps) {
             if (step.result) {
               duration += step.result.duration || 0;
-              if (['failed', 'skipped', 'undefined', 'pending'].includes(step.result.status)) {
-                status = step.result.status === 'skipped' ? 'SKIPPED' : 'FAILED';
-                break;
+              const sStatus = (step.result.status || '').toLowerCase();
+              const mapped = sStatus === 'passed' ? 'passed' : (sStatus === 'skipped' ? 'skipped' : 'failed');
+              stepDetails.push({ name: step.keyword ? `${step.keyword} ${step.name}` : step.name, action: step.name, status: mapped });
+              if (['failed', 'skipped', 'undefined', 'pending'].includes(sStatus)) {
+                status = sStatus === 'skipped' ? 'SKIPPED' : 'FAILED';
               }
+            } else {
+              stepDetails.push({ name: step.name, action: step.name, status: 'passed' });
             }
           }
+
+          testCaseDetails.set(name, { description: '', steps: stepDetails });
 
           testCases.push({
             name,
@@ -216,11 +245,17 @@ async function uploadResults() {
     console.log(`[BrowserStack] Found ${testCases.length} test cases`);
 
     const folderId = await getOrCreateFolder(projectId, 'API Tests');
+    ensureTestCases.details = testCaseDetails;
     const testCaseIdByName = await ensureTestCases(
       projectId,
       folderId,
       [...new Set(testCases.map((tc) => tc.name))]
     );
+
+    // Add all test cases to the test run before uploading results
+    const uniqueTestCaseIds = [...new Set(testCaseIdByName.values())];
+    console.log(`[BrowserStack] Adding ${uniqueTestCaseIds.length} test cases to test run ${testRunId}`);
+    await addTestCasesToTestRun(projectId, testRunId, uniqueTestCaseIds);
 
     // Upload results for each test case
     for (const testCase of testCases) {
@@ -232,11 +267,18 @@ async function uploadResults() {
         }
 
         console.log(`[BrowserStack] Uploading result for: ${testCase.name}`);
-        await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/test-cases/${encodeURIComponent(testCaseId)}/results`, {
-          result: {
-            status: toBrowserStackStatus(testCase.status),
-            duration: testCase.duration,
-          }
+        const detail = testCaseDetails.get(testCase.name) || null;
+        const resultPayload = {
+          test_case_id: testCaseId,
+          status: toBrowserStackStatus(testCase.status),
+          duration: testCase.duration,
+        };
+        if (detail && detail.steps && detail.steps.length) {
+          resultPayload.steps = detail.steps.map((s, idx) => ({ index: idx + 1, name: s.name, action: s.action, status: s.status }));
+        }
+
+        await makeRequest('POST', `/projects/${projectId}/test-runs/${testRunId}/results`, {
+          result: resultPayload
         });
       } catch (e) {
         console.warn(`[BrowserStack] Warning: Could not upload result for ${testCase.name}:`, e.message);
