@@ -8,7 +8,7 @@ on:
       upload_report:
         description: Upload Allure report artifact
         required: true
-        default: 'false'
+        default: 'true'
         type: choice
         options:
           - 'true'
@@ -16,7 +16,7 @@ on:
       send_email:
         description: Send Allure report email (requires SENDGRID_API_KEY)
         required: true
-        default: 'false'
+        default: 'true'
         type: choice
         options:
           - 'true'
