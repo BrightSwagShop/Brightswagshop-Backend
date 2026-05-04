@@ -1,6 +1,6 @@
 const shared = {
   paths: ['features/**/*.feature'],
-  require: ['features/step-definitions/**/*.js'],
+  require: ['features/support/**/*.js', 'features/step-definitions/**/*.js'],
   publishQuiet: true
 };
 
@@ -15,9 +15,8 @@ module.exports = {
     ...shared,
     format: ['progress', allureFormatter]
   },
-  qase: {
+  browserstack: {
     ...shared,
-    tags: '@qase',
-    format: ['progress', allureFormatter, 'cucumberjs-qase-reporter']
+    format: ['progress', allureFormatter]
   }
 };

@@ -1,0 +1,6 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Producten - BVA'
+item:
+  - $ref: './BVA-Lege-ID-Lijst.request.yaml'
+  - $ref: './BVA-Lijst-Met-Een-ID.request.yaml'

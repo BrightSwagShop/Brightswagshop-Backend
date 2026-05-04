@@ -1,0 +1,8 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Producten - Pairwise'
+item:
+  - $ref: './Pairwise-Tshirt-Betalend-Op-Voorraad.request.yaml'
+  - $ref: './Pairwise-Mok-Gratis-Uitverkocht.request.yaml'
+  - $ref: './Pairwise-Tshirt-Gratis-Uitverkocht.request.yaml'
+  - $ref: './Pairwise-Mok-Betalend-Op-Voorraad.request.yaml'
