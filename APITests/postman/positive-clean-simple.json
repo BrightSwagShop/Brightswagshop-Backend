@@ -1,0 +1,111 @@
+{
+  "info": {
+    "name": "FakeWebShop API - Automated Positive Tests (Simplified)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Auth-Positive",
+      "item": [
+        {
+          "name": "Register user -> 201",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/users/register",
+            "body": {"mode": "raw", "raw": "{ \"username\": \"testuser_{{$timestamp}}\", \"password\": \"P@ssw0rd123\", \"email\": \"test_{{$timestamp}}@test.com\" }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('register -> success', function(){ pm.expect([200,201]).to.include(pm.response.code); });"]} }]
+        },
+        {
+          "name": "Login user -> 200",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/users/login",
+            "body": {"mode": "raw", "raw": "{ \"username\": \"{{existingUser}}\", \"password\": \"P@ssw0rd\" }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('login -> 200', function(){ pm.response.to.have.status(200); });", "pm.test('login returns token', function(){ const body = pm.response.json(); pm.expect(body.token).to.exist; });"]} }]
+        }
+      ]
+    },
+    {
+      "name": "Catalog-Positive",
+      "item": [
+        {
+          "name": "List products -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/products"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('products -> 200', function(){ pm.response.to.have.status(200); });", "pm.test('products is array', function(){ pm.expect(pm.response.json()).to.be.an('array'); });"]} }]
+        },
+        {
+          "name": "Get product by ID -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/products/{{existingProductId}}"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('product -> 200', function(){ pm.response.to.have.status(200); });"]} }]
+        },
+        {
+          "name": "List categories -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/categories"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('categories -> 200', function(){ pm.response.to.have.status(200); });"]} }]
+        },
+        {
+          "name": "List product types -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/producttypes"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('product types -> 200', function(){ pm.response.to.have.status(200); });"]} }]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "(function(){",
+          "  const base = pm.environment.get('baseUrl') || 'http://127.0.0.1:5076';",
+          "  const existingUser = 'testuser_' + Date.now();",
+          "  const password = 'P@ssw0rd';",
+          "",
+          "  pm.sendRequest({",
+          "    url: base + '/api/users/register',",
+          "    method: 'POST',",
+          "    header: { 'Content-Type': 'application/json' },",
+          "    body: { mode: 'raw', raw: JSON.stringify({ username: existingUser, password: password, email: existingUser + '@test.com' }) }",
+          "  }, function(errR, resR){",
+          "    pm.sendRequest({",
+          "      url: base + '/api/users/login',",
+          "      method: 'POST',",
+          "      header: { 'Content-Type': 'application/json' },",
+          "      body: { mode: 'raw', raw: JSON.stringify({ username: existingUser, password: password }) }",
+          "    }, function(errL, resL){",
+          "      if (!errL && resL && resL.status === 200) {",
+          "        try {",
+          "          const body = resL.json();",
+          "          const token = body.token || body.accessToken;",
+          "          if (token) pm.environment.set('userToken', token);",
+          "          const user = body.user || body.data || body;",
+          "          const userId = user.id || user._id || user.userId;",
+          "          if (userId) pm.environment.set('existingUserId', userId);",
+          "        } catch (e) {}",
+          "      }",
+          "      pm.environment.set('existingUser', existingUser);",
+          "      pm.sendRequest({ url: base + '/api/products', method: 'GET' }, function(err2, res2){",
+          "        if (!err2 && res2 && res2.status === 200) {",
+          "          try {",
+          "            const products = res2.json();",
+          "            if (Array.isArray(products) && products.length > 0) {",
+          "              const first = products[0];",
+          "              const productId = first.id || first._id || first.productId;",
+          "              if (productId) pm.environment.set('existingProductId', productId);",
+          "            }",
+          "          } catch (e) {}",
+          "        }",
+          "      });",
+          "    });",
+          "  });",
+          "})();"
+        ]
+      }
+    }
+  ]
+}

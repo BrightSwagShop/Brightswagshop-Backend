@@ -2,7 +2,7 @@
   "id": "fakewebshop-env",
   "name": "FakeWebShop API Env",
   "values": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "enabled": true },
+    { "key": "baseUrl", "value": "http://127.0.0.1:5076", "enabled": true },
     { "key": "existingProductId", "value": "", "enabled": true },
     { "key": "existingOrderId", "value": "", "enabled": true },
     { "key": "existingUserId", "value": "", "enabled": true },
