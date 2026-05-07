@@ -13,7 +13,7 @@
     "test:browserstack": "npm run allure:clean && npm run browserstack:check-env && cucumber-js --profile browserstack && npm run upload:browserstack",
     "upload:browserstack": "node scripts/upload-browserstack.js test-results/cucumber.json",
     "test:newman:negative": "newman run postman/collection.json -e postman/environment.json --reporters cli,junit --reporter-junit-export test-results/newman-negative-results.xml",
-    "test:newman:positive": "newman run postman/positive-clean-simple.json -e postman/environment.json --reporters cli,junit --reporter-junit-export test-results/newman-positive-results.xml",
+    "test:newman:positive": "newman run postman/positive-clean-collection.json -e postman/environment.json --reporters cli,junit --reporter-junit-export test-results/newman-positive-results.xml",
     "test:newman": "npm run test:newman:positive && npm run test:newman:negative"
   },
   "devDependencies": {
