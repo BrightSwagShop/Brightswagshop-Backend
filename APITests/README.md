@@ -357,4 +357,6 @@ Feature: Minimum collection boundaries for product utilities
 
 - These scenarios are intentionally grouped by primary technique, not by current test file structure.
 - Replace placeholder ids such as `existing-product-id` and `existing-order-id` with seeded fixtures in the actual step definitions.
+- Any automated Newman request that creates data must delete that data in the same request flow or use a delete/revert endpoint immediately after the assertion.
+- The positive Newman suite is cleanup-aware for carts, products, and discounts. User registration and order checkout stay in the specification only until the API exposes a safe teardown path.
 - The Gherkin above is a specification target for coverage planning; it is not a claim that the current `features/*.feature` files already contain all of these cases.

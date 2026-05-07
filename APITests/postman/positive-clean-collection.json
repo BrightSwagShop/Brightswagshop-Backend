@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "FakeWebShop API - Automated Positive Tests (Cleanup Aware)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "User-Positive",
+      "item": [
+        {
+          "name": "Login existing user -> 200",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/users/login",
+            "body": {"mode": "raw", "raw": "{ \"username\": \"{{existingUser}}\", \"password\": \"P@ssw0rd\" }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('login -> 200', function(){ pm.response.to.have.status(200); });", "pm.test('login returns a token', function(){ pm.expect(pm.response.json()).to.be.an('object'); });"]}}]
+        },
+        {
+          "name": "Fetch own profile -> 200",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{userToken}}"}],
+            "url": "{{baseUrl}}/api/users/me"
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('me -> 200', function(){ pm.response.to.have.status(200); });"]}}]
+        }
+      ]
+    },
+    {
+      "name": "Catalog-Positive",
+      "item": [
+        {
+          "name": "List products -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/products"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('products -> 200', function(){ pm.response.to.have.status(200); });", "pm.test('products is array', function(){ pm.expect(pm.response.json()).to.be.an('array'); });"]}}]
+        },
+        {
+          "name": "Get existing product -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/products/{{existingProductId}}"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('product -> 200', function(){ pm.response.to.have.status(200); });"]}}]
+        },
+        {
+          "name": "List categories -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/categories"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('categories -> 200', function(){ pm.response.to.have.status(200); });"]}}]
+        },
+        {
+          "name": "List product types -> 200",
+          "request": {"method": "GET", "url": "{{baseUrl}}/api/producttypes"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('product types -> 200', function(){ pm.response.to.have.status(200); });"]}}]
+        }
+      ]
+    },
+    {
+      "name": "ShoppingCart-Positive",
+      "item": [
+        {
+          "name": "Create cart -> 201",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/shoppingcarts",
+            "body": {"mode": "raw", "raw": "{ \"userId\": \"{{existingUserId}}\", \"items\": [{ \"productId\": \"{{existingProductId}}\", \"quantity\": 1 }] }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('create cart -> 201', function(){ pm.expect([200,201]).to.include(pm.response.code); });", "(function(){ const body = pm.response.json(); const cartId = body.id || body._id || body.cartId; if (!cartId) return; pm.sendRequest({ url: pm.environment.get('baseUrl') + '/api/shoppingcarts/' + cartId, method: 'DELETE' }, function(err) { pm.test('created cart is deleted', function(){ pm.expect(err).to.equal(null); }); }); })();"]}}]
+        },
+        {
+          "name": "Add item to cart -> 200",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/shoppingcarts/user/{{existingUserId}}/items",
+            "body": {"mode": "raw", "raw": "{ \"productId\": \"{{existingProductId}}\", \"quantity\": 1 }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('add item -> 200', function(){ pm.expect([200,201]).to.include(pm.response.code); });", "(function(){ const base = pm.environment.get('baseUrl'); const userId = pm.environment.get('existingUserId'); pm.sendRequest({ url: base + '/api/shoppingcarts/user/' + userId, method: 'GET' }, function(err, res) { if (err || !res || res.status >= 400) return; let cartId = null; try { const body = res.json(); cartId = body.id || body._id || body.cartId; } catch (e) { return; } if (!cartId) return; pm.sendRequest({ url: base + '/api/shoppingcarts/' + cartId, method: 'DELETE' }, function(deleteErr) { pm.test('added cart is deleted', function(){ pm.expect(deleteErr).to.equal(null); }); }); }); })();"]}}]
+        },
+        {
+          "name": "Update quantity -> 200",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/shoppingcarts/user/{{existingUserId}}/quantity",
+            "body": {"mode": "raw", "raw": "{ \"productId\": \"{{existingProductId}}\", \"quantity\": 2 }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('update quantity -> 200', function(){ pm.expect([200,201]).to.include(pm.response.code); });", "(function(){ const base = pm.environment.get('baseUrl'); const userId = pm.environment.get('existingUserId'); pm.sendRequest({ url: base + '/api/shoppingcarts/user/' + userId, method: 'GET' }, function(err, res) { if (err || !res || res.status >= 400) return; let cartId = null; try { const body = res.json(); cartId = body.id || body._id || body.cartId; } catch (e) { return; } if (!cartId) return; pm.sendRequest({ url: base + '/api/shoppingcarts/' + cartId, method: 'DELETE' }, function(deleteErr) { pm.test('updated cart is deleted', function(){ pm.expect(deleteErr).to.equal(null); }); }); }); })();"]}}]
+        },
+        {
+          "name": "Remove item -> 200",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/shoppingcarts/user/{{existingUserId}}/item",
+            "body": {"mode": "raw", "raw": "{ \"productId\": \"{{existingProductId}}\" }"}
+          },
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('remove item -> 200', function(){ pm.expect([200,204]).to.include(pm.response.code); });", "(function(){ const base = pm.environment.get('baseUrl'); const userId = pm.environment.get('existingUserId'); pm.sendRequest({ url: base + '/api/shoppingcarts/user/' + userId, method: 'GET' }, function(err, res) { if (err || !res || res.status >= 400) return; let cartId = null; try { const body = res.json(); cartId = body.id || body._id || body.cartId; } catch (e) { return; } if (!cartId) return; pm.sendRequest({ url: base + '/api/shoppingcarts/' + cartId, method: 'DELETE' }, function(deleteErr) { pm.test('clean cart after item removal', function(){ pm.expect(deleteErr).to.equal(null); }); }); }); })();"]}}]
+        }
+      ]
+    },
+    {
+      "name": "Admin-Positive",
+      "item": [
+        {
+          "name": "Create product -> 201",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{adminToken}}"}],
+            "url": "{{baseUrl}}/api/products",
+            "body": {"mode": "raw", "raw": "{ \"title\": \"{{positiveProductTitle}}\", \"price\": 10, \"productType\": \"tshirt\" }"}
+          },
+          "event": [
+            {"listen": "prerequest", "script": {"exec": ["pm.environment.set('positiveProductTitle', 'positive-product-' + Date.now());"]}},
+            {"listen": "test", "script": {"exec": ["pm.test('create product -> 201', function(){ pm.expect([200,201]).to.include(pm.response.code); });", "(function(){ const base = pm.environment.get('baseUrl'); const adminToken = pm.environment.get('adminToken'); const body = pm.response.json(); const productId = body.id || body._id || body.productId; if (!productId) return; pm.sendRequest({ url: base + '/api/products/' + productId, method: 'DELETE', header: { Authorization: 'Bearer ' + adminToken } }, function(err) { pm.test('created product is deleted', function(){ pm.expect(err).to.equal(null); }); }); })();"]}}
+          ]
+        },
+        {
+          "name": "Create discount -> 201",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{adminToken}}"}],
+            "url": "{{baseUrl}}/api/discounts",
+            "body": {"mode": "raw", "raw": "{ \"code\": \"{{positiveDiscountCode}}\", \"startDate\": \"2025-01-01\", \"endDate\": \"2026-12-31\" }"}
+          },
+          "event": [
+            {"listen": "prerequest", "script": {"exec": ["pm.environment.set('positiveDiscountCode', 'DISC-' + Date.now());"]}},
+            {"listen": "test", "script": {"exec": ["pm.test('create discount -> 201', function(){ pm.expect([200,201]).to.include(pm.response.code); });", "(function(){ const base = pm.environment.get('baseUrl'); const adminToken = pm.environment.get('adminToken'); const body = pm.response.json(); const discountId = body.id || body._id || body.discountId; if (!discountId) return; pm.sendRequest({ url: base + '/api/discounts/' + discountId, method: 'DELETE', header: { Authorization: 'Bearer ' + adminToken } }, function(err) { pm.test('created discount is deleted', function(){ pm.expect(err).to.equal(null); }); }); })();"]}}
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "(function(){",
+          "  const base = pm.environment.get('baseUrl') || 'http://127.0.0.1:5076';",
+          "  const existingUser = pm.environment.get('existingUser') || 'existingUser';",
+          "  const password = 'P@ssw0rd';",
+          "  if (pm.environment.get('userToken') && pm.environment.get('existingUserId') && pm.environment.get('existingProductId')) return;",
+          "",
+          "  pm.sendRequest({",
+          "    url: base + '/api/users/login',",
+          "    method: 'POST',",
+          "    header: { 'Content-Type': 'application/json' },",
+          "    body: { mode: 'raw', raw: JSON.stringify({ username: existingUser, password: password }) }",
+          "  }, function(err, res){",
+          "    if (!err && res && res.status === 200) {",
+          "      try { const body = res.json(); const token = body.token || body.accessToken || (body.data && body.data.token); if (token) pm.environment.set('userToken', token); } catch (e) {}",
+          "      try { const body = res.json(); const user = body.user || body.data || body; const userId = user.id || user._id || user.userId; if (userId) pm.environment.set('existingUserId', userId); } catch (e) {}",
+          "    }",
+          "    pm.sendRequest({ url: base + '/api/products', method: 'GET' }, function(err2, res2){",
+          "      if (!err2 && res2 && res2.status === 200) {",
+          "        try { const products = res2.json(); if (Array.isArray(products) && products.length > 0) { const first = products[0]; const productId = first.id || first._id || first.productId; if (productId) pm.environment.set('existingProductId', productId); } } catch (e) {}",
+          "      }",
+          "    });",
+          "  });",
+          "})();"
+        ]
+      }
+    }
+  ]
+}
