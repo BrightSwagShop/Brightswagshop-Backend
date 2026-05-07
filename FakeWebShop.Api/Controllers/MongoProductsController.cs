@@ -98,7 +98,7 @@ public class MongoProductsController(IMongoProductService service) : ControllerB
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    // [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<MongoProductResponse>> Update(string id, [FromBody] MongoProductRequest request)
     {
         var updated = await service.UpdateProduct(id, request);
