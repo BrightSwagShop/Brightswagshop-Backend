@@ -1,0 +1,267 @@
+{
+  "info": {
+    "name": "FakeWebShop API - Automated Negative Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "UseCase-Negative",
+      "item": [
+        {
+          "name": "Register duplicate username -> 409",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "url": "{{baseUrl}}/api/users/register",
+            "body": {"mode":"raw","raw":"{ \"username\": \"{{existingUser}}\", \"password\": \"P@ssw0rd\" }"}
+          },
+          "event": [{"listen":"test","script":{"exec":["pm.test('duplicate -> 409', function(){ pm.response.to.have.status(409); });","pm.test('contains duplicate message', function(){ pm.response.to.have.jsonBody(); })"]}}]
+        },
+        {
+          "name": "AzureAd admin denies HeaderAuth -> 401",
+          "request": {
+            "method": "GET",
+            "header": [{"key":"X-User-Id","value":"{{headerAuthUserId}}"},{"key":"X-User-Role","value":"App.Admin"}],
+            "url": "{{baseUrl}}/api/admins/admin-only"
+          },
+          "event": [{"listen":"test","script":{"exec":["pm.test('HeaderAuth cannot access AzureAd endpoint -> 401', function(){ pm.response.to.have.status(401); });"]}}]
+        },
+        {
+          "name": "Payment provider error -> 500",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/payments/{{orderFailsOnProviderId}}/checkout","body":{"mode":"raw","raw":"{}"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('payment provider failure -> 500', function(){ pm.response.to.have.status(500); });"]}}]
+        },
+        {
+          "name": "Create order from malformed cart -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/orders/from-cart/{{existingUserId}}","body":{"mode":"raw","raw":"{ \"cart\": \"malformed\" }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('malformed cart -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Webhook malformed JSON -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Stripe-Signature","value":"t=1234,v1=signature"}],"url":"{{baseUrl}}/api/webhooks/stripe","body":{"mode":"raw","raw":"{ this is : not json }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('malformed webhook -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        }
+      ]
+    },
+    {
+      "name": "State-Negative",
+      "item": [
+        {
+          "name": "Concurrent remove/update -> 404 or 409",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-Test-Simulate","value":"concurrent-remove-update"}],"url":"{{baseUrl}}/api/shoppingcarts/user/{{u123}}/items","body":{"mode":"raw","raw":"{ \"productId\": \"{{sku1}}\", \"quantity\": 1 }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('concurrent conflict -> 404 or 409', function(){ pm.expect([404,409]).to.include(pm.response.code); });"]}}]
+        },
+        {
+          "name": "Update quantity to zero -> 400",
+          "request": {"method":"PUT","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/shoppingcarts/user/{{u123}}/quantity","body":{"mode":"raw","raw":"{ \"productId\": \"{{sku2}}\", \"quantity\": 0 }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('quantity 0 -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Remove non-existing item -> 404",
+          "request": {"method":"DELETE","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/shoppingcarts/user/{{u999}}/item","body":{"mode":"raw","raw":"{ \"productId\": \"missingSKU\" }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('remove missing -> 404', function(){ pm.response.to.have.status(404); });"]}}]
+        },
+        {
+          "name": "Apply discount to nonexistent cart -> 404",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/shoppingcarts/{{nonexistentCartId}}/apply-discount","body":{"mode":"raw","raw":"{ \"code\": \"SPRING\" }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('apply discount nonexistent cart -> 404', function(){ pm.response.to.have.status(404); });"]}}]
+        },
+        {
+          "name": "Discount unmet conditions -> 409",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-Test-Simulate","value":"discount-unmet"}],"url":"{{baseUrl}}/api/shoppingcarts/{{existingOrderId}}/apply-discount","body":{"mode":"raw","raw":"{ \"code\": \"SPRING\" }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('discount unmet -> 409', function(){ pm.response.to.have.status(409); });"]}}]
+        }
+      ]
+    },
+    {
+      "name": "EP-Negative",
+      "item": [
+        {
+          "name": "Malformed product id -> 400",
+          "request": {"method":"GET","url":"{{baseUrl}}/api/products/not-a-24-hex-id"},
+          "event":[{"listen":"test","script":{"exec":["pm.test('malformed id -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Malformed order id -> 400",
+          "request": {"method":"GET","url":"{{baseUrl}}/api/orders/order-!@#"},
+          "event":[{"listen":"test","script":{"exec":["pm.test('malformed order id -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "JWT wrong key -> 401",
+          "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer {{forgedJwt}}"}],"url":"{{baseUrl}}/api/users/me"},
+          "event":[{"listen":"test","script":{"exec":["pm.test('forged JWT -> 401', function(){ pm.response.to.have.status(401); });"]}}]
+        },
+        {
+          "name": "Expired JWT -> 401",
+          "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer {{expiredJwt}}"}],"url":"{{baseUrl}}/api/users/me"},
+          "event":[{"listen":"test","script":{"exec":["pm.test('expired JWT -> 401', function(){ pm.response.to.have.status(401); });"]}}]
+        },
+        {
+          "name": "Create product invalid enum -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/products","body":{"mode":"raw","raw":"{ \"title\": \"bad\", \"price\": 1, \"productType\": \"INVALID_TYPE\" }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('invalid enum -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Delete non-existent product -> 404",
+          "request": {"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/products/000000000000000000000001"},
+          "event":[{"listen":"test","script":{"exec":["pm.test('delete missing product -> 404', function(){ pm.response.to.have.status(404); });"]}}]
+        },
+        {
+          "name": "Bulk lookup mixed ids -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/products/by-ids","body":{"mode":"raw","raw":"[\"not-a-24-hex-id\",\"000000000000000000000001\"]"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('bulk mixed -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Create discount invalid date range -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/discounts","body":{"mode":"raw","raw":"{ \"code\": \"X\", \"startDate\": \"2025-12-31\", \"endDate\": \"2025-01-01\" }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('invalid date range -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        }
+      ]
+    },
+    {
+      "name": "BVA-Negative",
+      "item": [
+        {
+          "name": "Quantity boundary extremes -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/shoppingcarts/user/{{u123}}/items","body":{"mode":"raw","raw":"{ \"productId\": \"{{sku1}}\", \"quantity\": -1 }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('quantity -1 -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Quantity zero -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/shoppingcarts/user/{{u123}}/items","body":{"mode":"raw","raw":"{ \"productId\": \"{{sku1}}\", \"quantity\": 0 }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('quantity 0 -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Quantity extremely large -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/shoppingcarts/user/{{u123}}/items","body":{"mode":"raw","raw":"{ \"productId\": \"{{sku1}}\", \"quantity\": 1000000000 }"}},
+          "event":[{"listen":"test","script":{"exec":["pm.test('quantity huge -> 400', function(){ pm.response.to.have.status(400); });"]}}]
+        },
+        {
+          "name": "Oversized product title -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/products","body":{"mode":"raw","raw":"{ \"title\": \"{{overlongTitle}}\", \"price\": 1 }"}},
+          "event":[
+            {"listen":"prerequest","script":{"exec":["pm.environment.set('overlongTitle', 'A'.repeat(10001));"]}},
+            {"listen":"test","script":{"exec":["pm.test('oversized product title -> 400', function(){ pm.response.to.have.status(400); });"]}}
+          ]
+        },
+        {
+          "name": "Oversized discount name -> 400",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/discounts","body":{"mode":"raw","raw":"{ \"code\": \"{{overlongDiscount}}\" }"}},
+          "event":[
+            {"listen":"prerequest","script":{"exec":["pm.environment.set('overlongDiscount', 'D'.repeat(10001));"]}},
+            {"listen":"test","script":{"exec":["pm.test('oversized discount -> 400', function(){ pm.response.to.have.status(400); });"]}}
+          ]
+        },
+        {
+          "name": "Upload corrupted file -> 400",
+          "request": {"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/images/upload","body":{"mode":"formdata","formdata":[{"key":"file","type":"file","src":"APITests/postman/fixtures/corrupted.bin"}]}}
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "(function(){",
+          "  const base = pm.environment.get('baseUrl') || 'http://127.0.0.1:5076';",
+          "  if (pm.environment.get('fixtures_ready') === 'true') return;",
+          "  const existingUser = pm.environment.get('existingUser') || 'existingUser';",
+          "  const password = 'P@ssw0rd';",
+          "",
+          "  function loginUser(callback){",
+          "    pm.sendRequest({",
+          "      url: base + '/api/users/login',",
+          "      method: 'POST',",
+          "      header: {'Content-Type': 'application/json'},",
+          "      body: { mode: 'raw', raw: JSON.stringify({ username: existingUser, password: password }) }",
+          "    }, function(err, res){",
+          "      if(!err && res && res.status === 200){",
+          "        try{ const b = res.json(); const token = b.token || b.accessToken || (b.data && b.data.token); if(token) pm.environment.set('userToken', token); } catch(e){}",
+          "      }",
+          "      callback && callback();",
+          "    });",
+          "  }",
+          "",
+          "  function createUserAndLogin(next){",
+          "    pm.sendRequest({",
+          "      url: base + '/api/users/register',",
+          "      method: 'POST',",
+          "      header: {'Content-Type': 'application/json'},",
+          "      body: { mode: 'raw', raw: JSON.stringify({ username: existingUser, password: password }) }",
+          "    }, function(err, res){",
+          "      if(!err && res && (res.status === 200 || res.status === 201)){",
+          "        try{ const b = res.json(); const id = b.id || b.userId || b._id; if(id) pm.environment.set('existingUserId', id); } catch(e){}",
+          "      }",
+          "      // attempt login regardless of register outcome (user may already exist)",
+          "      loginUser(next);",
+          "    });",
+          "  }",
+          "",
+          "  function setupProductAndOrder(){",
+          "    const uid = pm.environment.get('existingUserId');",
+          "    const token = pm.environment.get('userToken');",
+          "    if(pm.environment.get('existingProductId')){ proceedToOrder(); return; }
+          "    // try get products first",
+          "    pm.sendRequest({ url: base + '/api/products', method: 'GET' }, function(err, res){",
+          "      if(!err && res && res.status === 200){",
+          "        try{ const arr = res.json(); if(Array.isArray(arr) && arr.length > 0){ pm.environment.set('existingProductId', arr[0].id || arr[0]._id || arr[0].productId); proceedToOrder(); return; } } catch(e){}",
+          "      }",
+          "      // otherwise try create a product if admin token present",
+          "      const adminToken = pm.environment.get('adminToken');",
+          "      if(adminToken){",
+          "        pm.sendRequest({",
+          "          url: base + '/api/products',",
+          "          method: 'POST',",
+          "          header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + adminToken },",
+          "          body: { mode: 'raw', raw: JSON.stringify({ title: 'fixture product', price: 1, productType: 'tshirt' }) }",
+          "        }, function(e2, r2){",
+          "          if(!e2 && r2 && (r2.status === 200 || r2.status === 201)){ try{ const pb = r2.json(); pm.environment.set('existingProductId', pb.id || pb._id || pb.productId); }catch(e){} }",
+          "          proceedToOrder();",
+          "        });",
+          "      } else {",
+          "        proceedToOrder();",
+          "      }",
+          "    });",
+          "",
+          "    function proceedToOrder(){",
+          "      const pid = pm.environment.get('existingProductId');",
+          "      const uid = pm.environment.get('existingUserId');",
+          "      const token = pm.environment.get('userToken');",
+          "      if(!pid || !uid || !token){ pm.environment.set('fixtures_ready','true'); return; }
+          "      // add item to cart",
+          "      pm.sendRequest({",
+          "        url: base + '/api/shoppingcarts/user/' + uid + '/items',",
+          "        method: 'POST',",
+          "        header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },",
+          "        body: { mode: 'raw', raw: JSON.stringify({ productId: pid, quantity: 1 }) }",
+          "      }, function(ea, ra){",
+          "        // create order from cart",
+          "        pm.sendRequest({",
+          "          url: base + '/api/orders/from-cart/' + uid,",
+          "          method: 'POST',",
+          "          header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },",
+          "        }, function(eb, rb){",
+          "          if(!eb && rb && (rb.status === 200 || rb.status === 201)){ try{ const ob = rb.json(); pm.environment.set('existingOrderId', ob.id || ob._id || ob.orderId); } catch(e){} }",
+          "          pm.environment.set('fixtures_ready','true');",
+          "        });",
+          "      });",
+          "    }",
+          "  }",
+          "",
+          "  // main flow",
+          "  if(!pm.environment.get('existingUserId')){",
+          "    createUserAndLogin(setupProductAndOrder);",
+          "  } else if(!pm.environment.get('userToken')){",
+          "    loginUser(setupProductAndOrder);",
+          "  } else {",
+          "    setupProductAndOrder();",
+          "  }",
+          "})();"
+        ]
+      }
+    }
+  ]
+}

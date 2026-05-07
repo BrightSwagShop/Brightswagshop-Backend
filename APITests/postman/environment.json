@@ -1,0 +1,23 @@
+{
+  "id": "fakewebshop-env",
+  "name": "FakeWebShop API Env",
+  "values": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "enabled": true },
+    { "key": "existingProductId", "value": "", "enabled": true },
+    { "key": "existingOrderId", "value": "", "enabled": true },
+    { "key": "existingUserId", "value": "", "enabled": true },
+    { "key": "existingUser", "value": "existingUser", "enabled": true },
+    { "key": "orderFailsOnProviderId", "value": "order-fails-on-provider", "enabled": true },
+    { "key": "nonexistentCartId", "value": "nonexistent-cart", "enabled": true },
+    { "key": "sku1", "value": "SKU-1", "enabled": true },
+    { "key": "sku2", "value": "SKU-2", "enabled": true },
+    { "key": "u123", "value": "u123", "enabled": true },
+    { "key": "u999", "value": "u999", "enabled": true },
+    { "key": "forgedJwt", "value": "", "enabled": true },
+    { "key": "expiredJwt", "value": "", "enabled": true },
+    { "key": "adminToken", "value": "", "enabled": true },
+    { "key": "userToken", "value": "", "enabled": true },
+    { "key": "headerAuthUserId", "value": "", "enabled": true },
+    { "key": "stripeWebhookSecret", "value": "", "enabled": true }
+  ]
+}
