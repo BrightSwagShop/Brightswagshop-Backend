@@ -23,10 +23,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.AddUserSecrets<Program>();
 var jwtKey = builder.Configuration["Jwt:Key"]!;
 var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;
 var jwtAudience = builder.Configuration["Jwt:Audience"]!;
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new Exception("JWT Key is NULL → fix je user-secrets");
+}
 
 // Mongo
 builder.Services.Configure<MongoOptions>(
