@@ -1,6 +1,6 @@
 using FakeWebShop.Domain.Enums;
 
-namespace FakeWebShop.Domain.Models;
+namespace FakeWebShop.Domain.Model;
 
 public abstract class ProductModel
 {

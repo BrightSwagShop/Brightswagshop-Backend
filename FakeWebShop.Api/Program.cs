@@ -72,11 +72,30 @@ authBuilder.AddJwtBearer("CustomJwt", options =>
         RoleClaimType = ClaimTypes.Role
     };
 });
+// Admin Only -> [Authorize(Policy = "AdminOnly")]
+// UserOnly -> [Authorize(Policy = "UserOnly")]
+// Admin & User -> [Authorize(Policy = "UserOrAdmin")]
 
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("AdminOnly", policy =>
+    {
+        policy.AuthenticationSchemes.Add("AzureAd");
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("App.Admin");
+    });
+
+    options.AddPolicy("UserOnly", policy =>
+    {
+        policy.AuthenticationSchemes.Add("CustomJwt");
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("User");
+    });
+
     options.AddPolicy("UserOrAdmin", policy =>
     {
+        policy.AuthenticationSchemes.Add("CustomJwt");
+        policy.AuthenticationSchemes.Add("AzureAd");
         policy.RequireAuthenticatedUser();
         policy.RequireRole("User", "App.Admin");
     });
@@ -115,7 +134,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers()
+builder.Services
+    .AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -127,7 +147,6 @@ builder.Services
         HeaderAuthDefaults.Scheme,
         _ => { });
 
-builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthorizationMiddlewareResultHandler>();
 
 var app = builder.Build();

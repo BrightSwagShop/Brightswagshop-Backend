@@ -3,8 +3,16 @@ namespace FakeWebShop.Domain.Enums;
 public enum ProductTypeEnum
 {
     TShirt,
-    Mok,
     Hoodie,
-    Sticker
+    Sportkledij,
+    Sokken,
+
+
+    Drinkfles,
+    Mok,
+
+    Onderlegger,
+    Balpen,
+    Eendje
 
 }

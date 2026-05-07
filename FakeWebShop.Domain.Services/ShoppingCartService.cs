@@ -161,12 +161,12 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
     {
         return product switch
         {
-            ClothingProduct clothing => clothing.Kleuren
+            ProductWithSizes clothing => clothing.Kleuren
                 .FirstOrDefault(k => k.Kleur == selectedColor)?.ImageUrl
                 ?? clothing.Kleuren.FirstOrDefault()?.ImageUrl
                 ?? string.Empty,
 
-            MugProduct mug => mug.Kleuren
+            SimpleProduct mug => mug.Kleuren
                 .FirstOrDefault(k => k.Kleur == selectedColor)?.ImageUrl
                 ?? mug.Kleuren.FirstOrDefault()?.ImageUrl
                 ?? string.Empty,
@@ -221,7 +221,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
 
         if (cart.DiscountApplied)
             throw new InvalidOperationException("A discount has already been applied to this cart.");
-        
+
         var cartModel = cart.AsModel();
         var discountModel = DiscountMapping.AsModel(discount);
 

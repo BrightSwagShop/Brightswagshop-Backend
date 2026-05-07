@@ -4,8 +4,7 @@ using FakeWebShop.Contracts.Request.VariantRequest;
 
 namespace FakeWebShop.Contracts.Request;
 
-public class MugProductRequest : MongoProductRequest
+public class ProductWithSizesRequest : MongoProductRequest
 {
-    public List<ColorVariantRequest> Kleuren { get; set; } = new();
-
+    public List<ColorVariantClothesRequest> Kleuren { get; set; } = new();
 }

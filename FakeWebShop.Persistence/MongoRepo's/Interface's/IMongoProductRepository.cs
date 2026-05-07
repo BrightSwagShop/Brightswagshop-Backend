@@ -14,10 +14,7 @@ public interface IMongoProductRepository
     Task<bool> DeleteAsync(string id);
     Task<List<Product>> GetByTypeAsync(ProductTypeEnum productType);
     Task<List<Product>> GetByIdsAsync(List<string> ids);
-
-    // Volledige vervanging
-    // Task<bool> UpdateAsync(Product product);
-
+    Task<bool> UpdateAsync(Product product);
 
 
 

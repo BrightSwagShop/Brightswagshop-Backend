@@ -1,5 +1,3 @@
-using System;
-using FakeWebShop.Contracts.Request.Products;
 using FakeWebShop.Contracts.Request.Products.BaseProductRequest;
 using FakeWebShop.Contracts.Response.Products.BaseProductResponse;
 using FakeWebShop.Domain.Enums;
@@ -52,6 +50,18 @@ public class MongoProductService(IMongoProductRepository repo) : IMongoProductSe
             .ToList();
     }
 
-    // Update Later aanmaken 
+    public async Task<MongoProductResponse?> UpdateProduct(string id, MongoProductRequest product)
+    {
+        var productModel = product.ToModel();
+        productModel.Id = id;
 
+        var productEntity = productModel.ToEntity();
+
+        var updated = await repo.UpdateAsync(productEntity);
+
+        if (!updated) return null;
+
+        return productEntity.ToModel().ToResponse();
+
+    }
 }
