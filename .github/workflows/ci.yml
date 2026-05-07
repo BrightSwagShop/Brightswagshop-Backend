@@ -114,8 +114,8 @@ jobs:
         cat api.log || true
         exit 1
 
-    - name: Run Newman API tests
-      id: newman_tests
+    - name: Run Newman positive API tests
+      id: newman_positive_tests
       continue-on-error: true
       working-directory: APITests
       env:
@@ -126,14 +126,36 @@ jobs:
       run: |
         # Ensure test-results exists
         mkdir -p test-results
-        npm run test:newman
+        npm run test:newman:positive
 
-    - name: Upload Newman results
+    - name: Upload Newman positive results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: newman-results
-        path: APITests/test-results/newman-results.xml
+        name: newman-positive-results
+        path: APITests/test-results/newman-positive-results.xml
+        retention-days: 14
+
+    - name: Run Newman negative API tests
+      id: newman_negative_tests
+      continue-on-error: true
+      working-directory: APITests
+      env:
+        API_BASE_URL: http://127.0.0.1:5076
+        STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        JWT_KEY: ${{ secrets.JWT_KEY }}
+        ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+      run: |
+        # Ensure test-results exists
+        mkdir -p test-results
+        npm run test:newman:negative
+
+    - name: Upload Newman negative results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: newman-negative-results
+        path: APITests/test-results/newman-negative-results.xml
         retention-days: 14
 
     - name: Run Cucumber API tests

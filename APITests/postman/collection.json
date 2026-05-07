@@ -203,7 +203,7 @@
           "  function setupProductAndOrder(){",
           "    const uid = pm.environment.get('existingUserId');",
           "    const token = pm.environment.get('userToken');",
-          "    if(pm.environment.get('existingProductId')){ proceedToOrder(); return; }
+          "    if(pm.environment.get('existingProductId')){ proceedToOrder(); return; }",
           "    // try get products first",
           "    pm.sendRequest({ url: base + '/api/products', method: 'GET' }, function(err, res){",
           "      if(!err && res && res.status === 200){",
@@ -230,7 +230,7 @@
           "      const pid = pm.environment.get('existingProductId');",
           "      const uid = pm.environment.get('existingUserId');",
           "      const token = pm.environment.get('userToken');",
-          "      if(!pid || !uid || !token){ pm.environment.set('fixtures_ready','true'); return; }
+          "      if(!pid || !uid || !token){ pm.environment.set('fixtures_ready','true'); return; }",
           "      // add item to cart",
           "      pm.sendRequest({",
           "        url: base + '/api/shoppingcarts/user/' + uid + '/items',",
