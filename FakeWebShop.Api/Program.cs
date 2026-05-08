@@ -21,6 +21,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Identity.Web;
+using FakeWebShop.Persistence.MongoRepo_s.Interface_s;
+using System.Diagnostics;
+using FakeWebShop.Persistence.Entities.Bugs;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
@@ -111,6 +114,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
+builder.Services.AddScoped<IDebugBugRepository, DebugBugRepository>();
 
 // Services DI
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
@@ -122,6 +126,7 @@ builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IDebugStateService, DebugStateService>();
 
 // CORS
 var allowedOrigins = builder.Configuration
