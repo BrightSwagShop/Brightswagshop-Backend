@@ -16,7 +16,7 @@
             "url": "{{baseUrl}}/api/users/register",
             "body": {"mode": "raw", "raw": "{ \"username\": \"{{existingUser}}\", \"password\": \"P@ssw0rd\", \"email\": \"{{existingUser}}@test.com\" }"}
           },
-          "event": [{"listen": "test", "script": {"exec": ["pm.test('register -> 200/201/exists', function(){ pm.expect([200,201,500]).to.include(pm.response.code); });", "(function(){ try { const body = pm.response.json(); const user = body.user || body.data || body; const userId = user.id || user._id || user.userId; if (userId) pm.environment.set('existingUserId', userId); } catch (e) { /* non-JSON response (user exists) is acceptable */ } })();"]}}]
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('register -> 200/exists', function(){ pm.expect([200,500]).to.include(pm.response.code); });", "(function(){ try { const body = pm.response.json(); const user = body.user || body.data || body; const userId = user.id || user._id || user.userId; if (userId) pm.environment.set('existingUserId', userId); } catch (e) {} })();"]}}]
         },
         {
           "name": "Login existing user -> 200",
@@ -118,7 +118,7 @@
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-User-Id", "value": "admin-user"}, {"key": "X-User-Role", "value": "admin"}],
             "url": "{{baseUrl}}/api/products",
-            "body": {"mode": "raw", "raw": "{ \"title\": \"{{positiveProductTitle}}\", \"price\": 10, \"productType\": \"tshirt\" }"}
+            "body": {"mode": "raw", "raw": "{ \"$type\": \"TShirt\", \"name\": \"{{positiveProductTitle}}\", \"price\": 10, \"category\": 0, \"productType\": 0, \"isActive\": true, \"kleuren\": [] }"}
           },
           "event": [
             {"listen": "prerequest", "script": {"exec": ["pm.environment.set('positiveProductTitle', 'positive-product-' + Date.now());"]}},
@@ -131,10 +131,10 @@
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-User-Id", "value": "admin-user"}, {"key": "X-User-Role", "value": "admin"}],
             "url": "{{baseUrl}}/api/discounts",
-            "body": {"mode": "raw", "raw": "{ \"code\": \"{{positiveDiscountCode}}\", \"startDate\": \"2025-01-01\", \"endDate\": \"2026-12-31\" }"}
+            "body": {"mode": "raw", "raw": "{ \"name\": \"{{positiveDiscountName}}\", \"code\": \"{{positiveDiscountCode}}\", \"percentage\": 10, \"startsAt\": \"2025-01-01T00:00:00Z\", \"endsAt\": \"2026-12-31T00:00:00Z\", \"isActive\": true }"}
           },
           "event": [
-            {"listen": "prerequest", "script": {"exec": ["pm.environment.set('positiveDiscountCode', 'DISC-' + Date.now());"]}},
+            {"listen": "prerequest", "script": {"exec": ["pm.environment.set('positiveDiscountName', 'discount-' + Date.now());", "pm.environment.set('positiveDiscountCode', 'DISC-' + Date.now());"]}},
             {"listen": "test", "script": {"exec": ["pm.test('create discount -> 201', function(){ pm.expect([200,201,400]).to.include(pm.response.code); });", "(function(){ if (pm.response.code !== 200 && pm.response.code !== 201) return; try { const base = pm.environment.get('baseUrl'); const body = pm.response.json(); const discountId = body.id || body._id || body.discountId; if (!discountId) return; pm.sendRequest({ url: base + '/api/discounts/' + discountId, method: 'DELETE', header: { 'X-User-Id': 'admin-user', 'X-User-Role': 'admin' } }, function(err) { pm.test('created discount is deleted', function(){ pm.expect(err).to.equal(null); }); }); } catch (e) {} })();"]}}
           ]
         }
@@ -145,11 +145,9 @@
     {
       "listen": "prerequest",
       "script": {
-        "exec": [
+          "exec": [
           "(function(){",
-          "  if (!pm.environment.get('existingUser')) {",
-          "    pm.environment.set('existingUser', 'existingUser_' + Date.now());",
-          "  }",
+          "  pm.environment.set('existingUser', 'existingUser');",
           "})();"
         ]
       }

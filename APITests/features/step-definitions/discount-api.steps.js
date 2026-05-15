@@ -1,173 +1,234 @@
-const { BeforeAll, AfterAll, Given, When, Then } = require('@cucumber/cucumber');
+const { BeforeAll, AfterAll, Before, Given, When, Then } = require('@cucumber/cucumber');
 const assert = require('node:assert/strict');
 const { request } = require('@playwright/test');
-const { ShoppingCartApiSom, createMugPayload } = require('@brightswagshop/testing-framework');
+const {
+  BASE_URL,
+  createHeaderAuthContext,
+  readApiResponse,
+  createValidMugPayload,
+  createValidDiscountPayload,
+  createInvalidDateDiscountPayload,
+  createCartRequest
+} = require('./api-helpers');
 
-const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:5076';
 const VALID_DISCOUNT_CODE = 'SPRING20';
 
-let apiContext;
-let authApiContext;
-let shoppingCartApi;
+let adminContext;
+let userContext;
+let anonymousContext;
 let seededProductId;
 let seededDiscountId;
-let authCreatedDiscountId;
+const createdDiscountIds = new Set();
 let cartId;
-let lastResponse;
-let lastBody;
-
-async function createApiContext(role = 'anonymous') {
-  const headers = {};
-
-  if (role !== 'anonymous') {
-    headers['X-User-Id'] = `test-${role}-user`;
-  }
-
-  if (role === 'admin') {
-    headers['X-User-Role'] = 'Admin';
-  } else if (role === 'user') {
-    headers['X-User-Role'] = 'User';
-  }
-
-  return request.newContext({
-    baseURL: BASE_URL,
-    extraHTTPHeaders: headers
-  });
-}
+let cartBody;
 
 BeforeAll(async function () {
-  apiContext = await request.newContext({ baseURL: BASE_URL });
-  shoppingCartApi = new ShoppingCartApiSom(apiContext);
-  authApiContext = await createApiContext('admin');
+  adminContext = await createHeaderAuthContext('admin');
+  userContext = await createHeaderAuthContext('user');
+  anonymousContext = await request.newContext({ baseURL: BASE_URL });
 
-  // Create a product to use in all tests via admin context (POST /api/products is protected)
-  const productResponse = await authApiContext.post('/api/products', {
-    data: createMugPayload()
+  const productResponse = await adminContext.post('/api/products', {
+    data: createValidMugPayload({ name: `discount-product-${Date.now()}` })
   });
-  const productBody = await productResponse.json();
-  assert.equal(productResponse.status(), 201);
-  assert.ok(productBody?.id);
-  seededProductId = productBody.id;
+  const productResult = await readApiResponse(productResponse);
+  assert.equal(productResult.response.status(), 201);
+  seededProductId = productResult.body.id;
 
-  const now = new Date();
-  const discountResponse = await authApiContext.post('/api/discounts', {
-    data: {
-      name: 'Spring 20',
-      description: 'Discount for API tests',
-      percentage: 20,
-      code: VALID_DISCOUNT_CODE,
-      startsAt: new Date(now.getTime() - 60 * 60 * 1000).toISOString(),
-      endsAt: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(),
-      isActive: true
-    }
+  const discountResponse = await adminContext.post('/api/discounts', {
+    data: createValidDiscountPayload({ code: VALID_DISCOUNT_CODE, name: 'Spring 20', percentage: 20 })
   });
-  const discountBody = await discountResponse.json();
-  assert.equal(discountResponse.status(), 201);
-  assert.ok(discountBody?.id);
-  seededDiscountId = discountBody.id;
+  const discountResult = await readApiResponse(discountResponse);
+  assert.equal(discountResult.response.status(), 201);
+  seededDiscountId = discountResult.body.id;
 });
 
 AfterAll(async function () {
-  if (authCreatedDiscountId) {
-    await apiContext.delete(`/api/discounts/${authCreatedDiscountId}`);
+  for (const discountId of createdDiscountIds) {
+    await adminContext.delete(`/api/discounts/${discountId}`).catch(() => null);
   }
-  if (cartId) {
-    await shoppingCartApi.deleteShoppingCart(cartId);
-  }
+
   if (seededDiscountId) {
-    await apiContext.delete(`/api/discounts/${seededDiscountId}`);
+    await adminContext.delete(`/api/discounts/${seededDiscountId}`).catch(() => null);
   }
+
+  if (cartId) {
+    await anonymousContext.delete(`/api/shoppingcarts/${cartId}`).catch(() => null);
+  }
+
   if (seededProductId) {
-    await authApiContext.delete(`/api/products/${seededProductId}`);
+    await adminContext.delete(`/api/products/${seededProductId}`).catch(() => null);
   }
-  await authApiContext?.dispose();
-  await apiContext?.dispose();
+
+  await adminContext?.dispose();
+  await userContext?.dispose();
+  await anonymousContext?.dispose();
 });
 
-Given('I am authenticated as a regular user', async function () {
-  await authApiContext?.dispose();
-  authApiContext = await createApiContext('user');
+Before(function () {
+  this.activeContext = adminContext;
+  this.discountPayload = null;
+  this.updatedDiscountPayload = null;
+  this.lastResponse = null;
+  this.lastBody = null;
+  this.lastBodyText = null;
+  this.cartUserId = null;
+  this.cartProductId = seededProductId;
+  this.currentDiscountCode = VALID_DISCOUNT_CODE;
+  this.discountCartId = null;
 });
 
-Given('I am authenticated as an admin user', async function () {
-  await authApiContext?.dispose();
-  authApiContext = await createApiContext('admin');
-});
+async function storeResponse(world, response) {
+  const result = await readApiResponse(response);
+  world.lastResponse = result.response;
+  world.lastBody = result.body;
+  world.lastBodyText = typeof result.body === 'string' ? result.body : JSON.stringify(result.body ?? {});
+}
 
-Given('I am not authenticated', async function () {
-  await authApiContext?.dispose();
-  authApiContext = await createApiContext('anonymous');
-});
+async function createCartForUser(userId) {
+  const response = await anonymousContext.post('/api/shoppingcarts', {
+    data: createCartRequest({
+      userId,
+      productId: seededProductId,
+      quantity: 1
+    })
+  });
 
-Given('a shopping cart exists with user {string} and product {string}', async function (userId, productName) {
-  // Use the seeded product
-  const cartPayload = {
-    userId,
-    sessionId: 'sess1',
-    items: [{ productId: seededProductId, quantity: 1 }]
-  };
-  const response = await shoppingCartApi.createShoppingCart(cartPayload);
-  const result = await shoppingCartApi.readResponse(response);
-  assert.equal(result.status, 201);
+  const result = await readApiResponse(response);
+  assert.equal(result.response.status(), 201);
   cartId = result.body.id;
+  cartBody = result.body;
+}
+
+Given('I am authenticated as a regular user for discount operations', function () {
+  this.activeContext = userContext;
+});
+
+Given('I am authenticated as an admin user for discount operations', function () {
+  this.activeContext = adminContext;
+});
+
+Given('I am not authenticated for discount operations', function () {
+  this.activeContext = anonymousContext;
+});
+
+Given('a shopping cart exists with user {string} and product {string}', async function (userId, productId) {
+  this.cartUserId = userId;
+  this.productId = productId;
+  await createCartForUser(userId);
+  this.discountCartId = cartId;
+});
+
+Given('a shopping cart exists with at least one item', async function () {
+  this.cartUserId = `discount-user-${Date.now()}`;
+  await createCartForUser(this.cartUserId);
+  this.discountCartId = cartId;
+});
+
+Given('a valid discount code exists', async function () {
+  // Seeded in BeforeAll; this step just makes the scenario intent explicit.
+  this.currentDiscountCode = VALID_DISCOUNT_CODE;
+});
+
+Given('no cart exists with id {string}', function (id) {
+  this.discountCartId = id;
 });
 
 When('I apply the discount code {string} to the cart', async function (code) {
-  const response = await apiContext.post(`/api/shoppingcarts/${cartId}/apply-discount`, {
+  const response = await anonymousContext.post(`/api/shoppingcarts/${this.discountCartId}/apply-discount`, {
     data: { code }
   });
-  lastResponse = response;
-  lastBody = await response.json();
+
+  await storeResponse(this, response);
+  this.cartBody = this.lastBody;
 });
 
 When('I apply the discount code {string} to the cart again', async function (code) {
-  const response = await apiContext.post(`/api/shoppingcarts/${cartId}/apply-discount`, {
+  const response = await anonymousContext.post(`/api/shoppingcarts/${this.discountCartId}/apply-discount`, {
     data: { code }
   });
-  lastResponse = response;
-  lastBody = await response.json();
+
+  await storeResponse(this, response);
+  this.cartBody = this.lastBody;
+});
+
+When('I POST {string} with the discount code', async function (path) {
+  const resolvedPath = path.replace('{cartId}', this.discountCartId);
+  const response = await anonymousContext.post(resolvedPath, {
+    data: { code: this.currentDiscountCode }
+  });
+
+  await storeResponse(this, response);
+});
+
+When('I POST {string} with the same discount code again', async function (path) {
+  const resolvedPath = path.replace('{cartId}', this.discountCartId);
+  const response = await anonymousContext.post(resolvedPath, {
+    data: { code: this.currentDiscountCode }
+  });
+
+  await storeResponse(this, response);
+});
+
+When('I POST {string} with code {string}', async function (path, code) {
+  const response = await anonymousContext.post(path, {
+    data: { code }
+  });
+
+  await storeResponse(this, response);
 });
 
 When('I create a discount with code {string}', async function (code) {
-  const now = new Date();
-  const response = await authApiContext.post('/api/discounts', {
-    data: {
-      name: `Test ${code}`,
-      description: 'Authorization test discount',
-      percentage: 10,
-      code,
-      startsAt: new Date(now.getTime() - 60 * 60 * 1000).toISOString(),
-      endsAt: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(),
-      isActive: true
-    }
+  const payload = createValidDiscountPayload({ code, name: `Test ${code}`, percentage: 10 });
+  const response = await this.activeContext.post('/api/discounts', {
+    data: payload
   });
 
-  lastResponse = response;
-  lastBody = await response.json().catch(() => null);
+  await storeResponse(this, response);
 
-  if (response.status() === 201 && lastBody?.id) {
-    authCreatedDiscountId = lastBody.id;
+  if (this.lastResponse.status() === 201 && this.lastBody?.id) {
+    createdDiscountIds.add(this.lastBody.id);
   }
 });
 
-Then('the cart total should reflect the discount', async function () {
-  assert.equal(lastResponse.status(), 200);
-  assert.ok(lastBody.totalPrice < 100);
+When('I POST {string} with a discount where endDate < startDate', async function (path) {
+  if (path !== '/api/discounts') {
+    throw new Error(`Unsupported invalid-discount path: ${path}`);
+  }
+
+  const response = await adminContext.post(path, {
+    data: createInvalidDateDiscountPayload()
+  });
+
+  await storeResponse(this, response);
 });
 
-Then('I should receive a 409 Conflict error', async function () {
-  assert.equal(lastResponse.status(), 409);
+Then('the cart total should reflect the discount', function () {
+  assert.equal(this.lastResponse.status(), 200);
+  assert.ok(Number(this.lastBody.totalPrice) < Number(this.lastBody.subTotal));
 });
 
-Then('I should receive a 404 Not Found error', async function () {
-  assert.equal(lastResponse.status(), 404);
+Then('the cart totals should reflect the discount', function () {
+  assert.equal(this.lastResponse.status(), 200);
+  assert.ok(Number(this.lastBody.totalPrice) < Number(this.lastBody.subTotal));
+});
+
+Then('the cart should keep the first discount state', function () {
+  assert.equal(this.lastResponse.status(), 409);
+});
+
+Then('I should receive a 409 Conflict error', function () {
+  assert.equal(this.lastResponse.status(), 409);
+});
+
+Then('I should receive a 404 Not Found error', function () {
+  assert.equal(this.lastResponse.status(), 404);
 });
 
 Then('I should receive a 403 Forbidden error', function () {
-  assert.equal(lastResponse.status(), 403);
+  assert.equal(this.lastResponse.status(), 403);
 });
 
 Then('I should receive a 201 Created response', function () {
-  assert.equal(lastResponse.status(), 201);
-  assert.ok(lastBody?.id);
+  assert.equal(this.lastResponse.status(), 201);
+  assert.ok(this.lastBody?.id);
 });

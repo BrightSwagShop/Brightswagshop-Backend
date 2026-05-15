@@ -15,8 +15,8 @@ module.exports = {
     ...shared,
     format: ['progress', allureFormatter]
   },
-  browserstack: {
+  testrail: {
     ...shared,
-    format: ['progress', allureFormatter, 'json:test-results/cucumber.json']
+    format: ['progress', allureFormatter, 'json:test-results/cucumber.json', 'junit:./test-results/junit.xml']
   }
 };

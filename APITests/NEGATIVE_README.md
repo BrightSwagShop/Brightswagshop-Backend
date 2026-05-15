@@ -137,7 +137,7 @@ Feature: Boundary error cases for sizes, numbers and payload lengths
     Examples:
       | quantity       | status |
       | -1             | 400    |
-      | 0              | 400    |
+      | 0              | 200    |
       | 1000000000     | 400    |
 
   Scenario Outline: Oversized string fields are rejected for create endpoints

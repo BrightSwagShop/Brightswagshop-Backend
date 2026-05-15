@@ -9,9 +9,9 @@
     "test:allure": "npm run allure:clean && cucumber-js --profile allure",
     "report:allure:generate": "allure generate allure-results --clean -o allure-report",
     "report:allure:open": "allure open allure-report",
-    "browserstack:check-env": "node -e \"const missing=[]; if(!process.env.BROWSERSTACK_USERNAME) missing.push('BROWSERSTACK_USERNAME'); if(!process.env.BROWSERSTACK_ACCESS_KEY) missing.push('BROWSERSTACK_ACCESS_KEY'); if(missing.length){ console.error('[BrowserStack] Missing required environment variables for reporting:'); missing.forEach(name => console.error('- ' + name)); process.exit(1); } console.log('[BrowserStack] Environment is configured for reporting.');\"",
-    "test:browserstack": "npm run allure:clean && npm run browserstack:check-env && cucumber-js --profile browserstack && npm run upload:browserstack",
-    "upload:browserstack": "node scripts/upload-browserstack.js test-results/cucumber.json",
+    "testrail:check-env": "node -e \"const missing=[]; if(!process.env.TESTRAIL_BASE_URL) missing.push('TESTRAIL_BASE_URL'); if(!process.env.TESTRAIL_USERNAME) missing.push('TESTRAIL_USERNAME'); if(!process.env.TESTRAIL_API_KEY) missing.push('TESTRAIL_API_KEY'); if(missing.length){ console.error('[TestRail] Missing required environment variables for reporting:'); missing.forEach(name => console.error('- ' + name)); process.exit(1); } console.log('[TestRail] Environment is configured for reporting.');\"",
+    "test:testrail": "npm run allure:clean && cucumber-js --profile testrail",
+    "upload:testrail": "node scripts/upload-testrail.js test-results/junit.xml",
     "test:newman:negative": "newman run postman/collection.json -e postman/environment.json --reporters cli,junit --reporter-junit-export test-results/newman-negative-results.xml",
     "test:newman:positive": "newman run postman/positive-clean-collection.json -e postman/environment.json --reporters cli,junit --reporter-junit-export test-results/newman-positive-results.xml",
     "test:newman": "npm run test:newman:positive && npm run test:newman:negative"
@@ -19,12 +19,11 @@
   "devDependencies": {
     "@brightswagshop/testing-framework": "git+https://github.com/BrightSwagShop/TestingFramework.git#main",
     "@cucumber/cucumber": "^12.7.0",
-    "@dot-slash/browserstack-test-management": "^6.1.0",
     "@playwright/test": "^1.54.2",
     "allure-commandline": "^2.34.1",
     "allure-cucumberjs": "^3.4.1",
-    "rimraf": "^6.0.1",
     "newman": "^5.3.2",
-    "newman-reporter-junitfull": "^1.1.1"
+    "newman-reporter-junitfull": "^1.1.1",
+    "rimraf": "^6.0.1"
   }
 }

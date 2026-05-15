@@ -163,12 +163,34 @@ jobs:
       continue-on-error: true
       env:
         API_BASE_URL: http://127.0.0.1:5076
-        BROWSERSTACK_USERNAME: ${{ secrets['BROWSERSTACK_USERNAME'] }}
-        BROWSERSTACK_ACCESS_KEY: ${{ secrets['BROWSERSTACK_ACCESS_KEY'] }}
-        BROWSERSTACK_PROJECT_NAME: BrightSwagShop - JIRA
-        BROWSERSTACK_BUILD_NAME: 'Build #${{ github.run_number }}'
-      run: npm run test:browserstack
+        TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+        TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+        TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+        TESTRAIL_PROJECT_NAME: BrightSwagShop
+        TESTRAIL_BUILD_NAME: 'Build #${{ github.run_number }}'
+      run: npx @cucumber/cucumber --profile testrail
       working-directory: APITests
+
+    - name: Setup Python for TestRail CLI
+      if: always()
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Upload to TestRail via CLI
+      if: always()
+      working-directory: APITests
+      run: |
+        pip install trcli
+        trcli -y \
+          -h "${{ secrets.TESTRAIL_BASE_URL }}" \
+          --project "BrightSwagShop" \
+          -u "${{ secrets.TESTRAIL_USERNAME }}" \
+          -p "${{ secrets.TESTRAIL_API_KEY }}" \
+          parse_junit \
+          --title "Automated API Tests - Build #${{ github.run_number }}" \
+          --run-description "Triggered by: ${{ github.actor }} | Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          -f "test-results/junit.xml"
 
     - name: Generate Allure report
       if: always() && github.event_name == 'workflow_dispatch' && (inputs.upload_report == 'true' || inputs.send_email == 'true')
