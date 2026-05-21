@@ -123,6 +123,17 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
 
     public async Task<ShoppingCartResponse> AddItemAsync(string userId, CartItemRequest request)
     {
+        var addToCartDisabled = await debugStateService.GetStateAsync("DisableAddToCart");
+
+    if (addToCartDisabled)
+    {
+        var existingCart = await cartRepo.GetByUserIdAsync(userId);
+
+        if (existingCart is not null)
+            return existingCart.AsModel().AsResponse();
+
+        return CreateNewCart(userId).AsResponse();
+    }
         var existingCartEntity = await cartRepo.GetByUserIdAsync(userId);
 
         var cartModel = existingCartEntity?.AsModel() ?? CreateNewCart(userId);
