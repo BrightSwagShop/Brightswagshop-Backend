@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test run 0d049b29dcff4ef0913284780267e087</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f8fafc; color: #0f172a; }
+    .status { display: inline-block; padding: 8px 14px; border-radius: 999px; color: white; background: #b91c1c; font-weight: 700; }
+    section { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-top: 18px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 12px; overflow: auto; }
+    .meta { display: grid; gap: 8px; margin-top: 12px; }
+    .meta div { display: flex; gap: 12px; flex-wrap: wrap; }
+    .label { font-weight: 700; min-width: 120px; }
+  </style>
+</head>
+<body>
+  <h1>Test automation report</h1>
+  <div class="status">Failed</div>
+  <section>
+    <div class="meta">
+      <div><span class="label">Suite</span><span>Api</span></div>
+      <div><span class="label">Started</span><span>2026-05-21T07:28:00.6502011+00:00</span></div>
+      <div><span class="label">Completed</span><span>2026-05-21T07:28:00.8707653+00:00</span></div>
+      <div><span class="label">Exit code</span><span>1</span></div>
+    </div>
+  </section>
+<section><h2>Failure</h2><pre>Test process exited with code 1.</pre></section>
+  <section>
+    <h2>Latest output</h2>
+    <pre>node:internal/modules/cjs/loader:1423
+  throw err;
+  ^
+Error: Cannot find module &#39;C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\npm\bin\npm-prefix.js&#39;
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1226:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:244:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: &#39;MODULE_NOT_FOUND&#39;,
+  requireStack: []
+}
+Node.js v24.11.0
+node:internal/modules/cjs/loader:1423
+  throw err;
+  ^
+Error: Cannot find module &#39;C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\npm\bin\npx-cli.js&#39;
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1226:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:244:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: &#39;MODULE_NOT_FOUND&#39;,
+  requireStack: []
+}
+Node.js v24.11.0</pre>
+  </section>
+</body>
+</html>

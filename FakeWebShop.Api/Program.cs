@@ -15,6 +15,8 @@ using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using FakeWebShop.Api.Security;
+using FakeWebShop.Api.TestAutomation;
+using Microsoft.Extensions.FileProviders;
 using MongoDB.Driver;
 using Stripe;
 using Microsoft.AspNetCore.Authentication;
@@ -126,6 +128,7 @@ builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddSingleton<ITestAutomationService, TestAutomationService>();
 builder.Services.AddScoped<IDebugStateService, DebugStateService>();
 
 // CORS
@@ -160,7 +163,15 @@ builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthori
 
 var app = builder.Build();
 
+var testReportRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "test-automation-runs");
+Directory.CreateDirectory(testReportRoot);
+
 app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(testReportRoot),
+    RequestPath = "/test-automation-runs"
+});
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
