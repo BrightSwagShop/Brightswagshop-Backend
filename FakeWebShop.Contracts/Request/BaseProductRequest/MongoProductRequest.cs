@@ -6,8 +6,8 @@ using FakeWebShop.Domain.Enums;
 namespace FakeWebShop.Contracts.Request.Products.BaseProductRequest;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
-[JsonDerivedType(typeof(ClothingProductRequest), nameof(ProductTypeEnum.TShirt))]
-[JsonDerivedType(typeof(MugProductRequest), nameof(ProductTypeEnum.Mok))]
+[JsonDerivedType(typeof(ProductWithSizesRequest), "ProductWithSizes")]
+[JsonDerivedType(typeof(SimpleProductRequest), "SimpleProduct")]
 public abstract class MongoProductRequest
 {
     public required string Name { get; set; }
@@ -17,3 +17,4 @@ public abstract class MongoProductRequest
     public ProductTypeEnum ProductType { get; set; }
     public bool IsActive { get; set; }
 }
+

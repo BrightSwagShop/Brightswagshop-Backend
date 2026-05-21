@@ -1,0 +1,9 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Winkelwagen - State Transition'
+item:
+  - $ref: './State-Cart-Aanmaken.request.yaml'
+  - $ref: './State-Cart-Item-Toevoegen.request.yaml'
+  - $ref: './State-Cart-Item-Verwijderen.request.yaml'
+  - $ref: './State-Cart-Verwijderen.request.yaml'
+  - $ref: './State-Cart-Verificatie-Verwijderd.request.yaml'

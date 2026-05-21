@@ -1,0 +1,8 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Producten - State Transition'
+item:
+  - $ref: './State-Product-Aanmaken.request.yaml'
+  - $ref: './State-Product-Ophalen.request.yaml'
+  - $ref: './State-Product-Verwijderen.request.yaml'
+  - $ref: './State-Product-Verificatie-Verwijderd.request.yaml'

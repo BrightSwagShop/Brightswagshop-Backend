@@ -1,0 +1,7 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Winkelwagen - EP'
+item:
+  - $ref: './EP-Cart-Geldige-Kortingscode.request.yaml'
+  - $ref: './EP-Cart-Verlopen-Kortingscode.request.yaml'
+  - $ref: './EP-Cart-Niet-Bestaande-Cart.request.yaml'

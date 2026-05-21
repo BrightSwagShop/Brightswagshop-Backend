@@ -12,7 +12,7 @@ using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 namespace FakeWebShop.Domain.Services;
 
-public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProductRepository productRepo, IDiscountRepository discountRepo) : IShoppingCartService
+public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProductRepository productRepo, IDiscountRepository discountRepo, IDebugStateService debugStateService) : IShoppingCartService
 {
     public async Task<ShoppingCartResponse> CreateAsync(ShoppingCartRequest request)
     {
@@ -32,7 +32,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
         }
 
 
-        cartModel.TotalPrice = cartModel.Items.Sum(i => i.UnitPrice * i.Quantity);
+       cartModel.TotalPrice = await CalculateTotalPriceAsync(cartModel);
 
         var entity = cartModel.AsEntity();
 
@@ -86,7 +86,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
         item.Quantity = request.Quantity;
 
 
-        cartModel.TotalPrice = cartModel.Items.Sum(i => i.UnitPrice * i.Quantity);
+       cartModel.TotalPrice = await CalculateTotalPriceAsync(cartModel);
         cartModel.UpdatedAt = DateTime.UtcNow;
 
         var updatedEntity = cartModel.AsEntity();
@@ -111,7 +111,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
 
         cartModel.Items.Remove(item);
 
-        cartModel.TotalPrice = cartModel.Items.Sum(i => i.UnitPrice * i.Quantity);
+        cartModel.TotalPrice = await CalculateTotalPriceAsync(cartModel);
         cartModel.UpdatedAt = DateTime.UtcNow;
 
         var updatedEntity = cartModel.AsEntity();
@@ -123,6 +123,17 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
 
     public async Task<ShoppingCartResponse> AddItemAsync(string userId, CartItemRequest request)
     {
+        var addToCartDisabled = await debugStateService.GetStateAsync("DisableAddToCart");
+
+    if (addToCartDisabled)
+    {
+        var existingCart = await cartRepo.GetByUserIdAsync(userId);
+
+        if (existingCart is not null)
+            return existingCart.AsModel().AsResponse();
+
+        return CreateNewCart(userId).AsResponse();
+    }
         var existingCartEntity = await cartRepo.GetByUserIdAsync(userId);
 
         var cartModel = existingCartEntity?.AsModel() ?? CreateNewCart(userId);
@@ -143,7 +154,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
             cartModel.Items.Add(CreateCartItemModel(product, request));
         }
 
-        cartModel.TotalPrice = CalculateTotalPrice(cartModel);
+        cartModel.TotalPrice = await CalculateTotalPriceAsync(cartModel);
         cartModel.UpdatedAt = DateTime.UtcNow;
 
         var updatedCartEntity = cartModel.AsEntity();
@@ -161,12 +172,12 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
     {
         return product switch
         {
-            ClothingProduct clothing => clothing.Kleuren
+            ProductWithSizes clothing => clothing.Kleuren
                 .FirstOrDefault(k => k.Kleur == selectedColor)?.ImageUrl
                 ?? clothing.Kleuren.FirstOrDefault()?.ImageUrl
                 ?? string.Empty,
 
-            MugProduct mug => mug.Kleuren
+            SimpleProduct mug => mug.Kleuren
                 .FirstOrDefault(k => k.Kleur == selectedColor)?.ImageUrl
                 ?? mug.Kleuren.FirstOrDefault()?.ImageUrl
                 ?? string.Empty,
@@ -205,9 +216,18 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
         };
     }
 
-    private static decimal CalculateTotalPrice(ShoppingCartModel cartModel)
+   private async Task<decimal> CalculateTotalPriceAsync(ShoppingCartModel cartModel)
     {
-        return cartModel.Items.Sum(i => i.UnitPrice * i.Quantity);
+        var total = cartModel.Items.Sum(i => i.UnitPrice * i.Quantity);
+
+        var wrongTotalEnabled = await debugStateService.GetStateAsync("WrongCartTotal");
+
+        if (wrongTotalEnabled)
+        {
+            total += 10;
+        }
+
+        return total;
     }
 
 
@@ -221,7 +241,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
 
         if (cart.DiscountApplied)
             throw new InvalidOperationException("A discount has already been applied to this cart.");
-        
+
         var cartModel = cart.AsModel();
         var discountModel = DiscountMapping.AsModel(discount);
 

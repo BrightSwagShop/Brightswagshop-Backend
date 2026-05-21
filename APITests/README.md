@@ -57,50 +57,34 @@ Step definitions:
 - `features/step-definitions/backend-api.steps.js`
 - `features/step-definitions/shopping-cart-api.steps.js`
 
-## Qase TestOps
+## BrowserStack reporting
 
-Cucumber reporter is enabled via `cucumberjs-qase-reporter`.
+BrowserStack reporting is enabled through the `browserstack` Cucumber profile.
 
-All scenarios intended for TestOps sync are tagged with `@qase`.
-The `qase` Cucumber profile runs only `@qase` scenarios.
+Set these env vars before running tests with BrowserStack reporting.
 
-Set these env vars before running tests with Qase upload:
-
-```powershell
-$env:QASE_MODE = "testops"
-$env:QASE_TESTOPS_API_TOKEN = "<your_qase_api_token>"
-$env:QASE_TESTOPS_PROJECT = "<your_project_code>"
-$env:QASE_REPORT = "1"
-```
-
-Run with uploads:
+- For CI: configure `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` as GitHub repository secrets (do not commit secrets to source).
+- For local runs only: set them in your local environment and do not check them into version control. Example (PowerShell):
 
 ```powershell
-npm run test:cucumber:qase
+$env:BROWSERSTACK_USERNAME = "your_username"; $env:BROWSERSTACK_ACCESS_KEY = "your_access_key"; npm run test:browserstack
 ```
 
-Alias command:
+Run with BrowserStack reporting:
 
 ```powershell
-npm run test:qase
+npm run test:browserstack
 ```
 
-Qase run also produces Allure results because the `qase` profile includes the Allure formatter.
+The `test:browserstack` command validates required env vars first and fails fast if missing:
 
-The `test:qase` command validates required env vars first and fails fast if missing:
-
-- `QASE_TESTOPS_API_TOKEN` (or `QASE_API_TOKEN`)
-- `QASE_TESTOPS_PROJECT` (or `QASE_PROJECT_CODE`)
-
-Auto-creation behavior:
-
-- Scenarios with `@QaseID=<id>` are linked to existing Qase test cases.
-- Scenarios with `@qase` but without `@QaseID=...` are auto-created in Qase from feature/scenario names.
+- `BROWSERSTACK_USERNAME`
+- `BROWSERSTACK_ACCESS_KEY`
 
 For GitHub Actions, set repository secrets:
 
-- `QASE_TESTOPS_API_TOKEN`
-- `QASE_TESTOPS_PROJECT`
+- `BROWSERSTACK_USERNAME`
+- `BROWSERSTACK_ACCESS_KEY`
 
 Optional email notifications (workflow):
 

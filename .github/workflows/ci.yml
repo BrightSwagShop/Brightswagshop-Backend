@@ -8,7 +8,7 @@ on:
       upload_report:
         description: Upload Allure report artifact
         required: true
-        default: 'false'
+        default: 'true'
         type: choice
         options:
           - 'true'
@@ -16,7 +16,7 @@ on:
       send_email:
         description: Send Allure report email (requires SENDGRID_API_KEY)
         required: true
-        default: 'false'
+        default: 'true'
         type: choice
         options:
           - 'true'
@@ -119,10 +119,11 @@ jobs:
       continue-on-error: true
       env:
         API_BASE_URL: http://127.0.0.1:5076
-        QASE_MODE: testops
-        QASE_TESTOPS_API_TOKEN: ${{ secrets['QASE_TESTOPS_API_TOKEN'] }}
-        QASE_TESTOPS_PROJECT: ${{ secrets['QASE_TESTOPS_PROJECT'] }}
-      run: npm run test:qase
+        BROWSERSTACK_USERNAME: ${{ secrets['BROWSERSTACK_USERNAME'] }}
+        BROWSERSTACK_ACCESS_KEY: ${{ secrets['BROWSERSTACK_ACCESS_KEY'] }}
+        BROWSERSTACK_PROJECT_NAME: BrightSwagShop - JIRA
+        BROWSERSTACK_BUILD_NAME: 'Build #${{ github.run_number }}'
+      run: npm run test:browserstack
       working-directory: APITests
 
     - name: Generate Allure report
@@ -205,11 +206,110 @@ jobs:
     - name: Check for vulnerabilities
       run: dotnet list package --vulnerable --include-transitive
       continue-on-error: true
+
+    - name: Trigger cross-repo E2E workflow
+      id: trigger_e2e
+      env:
+        CROSS_REPO_PAT: ${{ secrets.CROSS_REPO_PAT }}
+      if: github.event_name == 'push' && env.CROSS_REPO_PAT != ''
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ env.CROSS_REPO_PAT }}
+        repository: BrightSwagShop/TestingFramework
+        event-type: run-cross-e2e
+        client-payload: '{"source_repository":"${{ github.repository }}","source_workflow":"${{ github.workflow }}","source_run_id":"${{ github.run_id }}","sha":"${{ github.sha }}","ref":"${{ github.ref }}","frontend_ref":"frontend-framework-integration","status_context":"cross-repo-e2e/${{ github.run_id }}"}'
+
+    - name: Wait for E2E workflow to complete
+      if: github.event_name == 'push' && steps.trigger_e2e.outcome == 'success'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const maxAttempts = 120; // ~10 minutes (120 * 5s)
+          const sleepMs = 5000;
+          const sourceSha = '${{ github.sha }}';
+          const sourceRunId = '${{ github.run_id }}';
+          const statusContext = `cross-repo-e2e/${{ github.run_id }}`;
+
+          let attempts = 0;
+          let concluded = false;
+
+          while (attempts < maxAttempts && !concluded) {
+            // Check commit statuses on this repo first
+            const statuses = await github.rest.repos.listCommitStatusesForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: sourceSha,
+            });
+
+            const matchingStatus = statuses.data.find(s => s.context === statusContext);
+
+            if (matchingStatus) {
+              console.log(`Found cross-repo status: ${matchingStatus.state} (${matchingStatus.target_url || 'no-url'})`);
+              if (matchingStatus.state === 'success') {
+                console.log('E2E workflow completed successfully via commit status.');
+                concluded = true;
+                break;
+              }
+              if (matchingStatus.state === 'failure' || matchingStatus.state === 'error') {
+                throw new Error('E2E workflow reported failure via commit status. Blocking deployment.');
+              }
+            } else {
+              console.log(`No commit status yet for context ${statusContext} (attempt ${attempts + 1}/${maxAttempts}).`);
+            }
+
+            // Fallback: query TestingFramework workflow runs by source run id.
+            // The TestingFramework run-name includes the backend run id, but its head_sha
+            // is the TestingFramework repo commit, not the backend commit.
+            try {
+              const [owner, repo] = 'BrightSwagShop/TestingFramework'.split('/');
+              const runs = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                per_page: 20,
+                event: 'repository_dispatch',
+              });
+
+              const matchingRun = (runs.data.workflow_runs || []).find(run => {
+                const title = `${run.display_title || ''} ${run.name || ''}`;
+                return title.includes(`source run ${sourceRunId}`) || title.includes(sourceRunId);
+              });
+
+              if (matchingRun) {
+                console.log(`Found TF run: id=${matchingRun.id} conclusion=${matchingRun.conclusion} status=${matchingRun.status} url=${matchingRun.html_url}`);
+                if (matchingRun.status === 'completed') {
+                  if (matchingRun.conclusion === 'success') {
+                    console.log('E2E workflow completed successfully (fallback run).');
+                    concluded = true;
+                    break;
+                  }
+
+                  throw new Error(`E2E workflow run concluded with ${matchingRun.conclusion}. Blocking deployment.`);
+                }
+
+                console.log(`Matched TF run is still ${matchingRun.status}; waiting.`);
+              } else {
+                console.log(`No TestingFramework workflow runs found yet for source run ${sourceRunId}.`);
+              }
+            } catch (err) {
+              console.log('Error checking TestingFramework runs fallback:', String(err));
+            }
+
+            if (!concluded) {
+              await new Promise(resolve => setTimeout(resolve, sleepMs));
+              attempts++;
+            }
+          }
+
+          if (!concluded) {
+            throw new Error('E2E workflow did not complete in time or had unknown status; blocking deployment.');
+          }
   
   deploy:
     name: Deploy to Render
     runs-on: ubuntu-latest
     needs: build
+    if: success()
         
     steps:
     - name: Trigger Render deployment

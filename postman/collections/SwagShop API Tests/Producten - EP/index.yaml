@@ -1,0 +1,8 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Producten - EP'
+item:
+  - $ref: './EP-Geldige-Categorie-Slug.request.yaml'
+  - $ref: './EP-Ongeldige-Categorie-Slug.request.yaml'
+  - $ref: './EP-Admin-Product-Aanmaken.request.yaml'
+  - $ref: './EP-Customer-Product-Aanmaken.request.yaml'

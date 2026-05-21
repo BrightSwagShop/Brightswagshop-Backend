@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FakeWebShop.Api.Controllers;
 
+// Controller om admin/user claims te testen
 [ApiController]
 [Route("api/debug")]
 public class DebugController : ControllerBase

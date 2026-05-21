@@ -1,0 +1,6 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Productcategorieën - EP'
+item:
+  - $ref: './EP-Cat-Geldig-GET.request.yaml'
+  - $ref: './EP-Cat-Ongeldige-Methode.request.yaml'

@@ -1,0 +1,7 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: folder
+name: 'Winkelwagen - BVA'
+item:
+  - $ref: './BVA-Cart-Quantity-1.request.yaml'
+  - $ref: './BVA-Cart-Quantity-0.request.yaml'
+  - $ref: './BVA-Cart-Quantity-Negatief.request.yaml'

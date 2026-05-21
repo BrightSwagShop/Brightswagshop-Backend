@@ -6,7 +6,7 @@ namespace FakeWebShop.Persistence.Entities.BaseProduct;
 
 // Geopteerd voor Polymorfisme
 [BsonDiscriminator(RootClass = true)]
-[BsonKnownTypes(typeof(ClothingProduct), typeof(MugProduct))]
+[BsonKnownTypes(typeof(ProductWithSizes), typeof(SimpleProduct))]
 public abstract class Product
 {
     [BsonId]

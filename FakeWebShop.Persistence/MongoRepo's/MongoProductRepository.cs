@@ -60,10 +60,14 @@ public class MongoProductRepository : IMongoProductRepository
             .ToListAsync();
     }
 
+    public async Task<bool> UpdateAsync(Product product)
+    {
+        var result = await _products.ReplaceOneAsync(
+            p => p.Id == product.Id,
+            product
+        );
 
+        return result.MatchedCount > 0;
+    }
 
-    // Product updaten
-
-
-    // Alleen updaten wat effectief meegegeven is (Code moet nog herbekeken worden/ Misschien andere manier van te schrijven)
 }

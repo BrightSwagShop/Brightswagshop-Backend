@@ -1,0 +1,25 @@
+$schema: 'https://schema.getpostman.com/collection/v3'
+$kind: collection
+info:
+  name: SwagShop API Tests
+  description: 'Testcases voor SwagShop Backend API - EP, BVA, State Transition en Pairwise'
+item:
+  - $ref: './Producten - EP/'
+  - $ref: './Producten - BVA/'
+  - $ref: './Producten - State Transition/'
+  - $ref: './Producten - Pairwise/'
+  - $ref: './Productcategorieën - EP/'
+  - $ref: './Winkelwagen - EP/'
+  - $ref: './Winkelwagen - BVA/'
+  - $ref: './Winkelwagen - State Transition/'
+variable:
+  - key: baseUrl
+    value: 'http://localhost:5076'
+  - key: createdProductId
+    value: ''
+  - key: stateProductId
+    value: ''
+  - key: stateCartId
+    value: ''
+  - key: stateCartItemId
+    value: ''

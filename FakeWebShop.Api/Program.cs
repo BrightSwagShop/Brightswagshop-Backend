@@ -21,12 +21,19 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Identity.Web;
+using FakeWebShop.Persistence.MongoRepo_s.Interface_s;
+using System.Diagnostics;
+using FakeWebShop.Persistence.Entities.Bugs;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.AddUserSecrets<Program>();
 var jwtKey = builder.Configuration["Jwt:Key"]!;
 var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;
 var jwtAudience = builder.Configuration["Jwt:Audience"]!;
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new Exception("JWT Key is NULL → fix je user-secrets");
+}
 
 // Mongo
 builder.Services.Configure<MongoOptions>(
@@ -72,11 +79,30 @@ authBuilder.AddJwtBearer("CustomJwt", options =>
         RoleClaimType = ClaimTypes.Role
     };
 });
+// Admin Only -> [Authorize(Policy = "AdminOnly")]
+// UserOnly -> [Authorize(Policy = "UserOnly")]
+// Admin & User -> [Authorize(Policy = "UserOrAdmin")]
 
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("AdminOnly", policy =>
+    {
+        policy.AuthenticationSchemes.Add("AzureAd");
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("App.Admin");
+    });
+
+    options.AddPolicy("UserOnly", policy =>
+    {
+        policy.AuthenticationSchemes.Add("CustomJwt");
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("User");
+    });
+
     options.AddPolicy("UserOrAdmin", policy =>
     {
+        policy.AuthenticationSchemes.Add("CustomJwt");
+        policy.AuthenticationSchemes.Add("AzureAd");
         policy.RequireAuthenticatedUser();
         policy.RequireRole("User", "App.Admin");
     });
@@ -88,6 +114,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<IMongoUserRepository, MongoUserRepository>();
+builder.Services.AddScoped<IDebugBugRepository, DebugBugRepository>();
 
 // Services DI
 builder.Services.AddScoped<IMongoProductService, MongoProductService>();
@@ -99,6 +126,7 @@ builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IDebugStateService, DebugStateService>();
 
 // CORS
 var allowedOrigins = builder.Configuration
@@ -115,7 +143,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers()
+builder.Services
+    .AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -127,7 +156,6 @@ builder.Services
         HeaderAuthDefaults.Scheme,
         _ => { });
 
-builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthorizationMiddlewareResultHandler>();
 
 var app = builder.Build();
