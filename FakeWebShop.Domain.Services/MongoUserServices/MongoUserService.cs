@@ -3,13 +3,24 @@ using FakeWebShop.Contracts.Response.UserResponse;
 using FakeWebShop.Domain.Services.MongoServicesMapping.MongoUserMapping;
 using FakeWebShop.Domain.Services.MongoUserServices.MongoInterfaces;
 using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
+using FakeWebShop.Domain.Services.Interface_s;
 
 namespace FakeWebShop.Domain.Services.MongoUserServices;
 
-public class MongoUserService(IMongoUserRepository repo) : IMongoUserInterface
+public class MongoUserService(IMongoUserRepository repo, IDebugStateService debugService) : IMongoUserInterface
 {
+    public async Task<List<UserResponseContract>> GetAllAsync()
+    {
+        var users = await repo.GetAllAsync();
+        return users.Select(user => user.ToModel().ToResponse()).ToList();
+    }
+
     public async Task<UserResponseContract?> Login(UserAuthRequestContract request)
     {
+
+        if (await debugService.GetStateAsync("loginFails"))
+            return null;
+            
         var user = await repo.GetByUsernameAsync(request.Username);
         if (user == null)
             return null;

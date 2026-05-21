@@ -22,6 +22,13 @@ public class OrderRepository : IOrderRepository
         await _orders.InsertOneAsync(order);
     }
 
+    public async Task<List<Order>> GetAllAsync()
+    {
+        return await _orders
+            .Find(_ => true)
+            .ToListAsync();
+    }
+
     public async Task<Order?> GetByIdAsync(string id)
     {
         return await _orders

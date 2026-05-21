@@ -6,6 +6,7 @@ namespace FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 public interface IMongoUserRepository
 {
      Task<User> CreateAsync(User user);
+     Task<List<User>> GetAllAsync();
      Task<User?> GetByUsernameAsync(string username);
      Task<User?> GetByIdAsync(string id);
      Task VoegFavoriteByUserAsync(string userId, string productId);

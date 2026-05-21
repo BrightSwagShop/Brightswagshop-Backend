@@ -8,6 +8,7 @@ namespace FakeWebShop.Domain.Services.Interface_s;
 public interface IOrderService
 {
     Task<OrderResponse> CreateAsync(OrderRequest request);
+    Task<List<OrderResponse>> GetAllAsync();
     Task<OrderResponse?> GetByIdAsync(string id);
     Task<List<OrderResponse>> GetByUserIdAsync(string userId);
     Task UpdateAsync(string id, OrderRequest request);
