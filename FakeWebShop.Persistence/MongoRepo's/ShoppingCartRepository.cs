@@ -1,4 +1,5 @@
 using System;
+using MongoDB.Bson;
 using FakeWebShop.Persistence.Constants;
 using FakeWebShop.Persistence.Entities.Cart;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
@@ -37,6 +38,11 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task<bool> DeleteAsync(string id)
     {
+        if (!ObjectId.TryParse(id, out _))
+        {
+            return false;
+        }
+
         var deleteResult = await _shoppingCarts.DeleteOneAsync(cart => cart.Id == id);
         return deleteResult.DeletedCount > 0;
     }
@@ -52,6 +58,11 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task<ShoppingCart?> GetByIdAsync(string id)
     {
+        if (!ObjectId.TryParse(id, out _))
+        {
+            return null;
+        }
+
         return await _shoppingCarts
             .Find(cart => cart.Id == id)
             .FirstOrDefaultAsync();

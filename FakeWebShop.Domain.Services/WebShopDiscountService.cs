@@ -11,6 +11,9 @@ public class WebShopDiscountService(IDiscountRepository discountRepo) : IDiscoun
 {
     public async Task<DiscountResponse> CreateAsync(DiscountRequest request)
     {
+        if (request.EndsAt.HasValue && request.EndsAt.Value < request.StartsAt)
+            throw new ArgumentException("Discount end date must be after the start date.");
+
         var discountModel = request.AsModel();
 
         var entity = discountModel.AsEntity();
@@ -51,6 +54,9 @@ public class WebShopDiscountService(IDiscountRepository discountRepo) : IDiscoun
 
     public async Task<DiscountResponse?> UpdateAsync(string id, DiscountRequest request)
     {
+        if (request.EndsAt.HasValue && request.EndsAt.Value < request.StartsAt)
+            throw new ArgumentException("Discount end date must be after the start date.");
+
         var existing = await discountRepo.GetByIdAsync(id);
         if (existing is null)
         {

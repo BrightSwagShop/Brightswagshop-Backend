@@ -10,11 +10,15 @@ namespace FakeWebShop.Api.Controllers;
 [Route("api/shoppingcarts")]
 public class ShoppingCartController(IShoppingCartService service) : ControllerBase
 {
+    private static bool IsValidQuantity(int quantity) => quantity >= 0 && quantity <= 1000000;
 
 
     [HttpPost]
     public async Task<ActionResult<ShoppingCartResponse>> Create([FromBody] ShoppingCartRequest request)
     {
+        if (request.Items.Any(item => !IsValidQuantity(item.Quantity)))
+            return BadRequest("Quantity must be between 0 and 1000000.");
+
         var createdCart = await service.CreateAsync(request);
         return CreatedAtAction(nameof(GetByUserId), new { userId = createdCart.UserId }, createdCart);
     }
@@ -97,6 +101,9 @@ public class ShoppingCartController(IShoppingCartService service) : ControllerBa
     [HttpPost("user/{userId}/items")]
     public async Task<IActionResult> AddItem(string userId, [FromBody] CartItemRequest request)
     {
+        if (!IsValidQuantity(request.Quantity))
+            return BadRequest("Quantity must be between 0 and 1000000.");
+
         var result = await service.AddItemAsync(userId, request);
         return Ok(result);
     }

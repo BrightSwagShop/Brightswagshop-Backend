@@ -46,6 +46,7 @@ public static class DiscountMapping
             Description = entity.Description,
             Percentage = entity.Percentage,
             Code = entity.Code,
+            StartsAt = entity.StartsAt,
             EndsAt = entity.EndsAt,
             IsActive = entity.IsActive,
         };

@@ -38,7 +38,10 @@ public class DiscountRepository : IDiscountRepository
             return null;
         }
 
-        return await _discounts.Find(d => d.Code == code).FirstOrDefaultAsync();
+        return await _discounts
+            .Find(d => d.Code == code && d.IsActive)
+            .SortByDescending(d => d.StartsAt)
+            .FirstOrDefaultAsync();
 
     }
 

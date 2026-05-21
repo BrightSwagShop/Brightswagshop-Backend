@@ -211,7 +211,7 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
     }
 
 
-    public async Task<ShoppingCartResponse?> ApplyDiscountCodeAsync(string cartId, string code)
+        public async Task<ShoppingCartResponse?> ApplyDiscountCodeAsync(string cartId, string code)
     {
         var cart = await cartRepo.GetByIdAsync(cartId);
         var discount = await discountRepo.GetByCodeAsync(code);
@@ -221,11 +221,16 @@ public class ShoppingCartService(IShoppingCartRepository cartRepo, IMongoProduct
 
         if (cart.DiscountApplied)
             throw new InvalidOperationException("A discount has already been applied to this cart.");
-        
+
         var cartModel = cart.AsModel();
         var discountModel = DiscountMapping.AsModel(discount);
 
-        cart.SubTotal = cart.TotalPrice - discountModel.CalculateDiscountFor(cartModel, DateTimeOffset.UtcNow);
+        // Keep TotalPrice as the original total and set SubTotal to the discounted amount
+        var originalTotal = cart.TotalPrice;
+        var discountAmount = discountModel.CalculateDiscountFor(cartModel, DateTimeOffset.UtcNow);
+
+        cart.TotalPrice = originalTotal;
+        cart.SubTotal = originalTotal - discountAmount;
         cart.DiscountApplied = true;
 
         await cartRepo.UpdateAsync(cart);

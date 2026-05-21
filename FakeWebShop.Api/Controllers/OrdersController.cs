@@ -37,7 +37,19 @@ public class OrdersController(IOrderService service) : ControllerBase
     [HttpPost("from-cart/{userId}")]
     public async Task<ActionResult<OrderResponse>> CreateFromCart(string userId)
     {
-        var createdOrder = await service.CreateFromCartAsync(userId);
-        return CreatedAtAction(nameof(GetById), new { id = createdOrder.Id }, createdOrder);
+        try
+        {
+            var createdOrder = await service.CreateFromCartAsync(userId);
+            return CreatedAtAction(nameof(GetById), new { id = createdOrder.Id }, createdOrder);
+        }
+        catch (Exception ex)
+        {
+            var msg = ex.Message ?? string.Empty;
+            if (msg.Contains("not found", StringComparison.OrdinalIgnoreCase))
+                return NotFound(msg);
+            if (msg.Contains("empty", StringComparison.OrdinalIgnoreCase))
+                return BadRequest(msg);
+            return StatusCode(500, msg);
+        }
     }
 }

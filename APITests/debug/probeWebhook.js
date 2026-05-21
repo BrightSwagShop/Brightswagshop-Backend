@@ -1,0 +1,20 @@
+(async()=>{
+  const { createHeaderAuthContext, readApiResponse, createValidMugPayload, createCartRequest, buildStripeWebhookEvent, signStripeWebhookPayload } = require('../features/step-definitions/api-helpers');
+  const admin = await createHeaderAuthContext('admin');
+  const anon = await createHeaderAuthContext('anonymous');
+  const prodResp = await admin.post('/api/products',{data:createValidMugPayload({name:'probe-webhook-'+Date.now(), imageUrl:'https://example.invalid/x.jpg'})});
+  const prod = await readApiResponse(prodResp);
+  const cartResp = await anon.post('/api/shoppingcarts',{data:createCartRequest({userId:'probe-webhook-'+Date.now(), productId:prod.body.id, quantity:1})});
+  const cart = await readApiResponse(cartResp);
+  console.log('cart created', cart.body.id);
+  const orderResp = await anon.post(`/api/orders/from-cart/${cart.body.userId}`);
+  const order = await readApiResponse(orderResp);
+  console.log('order created', order.body.id, 'status', order.response.status());
+  const event = buildStripeWebhookEvent({ orderId: order.body.id, sessionId: 'cs_'+Date.now() });
+  const sig = signStripeWebhookPayload(event, process.env.STRIPE_WEBHOOK_SECRET || 'whsec_test_webhook_secret');
+  const webhookResp = await anon.post('/api/webhooks/stripe',{ data: event, headers: { 'Stripe-Signature': sig } });
+  const webhookResult = await readApiResponse(webhookResp);
+  console.log('webhook status', webhookResult.response.status(), 'body:', webhookResult.body);
+  await admin.dispose();
+  await anon.dispose();
+})().catch(e=>{ console.error(e); process.exit(1); });

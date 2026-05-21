@@ -27,7 +27,7 @@ let webhookSignature;
 let webhookSecret;
 
 function resolveStripeSecret() {
-  return process.env.STRIPE_WEBHOOK_SECRET || process.env.Stripe__WebhookSecret || process.env.stripeWebhookSecret || '';
+  return process.env.STRIPE_WEBHOOK_SECRET || process.env.Stripe__WebhookSecret || process.env.stripeWebhookSecret || 'whsec_test_webhook_secret';
 }
 
 BeforeAll(async function () {
@@ -82,11 +82,14 @@ Before(function () {
   failingOrderId = null;
 });
 
-async function storeResponse(response) {
+async function storeResponse(world, response) {
   const result = await readApiResponse(response);
   lastResponse = result.response;
   lastBody = result.body;
   lastBodyText = typeof result.body === 'string' ? result.body : JSON.stringify(result.body ?? {});
+  world.lastResponse = result.response;
+  world.lastBody = result.body;
+  world.lastBodyText = lastBodyText;
 }
 
 Given('I create an empty order for payments', async function () {
@@ -129,12 +132,12 @@ Given('the payment provider will simulate a service error for that order', funct
 
 When('I create checkout session for unknown order id', async function () {
   const response = await anonymousContext.post('/api/payments/000000000000000000000000/checkout');
-  await storeResponse(response);
+  await storeResponse(this, response);
 });
 
 When('I create checkout session for the stored payments order', async function () {
   const response = await anonymousContext.post(`/api/payments/${createdOrderId}/checkout`);
-  await storeResponse(response);
+  await storeResponse(this, response);
 });
 
 When('I POST Stripe webhook event without signature', async function () {
@@ -145,7 +148,7 @@ When('I POST Stripe webhook event without signature', async function () {
     })
   });
 
-  await storeResponse(response);
+  await storeResponse(this, response);
 });
 
 When('I POST Stripe webhook event with non empty cart', function () {
@@ -174,7 +177,7 @@ When('with correct signature', async function () {
     headers: webhookSignature ? { 'Stripe-Signature': webhookSignature } : {}
   });
 
-  await storeResponse(response);
+  await storeResponse(this, response);
 });
 
 When('I POST {string} with the malformed body and valid signature header', async function (path) {
@@ -189,7 +192,7 @@ When('I POST {string} with the malformed body and valid signature header', async
     }
   });
 
-  await storeResponse(response);
+  await storeResponse(this, response);
 });
 
 When(/^I POST "(\/api\/payments\/(order-fails-on-provider|[a-f0-9]{24})\/checkout)"$/, async function (path) {
@@ -199,13 +202,12 @@ When(/^I POST "(\/api\/payments\/(order-fails-on-provider|[a-f0-9]{24})\/checkou
   }
   
   const response = await anonymousContext.post(resolvedPath);
-  await storeResponse(response);
+  await storeResponse(this, response);
 });
 
 Then('the payments response status should be {int}', function (statusCode) {
   assert.equal(lastResponse.status(), statusCode);
 });
-
 Then('the payments response should contain text {string}', function (text) {
   assert.ok(lastBodyText.includes(text));
 });

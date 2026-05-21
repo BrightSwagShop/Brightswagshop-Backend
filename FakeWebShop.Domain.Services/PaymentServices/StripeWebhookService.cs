@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using FakeWebShop.Domain.Enums;
 using FakeWebShop.Domain.Services.Interface_s;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
@@ -32,16 +33,33 @@ public class StripeWebhookService(
     {
         var session = stripeEvent.Data.Object as Session;
 
-        if (session is null)
-            throw new Exception("Stripe session is null.");
+        string? orderId = null;
+        string? sessionId = null;
 
-        if (!session.Metadata.TryGetValue("OrderId", out string? orderId) || string.IsNullOrWhiteSpace(orderId))
+        if (session is not null)
+        {
+            sessionId = session.Id;
+            session.Metadata.TryGetValue("OrderId", out orderId);
+        }
+        else if (stripeEvent.Data.Object is not null)
+        {
+            var objectType = stripeEvent.Data.Object.GetType();
+            sessionId = objectType.GetProperty("Id", BindingFlags.Public | BindingFlags.Instance)?.GetValue(stripeEvent.Data.Object)?.ToString();
+
+            var metadata = objectType.GetProperty("Metadata", BindingFlags.Public | BindingFlags.Instance)?.GetValue(stripeEvent.Data.Object) as IDictionary<string, string>;
+            if (metadata is not null)
+            {
+                metadata.TryGetValue("OrderId", out orderId);
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(orderId))
             throw new Exception("OrderId ontbreekt in Stripe metadata");
 
         await orderService.UpdatePaymentStatusAsync(
             orderId,
             PaymentStatusEnum.Paid,
-            session.Id
+            sessionId
         );
 
         var order = await orderService.GetByIdAsync(orderId);

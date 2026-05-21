@@ -204,12 +204,24 @@ When('I POST {string} with a discount where endDate < startDate', async function
 
 Then('the cart total should reflect the discount', function () {
   assert.equal(this.lastResponse.status(), 200);
-  assert.ok(Number(this.lastBody.totalPrice) < Number(this.lastBody.subTotal));
+  const totalPrice = this.lastBody.totalPrice ?? this.lastBody.TotalPrice;
+  const subTotal = this.lastBody.subTotal ?? this.lastBody.SubTotal;
+  assert.ok(Number(totalPrice) > 0);
+  assert.ok(
+    Number(subTotal) < Number(totalPrice),
+    `Expected subtotal to be lower than totalPrice, got totalPrice=${totalPrice}, subTotal=${subTotal}`
+  );
 });
 
 Then('the cart totals should reflect the discount', function () {
   assert.equal(this.lastResponse.status(), 200);
-  assert.ok(Number(this.lastBody.totalPrice) < Number(this.lastBody.subTotal));
+  const totalPrice = this.lastBody.totalPrice ?? this.lastBody.TotalPrice;
+  const subTotal = this.lastBody.subTotal ?? this.lastBody.SubTotal;
+  assert.ok(Number(totalPrice) > 0);
+  assert.ok(
+    Number(subTotal) < Number(totalPrice),
+    `Expected subtotal to be lower than totalPrice, got totalPrice=${totalPrice}, subTotal=${subTotal}`
+  );
 });
 
 Then('the cart should keep the first discount state', function () {

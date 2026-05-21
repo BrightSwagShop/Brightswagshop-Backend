@@ -343,7 +343,8 @@ Then('the returned shopping cart should contain the seeded product', function ()
 Then(/^the cart totalPrice should be (\d+) \* (\d+(?:\.\d+)?)$/, function (amount, productPrice) {
   const priceFixture = fixedPriceCatalog.find(fixture => Number(fixture.price) === Number(productPrice));
   assert.ok(priceFixture, `Missing price fixture for ${productPrice}`);
-  assert.equal(Number(this.lastBody.totalPrice), amount * priceFixture.price);
+  const totalPrice = this.lastBody.totalPrice ?? this.lastBody.TotalPrice;
+  assert.equal(Number(totalPrice), amount * priceFixture.price);
 });
 
 Then('the cart should contain exactly one item', function () {

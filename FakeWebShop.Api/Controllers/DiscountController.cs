@@ -14,8 +14,15 @@ namespace FakeWebShop.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<DiscountResponse>> CreateDiscount([FromBody] DiscountRequest discount)
         {
-            var createdDiscount = await service.CreateAsync(discount);
-            return CreatedAtAction(nameof(GetDiscountById), new { id = createdDiscount.Id }, createdDiscount);
+            try
+            {
+                var createdDiscount = await service.CreateAsync(discount);
+                return CreatedAtAction(nameof(GetDiscountById), new { id = createdDiscount.Id }, createdDiscount);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
@@ -39,11 +46,18 @@ namespace FakeWebShop.Api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<DiscountResponse>> UpdateDiscount(string id, [FromBody] DiscountRequest discount)
         {
-            var updatedDiscount = await service.UpdateAsync(id, discount);
-            if (updatedDiscount is null)
-                return NotFound();
+            try
+            {
+                var updatedDiscount = await service.UpdateAsync(id, discount);
+                if (updatedDiscount is null)
+                    return NotFound();
 
-            return Ok(updatedDiscount);
+                return Ok(updatedDiscount);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
