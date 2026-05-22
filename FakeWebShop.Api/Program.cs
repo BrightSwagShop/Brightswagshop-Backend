@@ -24,6 +24,7 @@ using Microsoft.Identity.Web;
 using FakeWebShop.Persistence.MongoRepo_s.Interface_s;
 using System.Diagnostics;
 using FakeWebShop.Persistence.Entities.Bugs;
+ 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
@@ -127,7 +128,7 @@ builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IDebugStateService, DebugStateService>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 // CORS
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")

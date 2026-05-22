@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Request\ContactRequest\" />
     <Folder Include="Request\UserRequest\" />
     <Folder Include="Request\VariantRequest\" />
     <Folder Include="Response\UserResponse\" />
