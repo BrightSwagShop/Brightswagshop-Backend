@@ -12,7 +12,8 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
     public async Task<List<UserResponseContract>> GetAllAsync()
     {
         var users = await repo.GetAllAsync();
-        return users.Select(user => user.ToModel().ToResponse()).ToList();
+        var responses = users.Select(user => user.ToModel().ToResponse()).ToList();
+        return await ApplyBrokenFavoritesAsync(responses);
     }
 
     public async Task<UserResponseContract?> Login(UserAuthRequestContract request)
@@ -20,7 +21,7 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
 
         if (await debugService.GetStateAsync("loginFails"))
             return null;
-            
+
         var user = await repo.GetByUsernameAsync(request.Username);
         if (user == null)
             return null;
@@ -29,7 +30,7 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
         if (!valid)
             return null;
 
-        return user.ToModel().ToResponse();
+        return await ApplyBrokenFavoritesAsync(user.ToModel().ToResponse());
     }
 
     public async Task<UserResponseContract> Register(UserAuthRequestContract request)
@@ -45,7 +46,7 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
         var entity = model.ToEntity();
         var created = await repo.CreateAsync(entity);
 
-        return created.ToModel().ToResponse();
+        return await ApplyBrokenFavoritesAsync(created.ToModel().ToResponse());
     }
 
     public async Task<UserResponseContract> RemoveFavoriteAsync(string userId, FavoriteRequestContract request)
@@ -60,7 +61,7 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
         if (updatedUser == null)
             throw new Exception("Updated user not found");
 
-        return updatedUser.ToModel().ToResponse();
+        return await ApplyBrokenFavoritesAsync(updatedUser.ToModel().ToResponse());
     }
 
     public async Task<UserResponseContract> VoegFavoriteByUserAsync(string userId, FavoriteRequestContract request)
@@ -75,7 +76,7 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
         if (updatedUser == null)
             throw new Exception("Updated user not found");
 
-        return updatedUser.ToModel().ToResponse();
+        return await ApplyBrokenFavoritesAsync(updatedUser.ToModel().ToResponse());
     }
 
     public async Task<UserResponseContract> GetByIdAsync(string userId)
@@ -84,7 +85,30 @@ public class MongoUserService(IMongoUserRepository repo, IDebugStateService debu
         if (user == null)
             throw new Exception("User not found");
 
-        return user.ToModel().ToResponse();
+        return await ApplyBrokenFavoritesAsync(user.ToModel().ToResponse());
+    }
+
+    private async Task<UserResponseContract> ApplyBrokenFavoritesAsync(UserResponseContract user)
+    {
+        if (await debugService.GetStateAsync("brokenFavorites"))
+        {
+            user.Favorites = new List<string>();
+        }
+
+        return user;
+    }
+
+    private async Task<List<UserResponseContract>> ApplyBrokenFavoritesAsync(List<UserResponseContract> users)
+    {
+        if (await debugService.GetStateAsync("brokenFavorites"))
+        {
+            foreach (var user in users)
+            {
+                user.Favorites = new List<string>();
+            }
+        }
+
+        return users;
     }
 }
 
