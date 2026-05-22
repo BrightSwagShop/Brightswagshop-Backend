@@ -10,7 +10,7 @@ using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 namespace FakeWebShop.Domain.Services;
 
-public class OrderService(IOrderRepository orderRepo, IMongoProductRepository productRepo, IShoppingCartRepository cartRepo) : IOrderService
+public class OrderService(IOrderRepository orderRepo, IMongoProductRepository productRepo, IShoppingCartRepository cartRepo, IDebugStateService debugStateService) : IOrderService
 {
     public async Task<OrderResponse> CreateAsync(OrderRequest request)
     {
@@ -41,7 +41,8 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         orderModel.TotalPrice = orderModel.Items.Sum(i => i.SubTotal);
 
         var entity = orderModel.AsEntity();
-
+        await ThrowIfOrderSaveDisabledAsync();
+        
         await orderRepo.CreateAsync(entity);
 
         return entity.AsModel().AsResponse();
@@ -143,9 +144,21 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         orderModel.TotalPrice = orderModel.Items.Sum(i => i.UnitPrice * i.Quantity);
 
         var orderEntity = orderModel.AsEntity();
-
+         
+        await ThrowIfOrderSaveDisabledAsync();
         await orderRepo.CreateAsync(orderEntity);
 
         return orderEntity.AsModel().AsResponse();
+    }
+
+
+    private async Task ThrowIfOrderSaveDisabledAsync()
+    {
+        var disableOrderSave = await debugStateService.GetStateAsync("DisableOrderSave");
+
+        if (disableOrderSave)
+        {
+            throw new Exception("Order was not saved because debug bug DisableOrderSave is active.");
+        }
     }
 }
