@@ -123,7 +123,14 @@ jobs:
         BROWSERSTACK_ACCESS_KEY: ${{ secrets['BROWSERSTACK_ACCESS_KEY'] }}
         BROWSERSTACK_PROJECT_NAME: BrightSwagShop - JIRA
         BROWSERSTACK_BUILD_NAME: 'Build #${{ github.run_number }}'
-      run: npm run test:browserstack
+      run: |
+        if [ -n "$BROWSERSTACK_USERNAME" ] && [ -n "$BROWSERSTACK_ACCESS_KEY" ]; then
+          echo "[BrowserStack] Credentials found; running with BrowserStack reporting"
+          npm run test:browserstack
+        else
+          echo "[BrowserStack] Credentials not configured; running Cucumber without BrowserStack"
+          npm run allure:clean && npx cucumber-js --profile default
+        fi
       working-directory: APITests
 
     - name: Generate Allure report
