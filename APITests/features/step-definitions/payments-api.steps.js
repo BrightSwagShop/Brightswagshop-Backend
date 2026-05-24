@@ -1,16 +1,21 @@
 const { BeforeAll, AfterAll, Given, When, Then } = require('@cucumber/cucumber');
 const assert = require('node:assert/strict');
 const { request } = require('@playwright/test');
+const { PaymentsApiSom, OrderApiSom, createOrderPayload } = require('@brightswagshop/testing-framework');
 
 const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:5076';
 
 let apiContext;
+let paymentsApi;
+let orderApi;
 let createdOrderId;
 let lastResponse;
 let lastBodyText;
 
 BeforeAll(async function () {
   apiContext = await request.newContext({ baseURL: BASE_URL });
+  paymentsApi = new PaymentsApiSom(apiContext);
+  orderApi = new OrderApiSom(apiContext);
 });
 
 AfterAll(async function () {
@@ -23,41 +28,29 @@ async function storeResponse(response) {
 }
 
 Given('I create an empty order for payments', async function () {
-  const unique = Date.now();
-  const payload = {
-    userId: `payments-user-${unique}`,
-    items: []
-  };
-
-  const response = await apiContext.post('/api/orders', {
-    data: payload
-  });
-
+  const payload = createOrderPayload();
+  const response = await orderApi.createOrder(payload);
   const body = await response.json();
   assert.equal(response.status(), 201);
   assert.ok(body?.id);
-
   createdOrderId = body.id;
 });
 
 When('I create checkout session for unknown order id', async function () {
-  const response = await apiContext.post('/api/payments/000000000000000000000000/checkout');
+  const response = await paymentsApi.createCheckoutSession('000000000000000000000000');
   await storeResponse(response);
 });
 
 When('I create checkout session for the stored payments order', async function () {
-  const response = await apiContext.post(`/api/payments/${createdOrderId}/checkout`);
+  const response = await paymentsApi.createCheckoutSession(createdOrderId);
   await storeResponse(response);
 });
 
 When('I POST Stripe webhook event without signature', async function () {
-  const response = await apiContext.post('/api/webhooks/stripe', {
-    data: {
-      id: 'evt_test',
-      type: 'checkout.session.completed'
-    }
+  const response = await paymentsApi.postStripeWebhook({
+    id: 'evt_test',
+    type: 'checkout.session.completed'
   });
-
   await storeResponse(response);
 });
 
