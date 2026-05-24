@@ -90,13 +90,15 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy =>
     {
         policy.AuthenticationSchemes.Add("AzureAd");
+        policy.AuthenticationSchemes.Add(HeaderAuthDefaults.Scheme);
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("App.Admin");
+        policy.RequireRole("App.Admin", "Admin");
     });
 
     options.AddPolicy("UserOnly", policy =>
     {
         policy.AuthenticationSchemes.Add("CustomJwt");
+        policy.AuthenticationSchemes.Add(HeaderAuthDefaults.Scheme);
         policy.RequireAuthenticatedUser();
         policy.RequireRole("User");
     });
@@ -105,8 +107,9 @@ builder.Services.AddAuthorization(options =>
     {
         policy.AuthenticationSchemes.Add("CustomJwt");
         policy.AuthenticationSchemes.Add("AzureAd");
+        policy.AuthenticationSchemes.Add(HeaderAuthDefaults.Scheme);
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("User", "App.Admin");
+        policy.RequireRole("User", "App.Admin", "Admin");
     });
 });
 

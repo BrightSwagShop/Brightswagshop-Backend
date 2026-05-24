@@ -6,6 +6,7 @@ WORKDIR /src
 COPY *.sln ./
 COPY FakeWebShop.Api/*.csproj ./FakeWebShop.Api/
 COPY FakeWebShop.Contracts/*.csproj ./FakeWebShop.Contracts/
+COPY FakeWebShop.Domain.Abstractions/*.csproj ./FakeWebShop.Domain.Abstractions/
 COPY FakeWebShop.Domain.Model/*.csproj ./FakeWebShop.Domain.Model/
 COPY FakeWebShop.Domain.Services/*.csproj ./FakeWebShop.Domain.Services/
 COPY FakeWebShop.Enums/*.csproj ./FakeWebShop.Enums/
