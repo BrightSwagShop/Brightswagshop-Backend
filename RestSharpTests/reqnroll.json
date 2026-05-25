@@ -1,0 +1,7 @@
+{
+  "$schema": "https://reqnroll.net/reqnroll-json-schema/1.0/reqnroll-schema.json",
+  "testFramework": {
+    "provider": "NUnit"
+  },
+  "stepAssemblies": []
+}
