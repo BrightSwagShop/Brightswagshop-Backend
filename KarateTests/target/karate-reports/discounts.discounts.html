@@ -1,0 +1,4446 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="res/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="res/karate-report.css" type="text/css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <script type="text/javascript" src="res/jquery.min.js"></script>
+    <script type="text/javascript" src="res/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="res/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="res/bootstrap.min.js"></script>
+    <script type="text/javascript" src="res/karate-report.js"></script>
+    <script type="text/javascript" src="res/Resemble.js"></script>
+    <script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
+  api_host:'https://app.posthog.com',
+  persistence:'localStorage',
+  autocapture:false,
+  capture_pageview:false,
+  api_transport:'sendBeacon',
+  loaded: function(posthog) { 
+    posthog.capture("report_feature",{distinct_id:"270031bf-2622-42db-8f79-dd5f8418c394",karate_version:"1.4.1",karate_meta:null});
+  }
+});
+</script>
+
+    <title>discounts.discounts</title>
+  </head>
+  <body>
+    <div id="root-container">
+      <div id="leftnav">
+        
+        <div>
+  <div class="nav-logo">
+    <a href="https://karatelabs.io">
+      <img src="karate-labs-logo-ring.svg" alt="Karate Labs"/>
+    </a>
+    <div class="nav-count">
+      <div id="nav-pass" class="bg-success">5</div>
+      <div id="nav-fail" class="bg-danger">0</div>
+    </div>
+  </div>
+  <div id="nav-env">
+    <div></div>
+  </div>
+  <div id="nav-type">
+    <div>Scenarios</div>
+  </div>
+  <div id="nav-date">
+    <div>2026-05-25 01:00:42 PM</div>
+  </div>
+</div>
+
+        <div class="nav-container">
+          <div class="nav-item passed">
+            <a href="#[1:7]"><span>[1:7]</span> <span>Only admins can create discounts</span></a>
+          </div>
+          <div class="nav-item passed">
+            <a href="#[2:29]"><span>[2:29]</span> <span>Admin can create discounts</span></a>
+          </div>
+          <div class="nav-item passed">
+            <a href="#[3:59]"><span>[3:59]</span> <span>Apply a valid discount code to a cart</span></a>
+          </div>
+          <div class="nav-item passed">
+            <a href="#[4:139]"><span>[4:139]</span> <span>Prevent applying a discount code twice</span></a>
+          </div>
+          <div class="nav-item passed">
+            <a href="#[5:224]"><span>[5:224]</span> <span>Apply an invalid discount code</span></a>
+          </div>
+        </div>
+      </div>
+      <div id="content">
+        <div class="page-heading alert alert-primary">
+          <a href="karate-summary.html">Summary</a><span class="feature-label">|</span>
+          <a href="karate-tags.html">Tags</a><span class="feature-label">|</span>
+          <span class="feature-label">Feature:</span>
+          <span class="feature-path">discounts/discounts.feature</span><span class="feature-label">|</span>
+          <span class="feature-name">Discount API</span>
+          <span class="feature-description">API checks for discount creation and application.</span>
+        </div>
+        <div class="scenario">
+          <div class="scenario-heading" id="[1:7]">
+            <div class="heading-container">
+              <div class="scenario-tags">
+                
+              </div>
+              <div class="scenario-keyword">
+                Scenario: <span>[1:7]</span>
+                <span class="scenario-name">Only admins can create discounts</span>
+                <span></span>
+              </div>
+            </div>
+            <div class="scenario-time passed">
+              <span>ms:</span>&nbsp;<span>24</span>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-container" id="[1:7]bg">
+              <div class="step-ref bg-step">&gt;&gt;</div>
+              <div class="step-cell passed">Background:</div>
+            </div>
+            <div class="time-cell passed"></div>
+          </div>
+          <div data-parent="[1:7]bg"><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.5">
+      <div class="step-ref bg-step">5</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>url baseUrl</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.8">
+      <div class="step-ref passed">8</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def unique = java.lang.System.currentTimeMillis() + &#39;&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.9">
+      <div class="step-ref passed">9</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def now = new java.util.Date()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">6</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.10">
+      <div class="step-ref passed">10</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def startsAt = new java.util.Date(now.getTime() - 3600000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">9</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.11">
+      <div class="step-ref passed">11</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def endsAt = new java.util.Date(now.getTime() + 86400000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">2</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.12">
+      <div class="step-ref passed">12</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = userHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.13">
+      <div class="step-ref passed">13</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.14">
+      <div class="step-ref passed">14</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.14">{
+  &quot;name&quot;: &quot;User Discount #(unique)&quot;,
+  &quot;description&quot;: &quot;Should fail&quot;,
+  &quot;percentage&quot;: 10,
+  &quot;code&quot;: &quot;#(&#39;NODMIN-&#39; + unique)&quot;,
+  &quot;startsAt&quot;: &quot;#(startsAt)&quot;,
+  &quot;endsAt&quot;: &quot;#(endsAt)&quot;,
+  &quot;isActive&quot;: true
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.26">
+      <div class="step-ref passed">26</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">3</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.26">13:00:42.568 request:
+1 &gt; POST http://127.0.0.1:5076/api/discounts
+1 &gt; X-User-Role: User
+1 &gt; X-User-Id: test-user-user
+1 &gt; Content-Type: application/json; charset=UTF-8
+1 &gt; Content-Length: 198
+1 &gt; Host: 127.0.0.1:5076
+1 &gt; Connection: Keep-Alive
+1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+1 &gt; Accept-Encoding: gzip,deflate
+{&quot;name&quot;:&quot;User Discount #(unique)&quot;,&quot;description&quot;:&quot;Should fail&quot;,&quot;percentage&quot;:10,&quot;code&quot;:&quot;NODMIN-1779706842548&quot;,&quot;startsAt&quot;:&quot;2026-05-25T10:00:42.553Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.553Z&quot;,&quot;isActive&quot;:true}
+
+13:00:42.569 response time in milliseconds: 1
+1 &lt; 403
+1 &lt; Content-Type: application/json; charset=utf-8
+1 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+1 &lt; Server: Kestrel
+1 &lt; Transfer-Encoding: chunked
+{&quot;error&quot;:&quot;forbidden&quot;,&quot;message&quot;:&quot;Onvoldoende rechten om deze endpoint te gebruiken.&quot;}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.27">
+      <div class="step-ref passed">27</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 403</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+        </div>
+        <div class="scenario">
+          <div class="scenario-heading" id="[2:29]">
+            <div class="heading-container">
+              <div class="scenario-tags">
+                
+              </div>
+              <div class="scenario-keyword">
+                Scenario: <span>[2:29]</span>
+                <span class="scenario-name">Admin can create discounts</span>
+                <span></span>
+              </div>
+            </div>
+            <div class="scenario-time passed">
+              <span>ms:</span>&nbsp;<span>19</span>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-container" id="[2:29]bg">
+              <div class="step-ref bg-step">&gt;&gt;</div>
+              <div class="step-cell passed">Background:</div>
+            </div>
+            <div class="time-cell passed"></div>
+          </div>
+          <div data-parent="[2:29]bg"><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.5">
+      <div class="step-ref bg-step">5</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>url baseUrl</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.30">
+      <div class="step-ref passed">30</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def unique = java.lang.System.currentTimeMillis() + &#39;&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.31">
+      <div class="step-ref passed">31</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def now = new java.util.Date()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.32">
+      <div class="step-ref passed">32</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def startsAt = new java.util.Date(now.getTime() - 3600000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.33">
+      <div class="step-ref passed">33</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def endsAt = new java.util.Date(now.getTime() + 86400000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.34">
+      <div class="step-ref passed">34</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def discountCode = &#39;ADMIN-&#39; + unique</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.35">
+      <div class="step-ref passed">35</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.36">
+      <div class="step-ref passed">36</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.37">
+      <div class="step-ref passed">37</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.37">{
+  &quot;name&quot;: &quot;Admin Discount #(unique)&quot;,
+  &quot;description&quot;: &quot;Created by admin&quot;,
+  &quot;percentage&quot;: 20,
+  &quot;code&quot;: &quot;#(discountCode)&quot;,
+  &quot;startsAt&quot;: &quot;#(startsAt)&quot;,
+  &quot;endsAt&quot;: &quot;#(endsAt)&quot;,
+  &quot;isActive&quot;: true
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.49">
+      <div class="step-ref passed">49</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.49">13:00:42.582 request:
+1 &gt; POST http://127.0.0.1:5076/api/discounts
+1 &gt; X-User-Role: Admin
+1 &gt; X-User-Id: test-admin-user
+1 &gt; Content-Type: application/json; charset=UTF-8
+1 &gt; Content-Length: 203
+1 &gt; Host: 127.0.0.1:5076
+1 &gt; Connection: Keep-Alive
+1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+1 &gt; Accept-Encoding: gzip,deflate
+{&quot;name&quot;:&quot;Admin Discount #(unique)&quot;,&quot;description&quot;:&quot;Created by admin&quot;,&quot;percentage&quot;:20,&quot;code&quot;:&quot;ADMIN-1779706842577&quot;,&quot;startsAt&quot;:&quot;2026-05-25T10:00:42.577Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.577Z&quot;,&quot;isActive&quot;:true}
+
+13:00:42.585 response time in milliseconds: 3
+1 &lt; 201
+1 &lt; Content-Type: application/json; charset=utf-8
+1 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+1 &lt; Server: Kestrel
+1 &lt; Location: http://127.0.0.1:5076/api/discounts/6a142bdaf337d79af0dbed18
+1 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed18&quot;,&quot;name&quot;:&quot;Admin Discount #(unique)&quot;,&quot;description&quot;:&quot;Created by admin&quot;,&quot;percentage&quot;:20,&quot;code&quot;:&quot;ADMIN-1779706842577&quot;,&quot;startsAt&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.577Z&quot;,&quot;isActive&quot;:true}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.50">
+      <div class="step-ref passed">50</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.51">
+      <div class="step-ref passed">51</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>match response.id == &#39;#string&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Cleanup</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.54">
+      <div class="step-ref passed">54</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def discountId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.55">
+      <div class="step-ref passed">55</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts/&#39; + discountId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.56">
+      <div class="step-ref passed">56</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">8</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.56">13:00:42.588 request:
+2 &gt; DELETE http://127.0.0.1:5076/api/discounts/6a142bdaf337d79af0dbed18
+2 &gt; X-User-Role: Admin
+2 &gt; X-User-Id: test-admin-user
+2 &gt; Host: 127.0.0.1:5076
+2 &gt; Connection: Keep-Alive
+2 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+2 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.594 response time in milliseconds: 5
+2 &lt; 204
+2 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+2 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.57">
+      <div class="step-ref passed">57</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+        </div>
+        <div class="scenario">
+          <div class="scenario-heading" id="[3:59]">
+            <div class="heading-container">
+              <div class="scenario-tags">
+                
+              </div>
+              <div class="scenario-keyword">
+                Scenario: <span>[3:59]</span>
+                <span class="scenario-name">Apply a valid discount code to a cart</span>
+                <span></span>
+              </div>
+            </div>
+            <div class="scenario-time passed">
+              <span>ms:</span>&nbsp;<span>45</span>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-container" id="[3:59]bg">
+              <div class="step-ref bg-step">&gt;&gt;</div>
+              <div class="step-cell passed">Background:</div>
+            </div>
+            <div class="time-cell passed"></div>
+          </div>
+          <div data-parent="[3:59]bg"><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.5">
+      <div class="step-ref bg-step">5</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>url baseUrl</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.60">
+      <div class="step-ref passed">60</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def unique = java.lang.System.currentTimeMillis() + &#39;&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.61">
+      <div class="step-ref passed">61</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def now = new java.util.Date()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.62">
+      <div class="step-ref passed">62</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def startsAt = new java.util.Date(now.getTime() - 3600000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.63">
+      <div class="step-ref passed">63</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def endsAt = new java.util.Date(now.getTime() + 86400000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.64">
+      <div class="step-ref passed">64</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def discountCode = &#39;VALID-&#39; + unique</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Seed product</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.67">
+      <div class="step-ref passed">67</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.68">
+      <div class="step-ref passed">68</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/products&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.69">
+      <div class="step-ref passed">69</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.69">{
+  &quot;$type&quot;: &quot;SimpleProduct&quot;,
+  &quot;name&quot;: &quot;Discount Mug #(unique)&quot;,
+  &quot;description&quot;: &quot;test&quot;,
+  &quot;price&quot;: 29.99,
+  &quot;category&quot;: &quot;Drinkartikelen&quot;,
+  &quot;productType&quot;: &quot;Mok&quot;,
+  &quot;isActive&quot;: true,
+  &quot;kleuren&quot;: [{ &quot;kleur&quot;: &quot;Zwart&quot;, &quot;imageUrl&quot;: &quot;https://example.com/x.png&quot;, &quot;stock&quot;: 10, &quot;sku&quot;: &quot;#(&#39;DIS-&#39; + unique)&quot; }]
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.82">
+      <div class="step-ref passed">82</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">6</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.82">13:00:42.607 request:
+1 &gt; POST http://127.0.0.1:5076/api/products
+1 &gt; X-User-Role: Admin
+1 &gt; X-User-Id: test-admin-user
+1 &gt; Content-Type: application/json; charset=UTF-8
+1 &gt; Content-Length: 265
+1 &gt; Host: 127.0.0.1:5076
+1 &gt; Connection: Keep-Alive
+1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+1 &gt; Accept-Encoding: gzip,deflate
+{&quot;$type&quot;:&quot;SimpleProduct&quot;,&quot;name&quot;:&quot;Discount Mug #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;price&quot;:29.99,&quot;category&quot;:&quot;Drinkartikelen&quot;,&quot;productType&quot;:&quot;Mok&quot;,&quot;isActive&quot;:true,&quot;kleuren&quot;:[{&quot;kleur&quot;:&quot;Zwart&quot;,&quot;imageUrl&quot;:&quot;https:\/\/example.com\/x.png&quot;,&quot;stock&quot;:10,&quot;sku&quot;:&quot;DIS-1779706842603&quot;}]}
+
+13:00:42.611 response time in milliseconds: 3
+1 &lt; 201
+1 &lt; Content-Type: application/json; charset=utf-8
+1 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+1 &lt; Server: Kestrel
+1 &lt; Location: http://127.0.0.1:5076/api/products/6a142bdaf337d79af0dbed19
+1 &lt; Transfer-Encoding: chunked
+{&quot;kleuren&quot;:[{&quot;kleur&quot;:&quot;Zwart&quot;,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;,&quot;stock&quot;:10,&quot;sku&quot;:&quot;DIS-1779706842603&quot;}],&quot;id&quot;:&quot;6a142bdaf337d79af0dbed19&quot;,&quot;name&quot;:&quot;Discount Mug #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;price&quot;:29.99,&quot;category&quot;:&quot;Drinkartikelen&quot;,&quot;productType&quot;:&quot;Mok&quot;,&quot;isActive&quot;:true}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.83">
+      <div class="step-ref passed">83</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.84">
+      <div class="step-ref passed">84</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def seededProductId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Seed discount</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.87">
+      <div class="step-ref passed">87</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.88">
+      <div class="step-ref passed">88</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.88">{
+  &quot;name&quot;: &quot;Test Discount #(unique)&quot;,
+  &quot;description&quot;: &quot;Valid discount&quot;,
+  &quot;percentage&quot;: 20,
+  &quot;code&quot;: &quot;#(discountCode)&quot;,
+  &quot;startsAt&quot;: &quot;#(startsAt)&quot;,
+  &quot;endsAt&quot;: &quot;#(endsAt)&quot;,
+  &quot;isActive&quot;: true
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.100">
+      <div class="step-ref passed">100</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.100">13:00:42.614 request:
+2 &gt; POST http://127.0.0.1:5076/api/discounts
+2 &gt; X-User-Role: Admin
+2 &gt; X-User-Id: test-admin-user
+2 &gt; Content-Type: application/json; charset=UTF-8
+2 &gt; Content-Length: 200
+2 &gt; Host: 127.0.0.1:5076
+2 &gt; Connection: Keep-Alive
+2 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+2 &gt; Accept-Encoding: gzip,deflate
+{&quot;name&quot;:&quot;Test Discount #(unique)&quot;,&quot;description&quot;:&quot;Valid discount&quot;,&quot;percentage&quot;:20,&quot;code&quot;:&quot;VALID-1779706842603&quot;,&quot;startsAt&quot;:&quot;2026-05-25T10:00:42.604Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.604Z&quot;,&quot;isActive&quot;:true}
+
+13:00:42.617 response time in milliseconds: 2
+2 &lt; 201
+2 &lt; Content-Type: application/json; charset=utf-8
+2 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+2 &lt; Server: Kestrel
+2 &lt; Location: http://127.0.0.1:5076/api/discounts/6a142bdaf337d79af0dbed1a
+2 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1a&quot;,&quot;name&quot;:&quot;Test Discount #(unique)&quot;,&quot;description&quot;:&quot;Valid discount&quot;,&quot;percentage&quot;:20,&quot;code&quot;:&quot;VALID-1779706842603&quot;,&quot;startsAt&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.604Z&quot;,&quot;isActive&quot;:true}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.101">
+      <div class="step-ref passed">101</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.102">
+      <div class="step-ref passed">102</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def discountId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Create cart</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.105">
+      <div class="step-ref passed">105</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = null</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.106">
+      <div class="step-ref passed">106</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.107">
+      <div class="step-ref passed">107</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.107">{
+  &quot;userId&quot;: &quot;karate-dis-user-#(unique)&quot;,
+  &quot;items&quot;: [{ &quot;productId&quot;: &quot;#(seededProductId)&quot;, &quot;quantity&quot;: 1 }]
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.114">
+      <div class="step-ref passed">114</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.114">13:00:42.619 request:
+3 &gt; POST http://127.0.0.1:5076/api/shoppingcarts
+3 &gt; Content-Type: application/json; charset=UTF-8
+3 &gt; Content-Length: 102
+3 &gt; Host: 127.0.0.1:5076
+3 &gt; Connection: Keep-Alive
+3 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+3 &gt; Accept-Encoding: gzip,deflate
+{&quot;userId&quot;:&quot;karate-dis-user-#(unique)&quot;,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed19&quot;,&quot;quantity&quot;:1}]}
+
+13:00:42.623 response time in milliseconds: 4
+3 &lt; 201
+3 &lt; Content-Type: application/json; charset=utf-8
+3 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+3 &lt; Server: Kestrel
+3 &lt; Location: http://127.0.0.1:5076/api/shoppingcarts/user/karate-dis-user-%23(unique)
+3 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1b&quot;,&quot;userId&quot;:&quot;karate-dis-user-#(unique)&quot;,&quot;sessionId&quot;:null,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed19&quot;,&quot;productName&quot;:&quot;Discount Mug #(unique)&quot;,&quot;selectedColor&quot;:null,&quot;unitPrice&quot;:29.99,&quot;quantity&quot;:1,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;}],&quot;updatedAt&quot;:&quot;2026-05-25T11:00:42.6208521Z&quot;,&quot;totalPrice&quot;:29.99,&quot;subTotal&quot;:0}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.115">
+      <div class="step-ref passed">115</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.116">
+      <div class="step-ref passed">116</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def cartId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Apply discount</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.119">
+      <div class="step-ref passed">119</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId + &#39;/apply-discount&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.120">
+      <div class="step-ref passed">120</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request { code: &#39;#(discountCode)&#39; }</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.121">
+      <div class="step-ref passed">121</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">7</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.121">13:00:42.626 request:
+4 &gt; POST http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed1b/apply-discount
+4 &gt; Content-Type: application/json; charset=UTF-8
+4 &gt; Content-Length: 30
+4 &gt; Host: 127.0.0.1:5076
+4 &gt; Connection: Keep-Alive
+4 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+4 &gt; Accept-Encoding: gzip,deflate
+{&quot;code&quot;:&quot;VALID-1779706842603&quot;}
+
+13:00:42.632 response time in milliseconds: 6
+4 &lt; 200
+4 &lt; Content-Type: application/json; charset=utf-8
+4 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+4 &lt; Server: Kestrel
+4 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1b&quot;,&quot;userId&quot;:&quot;karate-dis-user-#(unique)&quot;,&quot;sessionId&quot;:null,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed19&quot;,&quot;productName&quot;:&quot;Discount Mug #(unique)&quot;,&quot;selectedColor&quot;:null,&quot;unitPrice&quot;:29.99,&quot;quantity&quot;:1,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;}],&quot;updatedAt&quot;:&quot;2026-05-25T11:00:42.62Z&quot;,&quot;totalPrice&quot;:29.99,&quot;subTotal&quot;:23.992}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.122">
+      <div class="step-ref passed">122</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 200</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.123">
+      <div class="step-ref passed">123</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>match response.totalPrice == &#39;#number&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Cleanup</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.126">
+      <div class="step-ref passed">126</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.127">
+      <div class="step-ref passed">127</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.128">
+      <div class="step-ref passed">128</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.128">13:00:42.634 request:
+5 &gt; DELETE http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed1b
+5 &gt; X-User-Role: Admin
+5 &gt; X-User-Id: test-admin-user
+5 &gt; Host: 127.0.0.1:5076
+5 &gt; Connection: Keep-Alive
+5 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+5 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.637 response time in milliseconds: 3
+5 &lt; 204
+5 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+5 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.129">
+      <div class="step-ref passed">129</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.131">
+      <div class="step-ref passed">131</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts/&#39; + discountId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.132">
+      <div class="step-ref passed">132</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.132">13:00:42.638 request:
+6 &gt; DELETE http://127.0.0.1:5076/api/discounts/6a142bdaf337d79af0dbed1a
+6 &gt; X-User-Role: Admin
+6 &gt; X-User-Id: test-admin-user
+6 &gt; Host: 127.0.0.1:5076
+6 &gt; Connection: Keep-Alive
+6 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+6 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.642 response time in milliseconds: 4
+6 &lt; 204
+6 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+6 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.133">
+      <div class="step-ref passed">133</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.135">
+      <div class="step-ref passed">135</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/products/&#39; + seededProductId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.136">
+      <div class="step-ref passed">136</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.136">13:00:42.644 request:
+7 &gt; DELETE http://127.0.0.1:5076/api/products/6a142bdaf337d79af0dbed19
+7 &gt; X-User-Role: Admin
+7 &gt; X-User-Id: test-admin-user
+7 &gt; Host: 127.0.0.1:5076
+7 &gt; Connection: Keep-Alive
+7 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+7 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.648 response time in milliseconds: 4
+7 &lt; 204
+7 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+7 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.137">
+      <div class="step-ref passed">137</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+        </div>
+        <div class="scenario">
+          <div class="scenario-heading" id="[4:139]">
+            <div class="heading-container">
+              <div class="scenario-tags">
+                
+              </div>
+              <div class="scenario-keyword">
+                Scenario: <span>[4:139]</span>
+                <span class="scenario-name">Prevent applying a discount code twice</span>
+                <span></span>
+              </div>
+            </div>
+            <div class="scenario-time passed">
+              <span>ms:</span>&nbsp;<span>45</span>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-container" id="[4:139]bg">
+              <div class="step-ref bg-step">&gt;&gt;</div>
+              <div class="step-cell passed">Background:</div>
+            </div>
+            <div class="time-cell passed"></div>
+          </div>
+          <div data-parent="[4:139]bg"><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.5">
+      <div class="step-ref bg-step">5</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>url baseUrl</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.140">
+      <div class="step-ref passed">140</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def unique = java.lang.System.currentTimeMillis() + &#39;&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.141">
+      <div class="step-ref passed">141</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def now = new java.util.Date()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.142">
+      <div class="step-ref passed">142</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def startsAt = new java.util.Date(now.getTime() - 3600000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.143">
+      <div class="step-ref passed">143</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def endsAt = new java.util.Date(now.getTime() + 86400000).toInstant().toString()</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.144">
+      <div class="step-ref passed">144</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def discountCode = &#39;TWICE-&#39; + unique</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Seed product</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.147">
+      <div class="step-ref passed">147</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.148">
+      <div class="step-ref passed">148</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/products&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.149">
+      <div class="step-ref passed">149</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.149">{
+  &quot;$type&quot;: &quot;SimpleProduct&quot;,
+  &quot;name&quot;: &quot;Twice Mug #(unique)&quot;,
+  &quot;description&quot;: &quot;test&quot;,
+  &quot;price&quot;: 29.99,
+  &quot;category&quot;: &quot;Drinkartikelen&quot;,
+  &quot;productType&quot;: &quot;Mok&quot;,
+  &quot;isActive&quot;: true,
+  &quot;kleuren&quot;: [{ &quot;kleur&quot;: &quot;Zwart&quot;, &quot;imageUrl&quot;: &quot;https://example.com/x.png&quot;, &quot;stock&quot;: 10, &quot;sku&quot;: &quot;#(&#39;TWI-&#39; + unique)&quot; }]
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.162">
+      <div class="step-ref passed">162</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.162">13:00:42.658 request:
+1 &gt; POST http://127.0.0.1:5076/api/products
+1 &gt; X-User-Role: Admin
+1 &gt; X-User-Id: test-admin-user
+1 &gt; Content-Type: application/json; charset=UTF-8
+1 &gt; Content-Length: 262
+1 &gt; Host: 127.0.0.1:5076
+1 &gt; Connection: Keep-Alive
+1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+1 &gt; Accept-Encoding: gzip,deflate
+{&quot;$type&quot;:&quot;SimpleProduct&quot;,&quot;name&quot;:&quot;Twice Mug #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;price&quot;:29.99,&quot;category&quot;:&quot;Drinkartikelen&quot;,&quot;productType&quot;:&quot;Mok&quot;,&quot;isActive&quot;:true,&quot;kleuren&quot;:[{&quot;kleur&quot;:&quot;Zwart&quot;,&quot;imageUrl&quot;:&quot;https:\/\/example.com\/x.png&quot;,&quot;stock&quot;:10,&quot;sku&quot;:&quot;TWI-1779706842654&quot;}]}
+
+13:00:42.661 response time in milliseconds: 3
+1 &lt; 201
+1 &lt; Content-Type: application/json; charset=utf-8
+1 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+1 &lt; Server: Kestrel
+1 &lt; Location: http://127.0.0.1:5076/api/products/6a142bdaf337d79af0dbed1c
+1 &lt; Transfer-Encoding: chunked
+{&quot;kleuren&quot;:[{&quot;kleur&quot;:&quot;Zwart&quot;,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;,&quot;stock&quot;:10,&quot;sku&quot;:&quot;TWI-1779706842654&quot;}],&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1c&quot;,&quot;name&quot;:&quot;Twice Mug #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;price&quot;:29.99,&quot;category&quot;:&quot;Drinkartikelen&quot;,&quot;productType&quot;:&quot;Mok&quot;,&quot;isActive&quot;:true}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.163">
+      <div class="step-ref passed">163</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.164">
+      <div class="step-ref passed">164</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def seededProductId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Seed discount</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.167">
+      <div class="step-ref passed">167</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.168">
+      <div class="step-ref passed">168</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.168">{
+  &quot;name&quot;: &quot;Twice Discount #(unique)&quot;,
+  &quot;description&quot;: &quot;test&quot;,
+  &quot;percentage&quot;: 10,
+  &quot;code&quot;: &quot;#(discountCode)&quot;,
+  &quot;startsAt&quot;: &quot;#(startsAt)&quot;,
+  &quot;endsAt&quot;: &quot;#(endsAt)&quot;,
+  &quot;isActive&quot;: true
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.180">
+      <div class="step-ref passed">180</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.180">13:00:42.663 request:
+2 &gt; POST http://127.0.0.1:5076/api/discounts
+2 &gt; X-User-Role: Admin
+2 &gt; X-User-Id: test-admin-user
+2 &gt; Content-Type: application/json; charset=UTF-8
+2 &gt; Content-Length: 191
+2 &gt; Host: 127.0.0.1:5076
+2 &gt; Connection: Keep-Alive
+2 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+2 &gt; Accept-Encoding: gzip,deflate
+{&quot;name&quot;:&quot;Twice Discount #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;percentage&quot;:10,&quot;code&quot;:&quot;TWICE-1779706842654&quot;,&quot;startsAt&quot;:&quot;2026-05-25T10:00:42.654Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.654Z&quot;,&quot;isActive&quot;:true}
+
+13:00:42.665 response time in milliseconds: 2
+2 &lt; 201
+2 &lt; Content-Type: application/json; charset=utf-8
+2 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+2 &lt; Server: Kestrel
+2 &lt; Location: http://127.0.0.1:5076/api/discounts/6a142bdaf337d79af0dbed1d
+2 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1d&quot;,&quot;name&quot;:&quot;Twice Discount #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;percentage&quot;:10,&quot;code&quot;:&quot;TWICE-1779706842654&quot;,&quot;startsAt&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;endsAt&quot;:&quot;2026-05-26T11:00:42.654Z&quot;,&quot;isActive&quot;:true}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.181">
+      <div class="step-ref passed">181</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.182">
+      <div class="step-ref passed">182</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def discountId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Create cart</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.185">
+      <div class="step-ref passed">185</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = null</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.186">
+      <div class="step-ref passed">186</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.187">
+      <div class="step-ref passed">187</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.187">{
+  &quot;userId&quot;: &quot;karate-twice-user-#(unique)&quot;,
+  &quot;items&quot;: [{ &quot;productId&quot;: &quot;#(seededProductId)&quot;, &quot;quantity&quot;: 1 }]
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.194">
+      <div class="step-ref passed">194</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.194">13:00:42.667 request:
+3 &gt; POST http://127.0.0.1:5076/api/shoppingcarts
+3 &gt; Content-Type: application/json; charset=UTF-8
+3 &gt; Content-Length: 104
+3 &gt; Host: 127.0.0.1:5076
+3 &gt; Connection: Keep-Alive
+3 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+3 &gt; Accept-Encoding: gzip,deflate
+{&quot;userId&quot;:&quot;karate-twice-user-#(unique)&quot;,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed1c&quot;,&quot;quantity&quot;:1}]}
+
+13:00:42.671 response time in milliseconds: 4
+3 &lt; 201
+3 &lt; Content-Type: application/json; charset=utf-8
+3 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+3 &lt; Server: Kestrel
+3 &lt; Location: http://127.0.0.1:5076/api/shoppingcarts/user/karate-twice-user-%23(unique)
+3 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1e&quot;,&quot;userId&quot;:&quot;karate-twice-user-#(unique)&quot;,&quot;sessionId&quot;:null,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed1c&quot;,&quot;productName&quot;:&quot;Twice Mug #(unique)&quot;,&quot;selectedColor&quot;:null,&quot;unitPrice&quot;:29.99,&quot;quantity&quot;:1,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;}],&quot;updatedAt&quot;:&quot;2026-05-25T11:00:42.669231Z&quot;,&quot;totalPrice&quot;:29.99,&quot;subTotal&quot;:0}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.195">
+      <div class="step-ref passed">195</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.196">
+      <div class="step-ref passed">196</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def cartId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Apply discount first time</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.199">
+      <div class="step-ref passed">199</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId + &#39;/apply-discount&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.200">
+      <div class="step-ref passed">200</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request { code: &#39;#(discountCode)&#39; }</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.201">
+      <div class="step-ref passed">201</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">8</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.201">13:00:42.673 request:
+4 &gt; POST http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed1e/apply-discount
+4 &gt; Content-Type: application/json; charset=UTF-8
+4 &gt; Content-Length: 30
+4 &gt; Host: 127.0.0.1:5076
+4 &gt; Connection: Keep-Alive
+4 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+4 &gt; Accept-Encoding: gzip,deflate
+{&quot;code&quot;:&quot;TWICE-1779706842654&quot;}
+
+13:00:42.680 response time in milliseconds: 6
+4 &lt; 200
+4 &lt; Content-Type: application/json; charset=utf-8
+4 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+4 &lt; Server: Kestrel
+4 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1e&quot;,&quot;userId&quot;:&quot;karate-twice-user-#(unique)&quot;,&quot;sessionId&quot;:null,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed1c&quot;,&quot;productName&quot;:&quot;Twice Mug #(unique)&quot;,&quot;selectedColor&quot;:null,&quot;unitPrice&quot;:29.99,&quot;quantity&quot;:1,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;}],&quot;updatedAt&quot;:&quot;2026-05-25T11:00:42.669Z&quot;,&quot;totalPrice&quot;:29.99,&quot;subTotal&quot;:26.991}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.202">
+      <div class="step-ref passed">202</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 200</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Apply same discount second time → 409</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.205">
+      <div class="step-ref passed">205</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId + &#39;/apply-discount&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.206">
+      <div class="step-ref passed">206</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request { code: &#39;#(discountCode)&#39; }</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.207">
+      <div class="step-ref passed">207</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.207">13:00:42.681 request:
+5 &gt; POST http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed1e/apply-discount
+5 &gt; Content-Type: application/json; charset=UTF-8
+5 &gt; Content-Length: 30
+5 &gt; Host: 127.0.0.1:5076
+5 &gt; Connection: Keep-Alive
+5 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+5 &gt; Accept-Encoding: gzip,deflate
+{&quot;code&quot;:&quot;TWICE-1779706842654&quot;}
+
+13:00:42.685 response time in milliseconds: 3
+5 &lt; 409
+5 &lt; Content-Type: application/json; charset=utf-8
+5 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+5 &lt; Server: Kestrel
+5 &lt; Transfer-Encoding: chunked
+{&quot;error&quot;:&quot;A discount has already been applied to this cart.&quot;}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.208">
+      <div class="step-ref passed">208</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 409</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Cleanup</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.211">
+      <div class="step-ref passed">211</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.212">
+      <div class="step-ref passed">212</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.213">
+      <div class="step-ref passed">213</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.213">13:00:42.686 request:
+6 &gt; DELETE http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed1e
+6 &gt; X-User-Role: Admin
+6 &gt; X-User-Id: test-admin-user
+6 &gt; Host: 127.0.0.1:5076
+6 &gt; Connection: Keep-Alive
+6 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+6 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.689 response time in milliseconds: 3
+6 &lt; 204
+6 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+6 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.214">
+      <div class="step-ref passed">214</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.216">
+      <div class="step-ref passed">216</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/discounts/&#39; + discountId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.217">
+      <div class="step-ref passed">217</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">6</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.217">13:00:42.691 request:
+7 &gt; DELETE http://127.0.0.1:5076/api/discounts/6a142bdaf337d79af0dbed1d
+7 &gt; X-User-Role: Admin
+7 &gt; X-User-Id: test-admin-user
+7 &gt; Host: 127.0.0.1:5076
+7 &gt; Connection: Keep-Alive
+7 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+7 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.695 response time in milliseconds: 4
+7 &lt; 204
+7 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+7 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.218">
+      <div class="step-ref passed">218</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.220">
+      <div class="step-ref passed">220</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/products/&#39; + seededProductId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.221">
+      <div class="step-ref passed">221</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.221">13:00:42.696 request:
+8 &gt; DELETE http://127.0.0.1:5076/api/products/6a142bdaf337d79af0dbed1c
+8 &gt; X-User-Role: Admin
+8 &gt; X-User-Id: test-admin-user
+8 &gt; Host: 127.0.0.1:5076
+8 &gt; Connection: Keep-Alive
+8 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+8 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.699 response time in milliseconds: 2
+8 &lt; 204
+8 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+8 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.222">
+      <div class="step-ref passed">222</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+        </div>
+        <div class="scenario">
+          <div class="scenario-heading" id="[5:224]">
+            <div class="heading-container">
+              <div class="scenario-tags">
+                
+              </div>
+              <div class="scenario-keyword">
+                Scenario: <span>[5:224]</span>
+                <span class="scenario-name">Apply an invalid discount code</span>
+                <span></span>
+              </div>
+            </div>
+            <div class="scenario-time passed">
+              <span>ms:</span>&nbsp;<span>27</span>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-container" id="[5:224]bg">
+              <div class="step-ref bg-step">&gt;&gt;</div>
+              <div class="step-cell passed">Background:</div>
+            </div>
+            <div class="time-cell passed"></div>
+          </div>
+          <div data-parent="[5:224]bg"><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.5">
+      <div class="step-ref bg-step">5</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>url baseUrl</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.225">
+      <div class="step-ref passed">225</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def unique = java.lang.System.currentTimeMillis() + &#39;&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Seed product</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.228">
+      <div class="step-ref passed">228</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.229">
+      <div class="step-ref passed">229</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/products&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.230">
+      <div class="step-ref passed">230</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">1</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.230">{
+  &quot;$type&quot;: &quot;SimpleProduct&quot;,
+  &quot;name&quot;: &quot;Invalid Disc Mug #(unique)&quot;,
+  &quot;description&quot;: &quot;test&quot;,
+  &quot;price&quot;: 9.99,
+  &quot;category&quot;: &quot;Drinkartikelen&quot;,
+  &quot;productType&quot;: &quot;Mok&quot;,
+  &quot;isActive&quot;: true,
+  &quot;kleuren&quot;: [{ &quot;kleur&quot;: &quot;Zwart&quot;, &quot;imageUrl&quot;: &quot;https://example.com/x.png&quot;, &quot;stock&quot;: 10, &quot;sku&quot;: &quot;#(&#39;INV-&#39; + unique)&quot; }]
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.243">
+      <div class="step-ref passed">243</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.243">13:00:42.707 request:
+1 &gt; POST http://127.0.0.1:5076/api/products
+1 &gt; X-User-Role: Admin
+1 &gt; X-User-Id: test-admin-user
+1 &gt; Content-Type: application/json; charset=UTF-8
+1 &gt; Content-Length: 268
+1 &gt; Host: 127.0.0.1:5076
+1 &gt; Connection: Keep-Alive
+1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+1 &gt; Accept-Encoding: gzip,deflate
+{&quot;$type&quot;:&quot;SimpleProduct&quot;,&quot;name&quot;:&quot;Invalid Disc Mug #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;price&quot;:9.99,&quot;category&quot;:&quot;Drinkartikelen&quot;,&quot;productType&quot;:&quot;Mok&quot;,&quot;isActive&quot;:true,&quot;kleuren&quot;:[{&quot;kleur&quot;:&quot;Zwart&quot;,&quot;imageUrl&quot;:&quot;https:\/\/example.com\/x.png&quot;,&quot;stock&quot;:10,&quot;sku&quot;:&quot;INV-1779706842705&quot;}]}
+
+13:00:42.711 response time in milliseconds: 3
+1 &lt; 201
+1 &lt; Content-Type: application/json; charset=utf-8
+1 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+1 &lt; Server: Kestrel
+1 &lt; Location: http://127.0.0.1:5076/api/products/6a142bdaf337d79af0dbed1f
+1 &lt; Transfer-Encoding: chunked
+{&quot;kleuren&quot;:[{&quot;kleur&quot;:&quot;Zwart&quot;,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;,&quot;stock&quot;:10,&quot;sku&quot;:&quot;INV-1779706842705&quot;}],&quot;id&quot;:&quot;6a142bdaf337d79af0dbed1f&quot;,&quot;name&quot;:&quot;Invalid Disc Mug #(unique)&quot;,&quot;description&quot;:&quot;test&quot;,&quot;price&quot;:9.99,&quot;category&quot;:&quot;Drinkartikelen&quot;,&quot;productType&quot;:&quot;Mok&quot;,&quot;isActive&quot;:true}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.244">
+      <div class="step-ref passed">244</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.245">
+      <div class="step-ref passed">245</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def seededProductId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Create cart</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.248">
+      <div class="step-ref passed">248</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = null</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.249">
+      <div class="step-ref passed">249</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.250">
+      <div class="step-ref passed">250</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  <div class="preformatted" data-parent="0.250">{
+  &quot;userId&quot;: &quot;karate-inv-user-#(unique)&quot;,
+  &quot;items&quot;: [{ &quot;productId&quot;: &quot;#(seededProductId)&quot;, &quot;quantity&quot;: 1 }]
+}</div>
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.257">
+      <div class="step-ref passed">257</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">6</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.257">13:00:42.712 request:
+2 &gt; POST http://127.0.0.1:5076/api/shoppingcarts
+2 &gt; Content-Type: application/json; charset=UTF-8
+2 &gt; Content-Length: 102
+2 &gt; Host: 127.0.0.1:5076
+2 &gt; Connection: Keep-Alive
+2 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+2 &gt; Accept-Encoding: gzip,deflate
+{&quot;userId&quot;:&quot;karate-inv-user-#(unique)&quot;,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed1f&quot;,&quot;quantity&quot;:1}]}
+
+13:00:42.717 response time in milliseconds: 5
+2 &lt; 201
+2 &lt; Content-Type: application/json; charset=utf-8
+2 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+2 &lt; Server: Kestrel
+2 &lt; Location: http://127.0.0.1:5076/api/shoppingcarts/user/karate-inv-user-%23(unique)
+2 &lt; Transfer-Encoding: chunked
+{&quot;id&quot;:&quot;6a142bdaf337d79af0dbed20&quot;,&quot;userId&quot;:&quot;karate-inv-user-#(unique)&quot;,&quot;sessionId&quot;:null,&quot;items&quot;:[{&quot;productId&quot;:&quot;6a142bdaf337d79af0dbed1f&quot;,&quot;productName&quot;:&quot;Invalid Disc Mug #(unique)&quot;,&quot;selectedColor&quot;:null,&quot;unitPrice&quot;:9.99,&quot;quantity&quot;:1,&quot;imageUrl&quot;:&quot;https://example.com/x.png&quot;}],&quot;updatedAt&quot;:&quot;2026-05-25T11:00:42.714887Z&quot;,&quot;totalPrice&quot;:9.99,&quot;subTotal&quot;:0}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.258">
+      <div class="step-ref passed">258</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 201</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.259">
+      <div class="step-ref passed">259</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>def cartId = response.id</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Apply invalid discount code → 404</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.262">
+      <div class="step-ref passed">262</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId + &#39;/apply-discount&#39;</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.263">
+      <div class="step-ref passed">263</div>
+      
+      <div class="step-cell passed">
+        <span>And</span>&nbsp;<span>request { code: &#39;DEFINITELY-INVALID-CODE-XYZ&#39; }</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.264">
+      <div class="step-ref passed">264</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method POST</span>
+      </div>
+    </div>
+    <div class="time-cell passed">5</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.264">13:00:42.719 request:
+3 &gt; POST http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed20/apply-discount
+3 &gt; Content-Type: application/json; charset=UTF-8
+3 &gt; Content-Length: 38
+3 &gt; Host: 127.0.0.1:5076
+3 &gt; Connection: Keep-Alive
+3 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+3 &gt; Accept-Encoding: gzip,deflate
+{&quot;code&quot;:&quot;DEFINITELY-INVALID-CODE-XYZ&quot;}
+
+13:00:42.723 response time in milliseconds: 4
+3 &lt; 404
+3 &lt; Content-Type: application/problem+json; charset=utf-8
+3 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+3 &lt; Server: Kestrel
+3 &lt; Transfer-Encoding: chunked
+{&quot;type&quot;:&quot;https://tools.ietf.org/html/rfc9110#section-15.5.5&quot;,&quot;title&quot;:&quot;Not Found&quot;,&quot;status&quot;:404,&quot;traceId&quot;:&quot;00-0a11da58290827916cfca5eeb29e4e65-e0ae7c3efaddea29-00&quot;}
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.265">
+      <div class="step-ref passed">265</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 404</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  <div class="step-row">
+    <div class="step-container">
+      <div class="step-ref passed"></div>
+      
+      <div class="step-cell comment"># Cleanup</div>
+    </div>
+    <div class="time-cell comment"></div>            
+  </div>
+
+  <div class="step-row">
+    <div class="step-container" id="0.268">
+      <div class="step-ref passed">268</div>
+      
+      <div class="step-cell passed">
+        <span>*</span>&nbsp;<span>configure headers = adminHeaders</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.269">
+      <div class="step-ref passed">269</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/shoppingcarts/&#39; + cartId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.270">
+      <div class="step-ref passed">270</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.270">13:00:42.724 request:
+4 &gt; DELETE http://127.0.0.1:5076/api/shoppingcarts/6a142bdaf337d79af0dbed20
+4 &gt; X-User-Role: Admin
+4 &gt; X-User-Id: test-admin-user
+4 &gt; Host: 127.0.0.1:5076
+4 &gt; Connection: Keep-Alive
+4 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+4 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.727 response time in milliseconds: 2
+4 &lt; 204
+4 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+4 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.271">
+      <div class="step-ref passed">271</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.273">
+      <div class="step-ref passed">273</div>
+      
+      <div class="step-cell passed">
+        <span>Given</span>&nbsp;<span>path &#39;/api/products/&#39; + seededProductId</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.274">
+      <div class="step-ref passed">274</div>
+      
+      <div class="step-cell passed">
+        <span>When</span>&nbsp;<span>method DELETE</span>
+      </div>
+    </div>
+    <div class="time-cell passed">4</div>
+  </div>
+
+   
+  
+  
+
+  
+
+  <div class="preformatted" data-parent="0.274">13:00:42.729 request:
+5 &gt; DELETE http://127.0.0.1:5076/api/products/6a142bdaf337d79af0dbed1f
+5 &gt; X-User-Role: Admin
+5 &gt; X-User-Id: test-admin-user
+5 &gt; Host: 127.0.0.1:5076
+5 &gt; Connection: Keep-Alive
+5 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)
+5 &gt; Accept-Encoding: gzip,deflate
+
+
+13:00:42.732 response time in milliseconds: 3
+5 &lt; 204
+5 &lt; Date: Mon, 25 May 2026 11:00:42 GMT
+5 &lt; Server: Kestrel
+
+
+</div>   
+
+  
+
+</div>
+</div>
+          <div><div>
+  
+
+  
+
+  <div class="step-row">
+    <div class="step-container" id="0.275">
+      <div class="step-ref passed">275</div>
+      
+      <div class="step-cell passed">
+        <span>Then</span>&nbsp;<span>status 204</span>
+      </div>
+    </div>
+    <div class="time-cell passed">0</div>
+  </div>
+
+   
+  
+  
+
+  
+
+     
+
+  
+
+</div>
+</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
