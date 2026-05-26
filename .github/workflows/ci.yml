@@ -52,6 +52,14 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
 
+    - name: Setup Python for TestRail CLI
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install TestRail CLI
+      run: pip install trcli
+
     - name: Cache NuGet packages
       uses: actions/cache@v4
       with:
@@ -119,16 +127,18 @@ jobs:
       continue-on-error: true
       env:
         API_BASE_URL: http://127.0.0.1:5076
-        BROWSERSTACK_USERNAME: ${{ secrets['BROWSERSTACK_USERNAME'] }}
-        BROWSERSTACK_ACCESS_KEY: ${{ secrets['BROWSERSTACK_ACCESS_KEY'] }}
-        BROWSERSTACK_PROJECT_NAME: BrightSwagShop - JIRA
-        BROWSERSTACK_BUILD_NAME: 'Build #${{ github.run_number }}'
+        TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+        TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+        TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+        TESTRAIL_PROJECT_NAME: BrightSwagShop
+        TESTRAIL_RUN_TITLE: 'API Tests - Build #${{ github.run_number }}'
+        TESTRAIL_RUN_DESCRIPTION: 'Triggered by: ${{ github.actor }} | Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
       run: |
-        if [ -n "$BROWSERSTACK_USERNAME" ] && [ -n "$BROWSERSTACK_ACCESS_KEY" ]; then
-          echo "[BrowserStack] Credentials found; running with BrowserStack reporting"
-          npm run test:browserstack
+        if [ -n "$TESTRAIL_BASE_URL" ] && [ -n "$TESTRAIL_USERNAME" ] && [ -n "$TESTRAIL_API_KEY" ]; then
+          echo "[TestRail] Credentials found; running with TestRail reporting"
+          npm run test:testrail
         else
-          echo "[BrowserStack] Credentials not configured; running Cucumber without BrowserStack"
+          echo "[TestRail] Credentials not configured; running Cucumber without TestRail"
           npm run allure:clean && npx cucumber-js --profile default
         fi
       working-directory: APITests
