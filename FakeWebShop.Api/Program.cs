@@ -160,6 +160,9 @@ builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthori
 
 var app = builder.Build();
 
+// register debug exception middleware (maps DebugApiException -> JSON)
+app.UseMiddleware<FakeWebShop.Api.Middleware.DebugExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();

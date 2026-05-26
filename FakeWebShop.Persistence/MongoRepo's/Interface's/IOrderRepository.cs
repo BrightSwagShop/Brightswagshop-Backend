@@ -5,6 +5,7 @@ namespace FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
 
 public interface IOrderRepository
 {
+    Task<List<Order>> GetAllAsync();
     Task<Order?> GetByIdAsync(string id);
     Task<List<Order>> GetByUserIdAsync(string userId);
     Task CreateAsync(Order order);

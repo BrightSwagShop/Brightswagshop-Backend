@@ -7,6 +7,7 @@ using FakeWebShop.Domain.Services.MongoInterfaces;
 using FakeWebShop.Domain.Services.MongoServicesMapping;
 using FakeWebShop.Persistence.Entities;
 using FakeWebShop.Persistence.MongoRepo_s.MongoInterface_s;
+using FakeWebShop.Domain.Services.Exceptions;
 
 namespace FakeWebShop.Domain.Services;
 
@@ -30,6 +31,15 @@ public class MongoProductService(IMongoProductRepository repo, IDebugStateServic
 
     public async Task<MongoProductResponse?> GetProductById(string id)
     {
+
+        // Simulate server error when productApiError is enabled
+        if (await debugService.GetStateAsync("productApiError"))
+            throw new DebugApiException(500, "Simulated product API error (debug toggle: productApiError)", "productApiError");
+
+        // Simulate slow loading when slowLoading is enabled
+        if (await debugService.GetStateAsync("slowLoading"))
+            await Task.Delay(5000);
+
         var product = await repo.GetByIdAsync(id);
         if (product == null) return null;
         var response = product.ToModel().ToResponse();
@@ -38,6 +48,14 @@ public class MongoProductService(IMongoProductRepository repo, IDebugStateServic
 
     public async Task<List<MongoProductResponse>> GetProducts()
     {
+        // Simulate server error when productApiError is enabled
+        if (await debugService.GetStateAsync("productApiError"))
+            throw new DebugApiException(500, "Simulated product API error (debug toggle: productApiError)", "productApiError");
+
+        // Simulate slow loading when slowLoading is enabled
+        if (await debugService.GetStateAsync("slowLoading"))
+            await Task.Delay(5000);
+
         var product = await repo.GetAllAsync();
         var responses = product.Select(p => p.ToModel().ToResponse()).ToList();
         return await ApplyDebugBugFilterAsync(responses);
@@ -47,6 +65,11 @@ public class MongoProductService(IMongoProductRepository repo, IDebugStateServic
     {
         var products = await repo.GetByIdsAsync(ids);
         var responses = products.Select(p => p.ToModel().ToResponse()).ToList();
+
+        // Apply artificial delay for slowLoading if enabled
+        if (await debugService.GetStateAsync("slowLoading"))
+            await Task.Delay(5000);
+
         return await ApplyDebugBugFilterAsync(responses);
     }
 
@@ -56,6 +79,10 @@ public class MongoProductService(IMongoProductRepository repo, IDebugStateServic
         var responses = products
             .Select(p => p.ToModel().ToResponse())
             .ToList();
+        // Apply artificial delay for slowLoading if enabled
+        if (await debugService.GetStateAsync("slowLoading"))
+            await Task.Delay(5000);
+
         return await ApplyDebugBugFilterAsync(responses);
     }
 
