@@ -67,8 +67,8 @@ public sealed class TestAutomationService : ITestAutomationService
             var execution = run.Suite switch
             {
                 TestAutomationSuite.Api => new TestExecutionPlan(
-                    ResolveExecutable("npx"),
-                    new[] { "cucumber-js", "--profile", "default" },
+                    ResolveExecutable("npm"),
+                    new[] { "run", "test:testrail" },
                     _apiTestsRoot,
                     GetProcessEnvironmentForSuite(run.Suite, apiBaseUrl)),
                 TestAutomationSuite.Frontend => new TestExecutionPlan(
@@ -151,6 +151,17 @@ public sealed class TestAutomationService : ITestAutomationService
     private async Task PublishReportAsync(TestAutomationRun run)
     {
         Directory.CreateDirectory(run.ReportRoot);
+
+        if (run.Suite == TestAutomationSuite.Api)
+        {
+            var apiAllureReportRoot = Path.Combine(_apiTestsRoot, "allure-report");
+
+            if (Directory.Exists(apiAllureReportRoot))
+            {
+                CopyDirectory(apiAllureReportRoot, run.ReportRoot);
+                return;
+            }
+        }
 
         if (run.Suite is TestAutomationSuite.Frontend or TestAutomationSuite.E2e)
         {
