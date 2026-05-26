@@ -131,6 +131,7 @@ jobs:
         TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
         TESTRAIL_PROJECT_NAME: BrightSwagShop
+        TESTRAIL_SUITE_NAME: API Tests
         TESTRAIL_RUN_TITLE: 'API Tests - Build #${{ github.run_number }}'
         TESTRAIL_RUN_DESCRIPTION: 'Triggered by: ${{ github.actor }} | Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
       run: |
