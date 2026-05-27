@@ -17,6 +17,7 @@ Feature: Backend API
   Scenario: GET product types returns 200 and list with name and slug
     When I GET backend product types
     Then the backend response status should be 200
+    And the backend response should complete within 1000 ms
     And the backend response should be a non-empty array
     And the first backend item should contain string name and string slug
 
