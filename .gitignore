@@ -26,3 +26,4 @@ APITests/allure-results/
 ## Local secret overrides
 FakeWebShop.Api/appsettings.Local.json
 FakeWebShop.Api/appsettings.Development.Local.json
+FakeWebShop.Api/wwwroot/test-automation-runs/
