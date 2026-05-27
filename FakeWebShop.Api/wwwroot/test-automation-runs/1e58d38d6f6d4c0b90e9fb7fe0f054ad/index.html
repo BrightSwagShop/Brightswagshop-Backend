@@ -1,0 +1,91 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test run 1e58d38d6f6d4c0b90e9fb7fe0f054ad</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f8fafc; color: #0f172a; }
+    .status { display: inline-block; padding: 8px 14px; border-radius: 999px; color: white; background: #047857; font-weight: 700; }
+    section { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-top: 18px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 12px; overflow: auto; }
+    .meta { display: grid; gap: 8px; margin-top: 12px; }
+    .meta div { display: flex; gap: 12px; flex-wrap: wrap; }
+    .label { font-weight: 700; min-width: 120px; }
+  </style>
+</head>
+<body>
+  <h1>Test automation report</h1>
+  <div class="status">Succeeded</div>
+  <section>
+    <div class="meta">
+      <div><span class="label">Suite</span><span>Frontend</span></div>
+      <div><span class="label">Started</span><span>2026-05-21T07:38:08.8640529+00:00</span></div>
+      <div><span class="label">Completed</span><span>2026-05-21T07:38:53.8023407+00:00</span></div>
+      <div><span class="label">Exit code</span><span>0</span></div>
+    </div>
+  </section>
+  <section>
+    <h2>Latest output</h2>
+    <pre>&gt; frontend@0.0.0 webtests
+&gt; playwright test
+Running 51 tests using 4 workers
+  ✓   4 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:28:3 › AboutPage - Smoke Tests › [About Page - Smoke] Heading text verification (4.0s)
+  ✓   1 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:21:3 › AboutPage - Smoke Tests › [About Page - Smoke] Navbar verification (4.0s)
+  ✓   2 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:14:3 › AboutPage - Smoke Tests › [About Page - Smoke] Load page successfully (3.9s)
+  ✓   3 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:35:3 › AboutPage - Smoke Tests › [About Page - Smoke] Shop button visibility (4.0s)
+  ✓   5 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:42:3 › AboutPage - Smoke Tests › [About Page - Smoke] Contact button visibility (3.2s)
+  ✓   7 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:56:3 › AboutPage - Smoke Tests › [About Page - Smoke] Footer verification (3.3s)
+  ✓   6 [chromium] › WebTests\Tests\Smoke\aboutpage.spec.ts:49:3 › AboutPage - Smoke Tests › [About Page - Smoke] Display customers section (3.5s)
+  ✓  11 [chromium] › WebTests\Tests\Smoke\cartpage.spec.ts:75:3 › Winkelwagen Page - Smoke Tests › [Cart Page - Smoke] Checkout button visibility (3.0s)
+  ✓  10 [chromium] › WebTests\Tests\Smoke\cartpage.spec.ts:68:3 › Winkelwagen Page - Smoke Tests › [Cart Page - Smoke] Continue shopping button visibility (3.2s)
+  ✓   8 [chromium] › WebTests\Tests\Smoke\cartpage.spec.ts:55:3 › Winkelwagen Page - Smoke Tests › [Cart Page - Smoke] Load page successfully (6.5s)
+  ✓   9 [chromium] › WebTests\Tests\Smoke\cartpage.spec.ts:61:3 › Winkelwagen Page - Smoke Tests › [Cart Page - Smoke] Navbar verification (3.4s)
+  ✓  13 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:14:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Load page successfully (2.5s)
+  ✓  15 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:28:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Heading text verification (2.5s)
+  ✓  14 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:21:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Navbar verification (2.7s)
+  ✓  12 [chromium] › WebTests\Tests\Smoke\cartpage.spec.ts:82:3 › Winkelwagen Page - Smoke Tests › [Cart Page - Smoke] Footer verification (2.8s)
+  ✓  16 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:35:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Phone number visibility (2.0s)
+  ✓  18 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:49:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Contact form exists (2.3s)
+  ✓  17 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:42:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Email visibility (2.7s)
+  ✓  19 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:56:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Form fields validation (2.7s)
+  ✓  20 [chromium] › WebTests\Tests\Smoke\contactpage.spec.ts:64:3 › Contact Page - Smoke Tests › [Contact Page - Smoke] Footer verification (2.4s)
+  ✓  21 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:26:5 › EntraID Login - Smoke Tests › Login Page UI Tests › [EntraID] Login page loads successfully (2.2s)
+  ✓  23 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:34:5 › EntraID Login - Smoke Tests › Login Page UI Tests › [EntraID] Microsoft login button is clickable (2.4s)
+  ✓  22 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:30:5 › EntraID Login - Smoke Tests › Login Page UI Tests › [EntraID] Microsoft login button is visible (2.6s)
+  ✓  24 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:38:5 › EntraID Login - Smoke Tests › Login Page UI Tests › [EntraID] Microsoft login button displays correct text (2.2s)
+  ✓  28 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:59:5 › EntraID Login - Smoke Tests › EntraID Token Acquisition › [EntraID] Token can be acquired with configured credentials (8ms)
+  ✓  29 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:72:5 › EntraID Login - Smoke Tests › EntraID Token Acquisition › [EntraID] Token payload contains required JWT claims (5ms)
+  ✓  30 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:90:5 › EntraID Login - Smoke Tests › EntraID Token Acquisition › [EntraID] Token is cached while still valid (4ms)
+  ✓  31 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:102:5 › EntraID Login - Smoke Tests › EntraID Token Acquisition › [EntraID] Token can be reacquired after cache clear (3ms)
+  ✓  32 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:117:5 › EntraID Login - Smoke Tests › EntraID Token Acquisition › [EntraID] Bearer header format is correct for API usage (5ms)
+  ✓  25 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:132:5 › EntraID Login - Smoke Tests › Protected Admin Routes › [EntraID] Admin page redirects to login when not authenticated (2.2s)
+  ✓  27 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:142:5 › EntraID Login - Smoke Tests › Protected Admin Routes › [EntraID] Admin users page redirects to login when not authenticated (2.5s)
+  ✓  26 [chromium] › WebTests\Tests\Smoke\entra-id-login.spec.ts:137:5 › EntraID Login - Smoke Tests › Protected Admin Routes › [EntraID] Admin dashboard redirects to login when not authenticated (2.6s)
+  ✓  33 [chromium] › WebTests\Tests\Smoke\homepage.spec.ts:14:3 › Homepage - Smoke Tests › [Home Page - Smoke] Load page successfully (2.3s)
+  ✓  34 [chromium] › WebTests\Tests\Smoke\homepage.spec.ts:21:3 › Homepage - Smoke Tests › [Home Page - Smoke] Navbar verification (2.4s)
+  ✓  35 [chromium] › WebTests\Tests\Smoke\homepage.spec.ts:28:3 › Homepage - Smoke Tests › [Home Page - Smoke] Heading text verification (2.4s)
+  ✓  36 [chromium] › WebTests\Tests\Smoke\homepage.spec.ts:35:3 › Homepage - Smoke Tests › [Home Page - Smoke] Product categories display (2.3s)
+  ✓  37 [chromium] › WebTests\Tests\Smoke\homepage.spec.ts:42:3 › Homepage - Smoke Tests › [Home Page - Smoke] Footer verification (2.2s)
+  ✓  38 [chromium] › WebTests\Tests\Smoke\loginpage.spec.ts:14:3 › LoginPage - Smoke Tests › [Login Page - Smoke] Load page successfully (2.2s)
+  ✓  39 [chromium] › WebTests\Tests\Smoke\loginpage.spec.ts:21:3 › LoginPage - Smoke Tests › [Login Page - Smoke] Microsoft login button visibility (2.2s)
+  ✓  40 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:14:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to Home via navbar (2.2s)
+  ✓  41 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:21:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to About page via navbar (2.3s)
+  ✓  42 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:28:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to Contact page via navbar (2.3s)
+  ✓  43 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:35:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to Cart via navbar (2.8s)
+  ✓  44 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:44:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to Home via footer (2.7s)
+  ✓  45 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:51:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to About page via footer (2.6s)
+  ✓  46 [chromium] › WebTests\Tests\Smoke\navigation.spec.ts:58:3 › Navigation - Smoke Tests › [Navigation - Smoke] Navigate to Contact page via footer (2.6s)
+  ✓  47 [chromium] › WebTests\Tests\Smoke\notfound.spec.ts:11:3 › Error Pages - Smoke Tests › [Error Page - Smoke] Load 404 page successfully (2.2s)
+  ✓  48 [chromium] › WebTests\Tests\Smoke\notfound.spec.ts:16:3 › Error Pages - Smoke Tests › [Error Page - Smoke] Display &quot;Pagina niet gevonden&quot; heading (2.3s)
+  ✓  49 [chromium] › WebTests\Tests\Smoke\notfound.spec.ts:24:3 › Error Pages - Smoke Tests › [Error Page - Smoke] Display &quot;Verder shoppen&quot; button (2.0s)
+  ✓  50 [chromium] › WebTests\Tests\Smoke\notfound.spec.ts:32:3 › Error Pages - Smoke Tests › [Error Page - Smoke] Click &quot;Verder shoppen&quot; redirects to home (2.1s)
+  ✓  51 [chromium] › WebTests\Tests\Smoke\notfound.spec.ts:39:3 › Error Pages - Smoke Tests › [Error Page - Smoke] Display error description text (1.7s)
+  51 passed (41.1s)
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m</pre>
+  </section>
+</body>
+</html>

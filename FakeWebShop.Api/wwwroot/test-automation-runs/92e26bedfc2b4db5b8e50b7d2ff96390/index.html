@@ -1,0 +1,54 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test run 92e26bedfc2b4db5b8e50b7d2ff96390</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f8fafc; color: #0f172a; }
+    .status { display: inline-block; padding: 8px 14px; border-radius: 999px; color: white; background: #b91c1c; font-weight: 700; }
+    section { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-top: 18px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 12px; overflow: auto; }
+    .meta { display: grid; gap: 8px; margin-top: 12px; }
+    .meta div { display: flex; gap: 12px; flex-wrap: wrap; }
+    .label { font-weight: 700; min-width: 120px; }
+  </style>
+</head>
+<body>
+  <h1>Test automation report</h1>
+  <div class="status">Failed</div>
+  <section>
+    <div class="meta">
+      <div><span class="label">Suite</span><span>Api</span></div>
+      <div><span class="label">Started</span><span>2026-05-21T11:15:15.9419794+00:00</span></div>
+      <div><span class="label">Completed</span><span>2026-05-21T11:15:19.0285053+00:00</span></div>
+      <div><span class="label">Exit code</span><span>1</span></div>
+    </div>
+  </section>
+<section><h2>Failure</h2><pre>Test process exited with code 1.</pre></section>
+  <section>
+    <h2>Latest output</h2>
+    <pre>[BrowserStack] BrowserStack environment not configured; reporting will be skipped
+Error: a BeforeAll hook errored, process exiting: features\step-definitions\discount-api.steps.js:38
+    at Worker.wrapTestRunHookError (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\worker.js:101:16)
+    at Worker.runTestRunHook (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\worker.js:71:30)
+    at async Worker.runBeforeAllHooks (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\worker.js:107:28)
+    ... 2 lines matching cause stack trace ...
+    at async runCucumber (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\api\run_cucumber.js:119:21)
+    at async Cli.run (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\cli\index.js:56:29)
+    at async Object.run [as default] (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\cli\run.js:30:18) {
+  [cause]: SyntaxError: Unexpected end of JSON input
+      at JSON.parse (&lt;anonymous&gt;)
+      at APIResponse.json (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\playwright-core\lib\client\fetch.js:300:17)
+      at async Object.&lt;anonymous&gt; (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\features\step-definitions\discount-api.steps.js:47:23)
+      at async wrapPromiseWithTimeout (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\time.js:67:12)
+      at async Object.run (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\user_code_runner.js:64:22)
+      at async Worker.runTestRunHook (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\worker.js:58:41)
+      at async Worker.runBeforeAllHooks (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\worker.js:107:28)
+      at async InProcessAdapter.run (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\serial\adapter.js:12:9)
+      at async Coordinator.run (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\runtime\coordinator.js:29:25)
+      at async runCucumber (C:\Users\boone\Documents\BRIGHTEST\SwagShop\SwagShop\Brightswagshop-Backend\APITests\node_modules\@cucumber\cucumber\lib\api\run_cucumber.js:119:21)
+}</pre>
+  </section>
+</body>
+</html>

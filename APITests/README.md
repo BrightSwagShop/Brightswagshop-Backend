@@ -57,34 +57,36 @@ Step definitions:
 - `features/step-definitions/backend-api.steps.js`
 - `features/step-definitions/shopping-cart-api.steps.js`
 
-## BrowserStack reporting
+## TestRail reporting
 
-BrowserStack reporting is enabled through the `browserstack` Cucumber profile.
+TestRail reporting is enabled through the `testrail` Cucumber profile.
 
-Set these env vars before running tests with BrowserStack reporting.
+Set these env vars before running tests with TestRail reporting.
 
-- For CI: configure `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` as GitHub repository secrets (do not commit secrets to source).
+- For CI: configure `TESTRAIL_BASE_URL`, `TESTRAIL_USERNAME`, and `TESTRAIL_API_KEY` as GitHub repository secrets (do not commit secrets to source).
 - For local runs only: set them in your local environment and do not check them into version control. Example (PowerShell):
 
 ```powershell
-$env:BROWSERSTACK_USERNAME = "your_username"; $env:BROWSERSTACK_ACCESS_KEY = "your_access_key"; npm run test:browserstack
+$env:TESTRAIL_BASE_URL = "https://your-instance.testrail.io"; $env:TESTRAIL_USERNAME = "your_username"; $env:TESTRAIL_API_KEY = "your_api_key"; npm run test:testrail
 ```
 
-Run with BrowserStack reporting:
+Run with TestRail reporting:
 
 ```powershell
-npm run test:browserstack
+npm run test:testrail
 ```
 
-The `test:browserstack` command validates required env vars first and fails fast if missing:
+The `test:testrail` command validates required env vars first and fails fast if missing:
 
-- `BROWSERSTACK_USERNAME`
-- `BROWSERSTACK_ACCESS_KEY`
+- `TESTRAIL_BASE_URL`
+- `TESTRAIL_USERNAME`
+- `TESTRAIL_API_KEY`
 
 For GitHub Actions, set repository secrets:
 
-- `BROWSERSTACK_USERNAME`
-- `BROWSERSTACK_ACCESS_KEY`
+- `TESTRAIL_BASE_URL`
+- `TESTRAIL_USERNAME`
+- `TESTRAIL_API_KEY`
 
 Optional email notifications (workflow):
 

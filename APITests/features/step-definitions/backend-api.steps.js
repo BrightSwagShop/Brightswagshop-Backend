@@ -43,24 +43,27 @@ async function storeResponse(world, response) {
   world.lastBody = result.body;
 }
 
+async function storeTimedResponse(world, action) {
+  const startedAt = Date.now();
+  const response = await action();
+  world.lastResponseTimeMs = Date.now() - startedAt;
+  await storeResponse(world, response);
+}
+
 When('I GET backend categories', async function () {
-  const response = await this.backendApi.getCategories();
-  await storeResponse(this, response);
+  await storeTimedResponse(this, () => this.backendApi.getCategories());
 });
 
 When('I GET backend product types', async function () {
-  const response = await this.backendApi.getProductTypes();
-  await storeResponse(this, response);
+  await storeTimedResponse(this, () => this.backendApi.getProductTypes());
 });
 
 When('I POST backend image upload without file', async function () {
-  const response = await this.backendApi.uploadImageWithoutFile();
-  await storeResponse(this, response);
+  await storeTimedResponse(this, () => this.backendApi.uploadImageWithoutFile());
 });
 
 When('I POST backend image upload as a regular user without file', async function () {
-  const response = await authApiContext.post('/api/images/upload');
-  await storeResponse(this, response);
+  await storeTimedResponse(this, () => authApiContext.post('/api/images/upload'));
 });
 
 Given('I am authenticated as a regular user for backend API', async function () {
@@ -100,4 +103,12 @@ Then('the first backend item should contain string name and string slug', functi
   const first = this.lastBody[0];
   assert.equal(typeof first.name, 'string');
   assert.equal(typeof first.slug, 'string');
+});
+
+Then('the backend response should complete within {int} ms', function (maxDurationMs) {
+  assert.ok(typeof this.lastResponseTimeMs === 'number', 'Response time was not captured.');
+  assert.ok(
+    this.lastResponseTimeMs <= maxDurationMs,
+    `Expected response time to be <= ${maxDurationMs} ms, but was ${this.lastResponseTimeMs} ms.`
+  );
 });

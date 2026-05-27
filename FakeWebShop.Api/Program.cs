@@ -15,6 +15,8 @@ using FakeWebShop.Persistence.PublicUserRepo_s.MongoInterfaces;
 using FakeWebShop.Persistence.Supabase;
 using FakeWebShop.Persistence.Supabase.SupabaseSettings;
 using FakeWebShop.Api.Security;
+using FakeWebShop.Api.TestAutomation;
+using Microsoft.Extensions.FileProviders;
 using MongoDB.Driver;
 using Stripe;
 using Microsoft.AspNetCore.Authentication;
@@ -88,13 +90,15 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy =>
     {
         policy.AuthenticationSchemes.Add("AzureAd");
+        policy.AuthenticationSchemes.Add(HeaderAuthDefaults.Scheme);
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("App.Admin");
+        policy.RequireRole("App.Admin", "Admin");
     });
 
     options.AddPolicy("UserOnly", policy =>
     {
         policy.AuthenticationSchemes.Add("CustomJwt");
+        policy.AuthenticationSchemes.Add(HeaderAuthDefaults.Scheme);
         policy.RequireAuthenticatedUser();
         policy.RequireRole("User");
     });
@@ -103,8 +107,9 @@ builder.Services.AddAuthorization(options =>
     {
         policy.AuthenticationSchemes.Add("CustomJwt");
         policy.AuthenticationSchemes.Add("AzureAd");
+        policy.AuthenticationSchemes.Add(HeaderAuthDefaults.Scheme);
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("User", "App.Admin");
+        policy.RequireRole("User", "App.Admin", "Admin");
     });
 });
 
@@ -126,6 +131,7 @@ builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IDiscountService, WebShopDiscountService>();
 builder.Services.AddScoped<IImageStorage, SupabaseImageStorage>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddSingleton<ITestAutomationService, TestAutomationService>();
 builder.Services.AddScoped<IDebugStateService, DebugStateService>();
 
 // CORS
@@ -160,10 +166,17 @@ builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, JsonAuthori
 
 var app = builder.Build();
 
+var testReportRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "test-automation-runs");
+Directory.CreateDirectory(testReportRoot);
 // register debug exception middleware (maps DebugApiException -> JSON)
 app.UseMiddleware<FakeWebShop.Api.Middleware.DebugExceptionMiddleware>();
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(testReportRoot),
+    RequestPath = "/test-automation-runs"
+});
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
