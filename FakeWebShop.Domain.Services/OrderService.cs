@@ -47,6 +47,15 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         return entity.AsModel().AsResponse();
     }
 
+    public async Task<List<OrderResponse>> GetAllAsync()
+    {
+        var entities = await orderRepo.GetAllAsync();
+
+        return entities
+            .Select(entity => entity.AsModel().AsResponse())
+            .ToList();
+    }
+
     public async Task<OrderResponse?> GetByIdAsync(string id)
     {
         var entity = await orderRepo.GetByIdAsync(id);

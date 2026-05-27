@@ -9,6 +9,7 @@ public interface IMongoUserInterface
 {
     Task<UserResponseContract> Register(UserAuthRequestContract request);
     Task<UserResponseContract?> Login(UserAuthRequestContract request);
+    Task<List<UserResponseContract>> GetAllAsync();
     Task<UserResponseContract> VoegFavoriteByUserAsync(string userId, FavoriteRequestContract request);
     Task<UserResponseContract> RemoveFavoriteAsync(string userId, FavoriteRequestContract request);
     Task<UserResponseContract> GetByIdAsync(string userId);

@@ -44,6 +44,14 @@ public class UserController(
         });
     }
 
+    [Authorize(AuthenticationSchemes = "AzureAd", Roles = "App.Admin")]
+    [HttpGet("all")]
+    public async Task<ActionResult<List<UserResponseContract>>> GetAllUsers()
+    {
+        var users = await service.GetAllAsync();
+        return Ok(users);
+    }
+
     [Authorize(AuthenticationSchemes = "CustomJwt", Roles = "User")]
     [HttpPost("favoriteToevoegen")]
     public async Task<ActionResult<UserResponseContract>> VoegFavoriteToe([FromBody] FavoriteRequestContract request)

@@ -168,6 +168,8 @@ var app = builder.Build();
 
 var testReportRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "test-automation-runs");
 Directory.CreateDirectory(testReportRoot);
+// register debug exception middleware (maps DebugApiException -> JSON)
+app.UseMiddleware<FakeWebShop.Api.Middleware.DebugExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(new StaticFileOptions

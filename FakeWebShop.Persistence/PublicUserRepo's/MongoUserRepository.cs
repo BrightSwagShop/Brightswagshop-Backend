@@ -23,6 +23,11 @@ public class MongoUserRepository : IMongoUserRepository
         return user;
     }
 
+    public async Task<List<User>> GetAllAsync()
+    {
+        return await _users.Find(_ => true).ToListAsync();
+    }
+
     public async Task<User?> GetByUsernameAsync(string username)
     {
         return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
