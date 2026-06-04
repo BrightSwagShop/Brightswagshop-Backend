@@ -8,7 +8,7 @@ public class ShoppingCartModel
     public string Id { get; set; } = null!;
 
     public string? UserId { get; set; }
-
+   public string UserName { get; set; } = default!;
     public string? SessionId { get; set; }
 
     public List<CartItemModel> Items { get; set; } = new();
