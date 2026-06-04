@@ -19,6 +19,7 @@ public class OrderRepository : IOrderRepository
     }
     public async Task CreateAsync(Order order)
     {
+         Console.WriteLine($"REPOSITORY USERNAME = {order.UserName}");
         await _orders.InsertOneAsync(order);
     }
 

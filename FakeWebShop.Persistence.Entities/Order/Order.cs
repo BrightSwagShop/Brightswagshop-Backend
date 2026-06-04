@@ -12,6 +12,8 @@ public class Order
 
     [BsonElement("userId")]
     public string UserId { get; set; } = null!;
+    [BsonElement("userName")]
+    public string UserName { get; set; } = default!;
 
     [BsonElement("items")]
     public List<OrderItem> Items { get; set; } = new();

@@ -18,5 +18,5 @@ public interface IOrderService
     Task SetStripeCheckoutSessionIdAsync(string id, string sessionId);
 
     // Cart naar Order method 
-    Task<OrderResponse> CreateFromCartAsync(string userId);
+    Task<OrderResponse> CreateFromCartAsync(string userId, string userName);
 }
