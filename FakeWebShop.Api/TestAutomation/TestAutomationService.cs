@@ -101,7 +101,7 @@ public sealed class TestAutomationService : ITestAutomationService
                     ResolveExecutable("npm"),
                     new[] { "run", "webtests" },
                     _frontendRoot,
-                    GetProcessEnvironmentForSuite(run.Suite)),
+                    GetProcessEnvironmentForSuite(run.Suite, apiBaseUrl)),
                 _ => throw new NotSupportedException($"Unknown test suite: {run.Suite}")
             };
 
@@ -378,6 +378,18 @@ public sealed class TestAutomationService : ITestAutomationService
         if (!string.IsNullOrWhiteSpace(resolvedBaseUrl))
         {
             vars["PLAYWRIGHT_BASE_URL"] = resolvedBaseUrl;
+        }
+
+        // Forward API_BASE_URL so Playwright bug-toggle tests reach the correct backend.
+        // Prefer an explicit env var; fall back to the URL derived from this HTTP request.
+        var resolvedApiUrl = Environment.GetEnvironmentVariable("API_BASE_URL")?.Trim();
+        if (string.IsNullOrWhiteSpace(resolvedApiUrl) && !string.IsNullOrWhiteSpace(apiBaseUrl))
+        {
+            resolvedApiUrl = apiBaseUrl;
+        }
+        if (!string.IsNullOrWhiteSpace(resolvedApiUrl))
+        {
+            vars["API_BASE_URL"] = resolvedApiUrl;
         }
 
         // Skip login tests when running via admin automation — fresh browser contexts
