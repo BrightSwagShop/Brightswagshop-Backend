@@ -8,7 +8,9 @@ public class OrderResponse
     public string Id { get; set; } = null!;
     public string UserId { get; set; } = null!;
     public List<OrderItemResponse> Items { get; set; } = new();
-    public OrderStatusEnum Status { get; set; }
+      public string UserName { get; set; } = default!;
+ 
+        public OrderStatusEnum Status { get; set; }
     public PaymentStatusEnum PaymentStatus { get; set; }
     public string? StripeCheckoutSessionId { get; set; }
     public DateTime CreatedAt { get; set; }

@@ -12,6 +12,7 @@ public class OrderModel
     public List<OrderItemModel> Items { get; set; } = new();
 
     public OrderStatusEnum Status { get; set; } = OrderStatusEnum.Pending;
+      public string UserName { get; set; } = default!;
 
     public PaymentStatusEnum PaymentStatus { get; set; } = PaymentStatusEnum.Pending;
 
