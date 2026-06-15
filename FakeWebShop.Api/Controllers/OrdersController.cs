@@ -42,9 +42,10 @@ public class OrdersController(IOrderService service) : ControllerBase
     }
 
     [HttpPost("from-cart/{userId}")]
-    public async Task<ActionResult<OrderResponse>> CreateFromCart(string userId)
+    public async Task<ActionResult<OrderResponse>> CreateFromCart(string userId,
+    [FromBody] CreateOrderFromCartRequest request)
     {
-        var createdOrder = await service.CreateFromCartAsync(userId);
+        var createdOrder = await service.CreateFromCartAsync(userId, request.UserName);
         return CreatedAtAction(nameof(GetById), new { id = createdOrder.Id }, createdOrder);
     }
 }

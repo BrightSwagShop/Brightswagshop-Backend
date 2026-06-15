@@ -19,8 +19,15 @@ public sealed class TestAutomationService : ITestAutomationService
     public TestAutomationService(IWebHostEnvironment environment)
     {
         _backendRoot = Path.GetFullPath(Path.Combine(environment.ContentRootPath, ".."));
-        _apiTestsRoot = Path.Combine(_backendRoot, "APITests");
-        _frontendRoot = Path.GetFullPath(Path.Combine(_backendRoot, "..", "Brightswagshop-Frontend", "frontend"));
+
+        _apiTestsRoot = Environment.GetEnvironmentVariable("API_TESTS_ROOT") is { Length: > 0 } apiRoot
+            ? apiRoot
+            : Path.Combine(_backendRoot, "APITests");
+
+        _frontendRoot = Environment.GetEnvironmentVariable("FRONTEND_ROOT") is { Length: > 0 } frontendRoot
+            ? frontendRoot
+            : Path.GetFullPath(Path.Combine(_backendRoot, "..", "Brightswagshop-Frontend", "frontend"));
+
         _reportRoot = Path.Combine(environment.ContentRootPath, "wwwroot", "test-automation-runs");
         Directory.CreateDirectory(_reportRoot);
     }
@@ -28,6 +35,17 @@ public sealed class TestAutomationService : ITestAutomationService
     public Task<TestAutomationRunDto> StartAsync(TestAutomationSuite suite, string? apiBaseUrl = null, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
+        // Evict previous run for this suite — keep memory and disk clean
+        if (_latestRuns.TryGetValue(suite, out var prevRunId) && _runs.TryRemove(prevRunId, out var prevRun))
+        {
+            var prevReportRoot = prevRun.ReportRoot;
+            _ = Task.Run(() =>
+            {
+                try { if (Directory.Exists(prevReportRoot)) Directory.Delete(prevReportRoot, recursive: true); }
+                catch { /* best effort */ }
+            });
+        }
 
         var runId = Guid.NewGuid();
         var run = new TestAutomationRun(runId, suite, Path.Combine(_reportRoot, runId.ToString("N")));
@@ -64,6 +82,14 @@ public sealed class TestAutomationService : ITestAutomationService
         {
             run.MarkRunning();
 
+            if (run.Suite is TestAutomationSuite.Frontend or TestAutomationSuite.E2e
+                && !Directory.Exists(_frontendRoot))
+            {
+                throw new InvalidOperationException(
+                    $"Frontend directory not found: '{_frontendRoot}'. " +
+                    "Set the FRONTEND_ROOT environment variable to the path of the frontend project.");
+            }
+
             var execution = run.Suite switch
             {
                 TestAutomationSuite.Api => new TestExecutionPlan(
@@ -71,16 +97,11 @@ public sealed class TestAutomationService : ITestAutomationService
                     new[] { "run", "test:testrail" },
                     _apiTestsRoot,
                     GetProcessEnvironmentForSuite(run.Suite, apiBaseUrl)),
-                TestAutomationSuite.Frontend => new TestExecutionPlan(
+                TestAutomationSuite.Frontend or TestAutomationSuite.E2e => new TestExecutionPlan(
                     ResolveExecutable("npm"),
                     new[] { "run", "webtests" },
                     _frontendRoot,
-                    new Dictionary<string, string>()),
-                TestAutomationSuite.E2e => new TestExecutionPlan(
-                    ResolveExecutable("npm"),
-                    new[] { "run", "webtests" },
-                    _frontendRoot,
-                    GetProcessEnvironmentForSuite(run.Suite)),
+                    GetProcessEnvironmentForSuite(run.Suite, apiBaseUrl)),
                 _ => throw new NotSupportedException($"Unknown test suite: {run.Suite}")
             };
 
@@ -328,41 +349,54 @@ public sealed class TestAutomationService : ITestAutomationService
 
     private IReadOnlyDictionary<string, string> GetProcessEnvironmentForSuite(TestAutomationSuite suite, string? apiBaseUrl = null)
     {
+        var vars = new Dictionary<string, string>
+        {
+            ["CI"] = "true"
+        };
+
         if (suite == TestAutomationSuite.Api)
         {
             var configuredApiBaseUrl = !string.IsNullOrWhiteSpace(apiBaseUrl)
                 ? apiBaseUrl.Trim()
                 : Environment.GetEnvironmentVariable("API_BASE_URL")?.Trim();
 
-            var apiVariables = new Dictionary<string, string>();
-
             if (!string.IsNullOrWhiteSpace(configuredApiBaseUrl))
             {
-                apiVariables["API_BASE_URL"] = configuredApiBaseUrl;
+                vars["API_BASE_URL"] = configuredApiBaseUrl;
             }
 
-            return apiVariables;
+            return vars;
         }
 
-        if (suite != TestAutomationSuite.E2e)
-        {
-            return new Dictionary<string, string>();
-        }
-
+        // Frontend / E2e: resolve the target app URL
         var configuredBaseUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_BASE_URL")?.Trim();
         var fallbackBaseUrl = Environment.GetEnvironmentVariable("Frontend__ProductionBaseUrl")?.Trim();
         var resolvedBaseUrl = !string.IsNullOrWhiteSpace(configuredBaseUrl)
             ? configuredBaseUrl
             : fallbackBaseUrl ?? string.Empty;
 
-        var variables = new Dictionary<string, string>();
-
         if (!string.IsNullOrWhiteSpace(resolvedBaseUrl))
         {
-            variables["PLAYWRIGHT_BASE_URL"] = resolvedBaseUrl;
+            vars["PLAYWRIGHT_BASE_URL"] = resolvedBaseUrl;
         }
 
-        return variables;
+        // Forward API_BASE_URL so Playwright bug-toggle tests reach the correct backend.
+        // Prefer an explicit env var; fall back to the URL derived from this HTTP request.
+        var resolvedApiUrl = Environment.GetEnvironmentVariable("API_BASE_URL")?.Trim();
+        if (string.IsNullOrWhiteSpace(resolvedApiUrl) && !string.IsNullOrWhiteSpace(apiBaseUrl))
+        {
+            resolvedApiUrl = apiBaseUrl;
+        }
+        if (!string.IsNullOrWhiteSpace(resolvedApiUrl))
+        {
+            vars["API_BASE_URL"] = resolvedApiUrl;
+        }
+
+        // Skip login tests when running via admin automation — fresh browser contexts
+        // are unauthenticated but MSAL SSO may interfere on some environments.
+        vars["SKIP_LOGIN_TESTS"] = "1";
+
+        return vars;
     }
 
     private sealed class TestAutomationRun

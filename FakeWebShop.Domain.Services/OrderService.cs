@@ -17,6 +17,7 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         var orderModel = new OrderModel
         {
             UserId = request.UserId,
+            UserName = request.UserName,
             CreatedAt = DateTime.UtcNow,
             Status = OrderStatusEnum.Pending,
             PaymentStatus = PaymentStatusEnum.Pending
@@ -122,10 +123,11 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
         await orderRepo.UpdateAsync(entity);
     }
 
-    public async Task<OrderResponse> CreateFromCartAsync(string userId)
+    public async Task<OrderResponse> CreateFromCartAsync(string userId, string userName)
     {
         var cartEntity = await cartRepo.GetByUserIdAsync(userId);
 
+          Console.WriteLine($"PARAMETER USERNAME = {userName}");
         if (cartEntity is null)
             throw new Exception($"Shopping cart for user {userId} not found.");
 
@@ -133,10 +135,12 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
 
         if (cartModel.Items is null || cartModel.Items.Count == 0)
             throw new Exception("Shopping cart is empty.");
+            Console.WriteLine(userName);
 
         var orderModel = new OrderModel
         {
             UserId = cartModel.UserId,
+             UserName = userName,
             Status = OrderStatusEnum.Pending,
             CreatedAt = DateTime.UtcNow,
             Items = cartModel.Items.Select(item => new OrderItemModel
@@ -148,10 +152,12 @@ public class OrderService(IOrderRepository orderRepo, IMongoProductRepository pr
 
             }).ToList()
         };
+         Console.WriteLine($"ORDERMODEL USERNAME = {orderModel.UserName}");
 
         orderModel.TotalPrice = orderModel.Items.Sum(i => i.UnitPrice * i.Quantity);
 
         var orderEntity = orderModel.AsEntity();
+         Console.WriteLine($"ORDERENTITY USERNAME = {orderEntity.UserName}");
 
         await orderRepo.CreateAsync(orderEntity);
 
