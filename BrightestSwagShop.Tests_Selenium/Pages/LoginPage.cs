@@ -80,6 +80,10 @@ namespace BrightestSwagShop.Tests.Pages
 
             Console.WriteLine("Login knop klikken");
             HandleStaySignedIn();
+            Console.WriteLine(
+                "URL na Yes = " + _driver.Url
+            );
+            Thread.Sleep(5000);
         }
 
         private void EnterEmail(string email)
@@ -90,6 +94,11 @@ namespace BrightestSwagShop.Tests.Pages
         private void EnterPassword(string password)
         {
             _driver.FindElement(By.Id("i0118")).SendKeys(password);
+        }
+        public void WaitForDashboard()
+        {
+            _wait.Until(d =>
+                d.Url.Contains("/admin/dashboard"));
         }
 
         private void ClickNext()
@@ -115,21 +124,50 @@ namespace BrightestSwagShop.Tests.Pages
 
         private void HandleStaySignedIn()
         {
-            if (ElementExists(By.Id("idSIButton9")))
-            {
-                try
-                {
-                    var button = _driver.FindElement(By.Id("idSIButton9"));
+            // if (ElementExists(By.Id("idSIButton9")))
+            // {
+            //      Console.WriteLine("Stay signed in scherm gevonden");
+            //     try
+            //     {
+            //         var button = _driver.FindElement(By.Id("idSIButton9"));
 
-                    if (button.Displayed)
+            //         if (button.Displayed)
+            //         {
+            //             button.Click();
+            //          Console.WriteLine("Yes geklikt");
+            //           Thread.Sleep(10000);
+            //         }
+            //     }
+            //     catch
+            //     {
+            //          Console.WriteLine(
+            //                 "Geen Stay signed in scherm gevonden"
+            //             );
+            //     }
+            // }
+               Console.WriteLine("HandleStaySignedIn gestart");
+
+                    try
                     {
+                        Thread.Sleep(3000);
+
+                        var button = _driver.FindElement(
+                            By.Id("idSIButton9"));
+
+                        Console.WriteLine(
+                            "Button value = " +
+                            button.GetAttribute("value"));
+
                         button.Click();
+
+                        Console.WriteLine("Button geklikt");
+
+                        Thread.Sleep(10000);
                     }
-                }
-                catch
-                {
-                }
-            }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
         }
 
         private bool IsAlreadyLoggedIn()
@@ -175,6 +213,13 @@ namespace BrightestSwagShop.Tests.Pages
             {
                 return false;
             }
+        }
+
+       public void ClickLogout()
+        {
+            _wait.Until(d =>
+                d.FindElement(By.XPath("//button[./svg]"))
+            ).Click();
         }
 
 
